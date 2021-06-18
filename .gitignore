@@ -1,0 +1,9 @@
+*.aux
+*.log
+*.blg
+*.bbl
+*.toc
+*.xml
+*.pdf
+main-blx.bib
+
