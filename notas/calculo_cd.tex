@@ -1,0 +1,44 @@
+
+% Heywood 2Ed, pag 376
+\section{Coeficiente de descarga ($C_D$)}
+
+Se parte de la ecuación para flujo compresible a través de una restricción.
+
+Para determinar el $C_D$ se debe conocer
+
+\begin{description}
+    \item[$p_0$] Presión de estancamiento antes de la restricción.
+    \item[$T_0$] Temperatura de estancamiento anes de la restricción.
+    \item[$p_T$] Presión estática justo después de la restricción.
+    \item[$A_R$] Área de referencia.
+    \item[$\dot{m}$] Caudal másico.
+    \item[\gamma] Cociente de capacidades térmicas del gas.
+\end{description}
+
+Los valores de presión y temperatura se obtienen de los datos calculados con
+ICESym. De estos valores se calcula el $\gamma$ del gas.
+
+El caudal másico y la velocidad a las entradas y salidas se obtiene con
+OpenFOAM.
+
+Para flujo no bloqueado se utiliza:
+$$
+C_D^{-1} =  \frac {A_R p_0} {\dot{m} R T_0^{1/2}}
+            \left( \frac{p_T} {p_0} \right)^{1/\gamma}
+            \left{ \frac{2\gamma}{\gamma-1} \left[1 - \left(\frac{p_T}{p_0}^(\gamma-1/\gamma)\right) \right] \right}^{1/2}
+$$
+
+En caso del que el flujo esté blqueado, es decir $p_T/p_0 \le [2/\gamma+1)]^{\gamma/(\gamma - 1)}$, la ecuación correspondiente es:
+
+$$
+C_D^{-1} =  \frac {A_R p_0} {\dot{m} (R T_0)^{1/2}}
+            \gamma^{1/2}
+            \left( \frac{2\gamma}{\gamma+1} \right)^{(\gamma+1)/(2(\gamma-1))}
+$$
+
+\subsection{Área de referencia}
+El área de referencia utilizada por ICESym es el área de cortina.
+
+$$
+A_R = A_C = \pi D_v L_v
+$$
