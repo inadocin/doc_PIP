@@ -3,79 +3,57 @@
 % -----------------------------------------------------------------------------
 % Paquetes y configuracion
 % -----------------------------------------------------------------------------
-\documentclass[11pt,openright,twoside]{report}
+\documentclass[11pt,twoside]{report}
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
-\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
+\usepackage[a4paper,width=170mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
 \usepackage{fancyhdr}
-\usepackage[backend=bibtex,style=authoryear,natbib]{biblatex}
+\usepackage[backend=biber]{biblatex}  % bibliografia
 \usepackage{csquotes}
 \usepackage{graphicx}
 
+\usepackage{longtable}
+\usepackage[acronym]{glossaries} % nomenclatura y abreviaciones
+\include{partes/glosarios}  % esto esta mejor si lo pongo en cada entrada de texto
+\makeglossaries
+
 \graphicspath{ {figuras/} }
 \addbibresource{bib.bib}
-\pagestyle{fancy}
+
+\pagenumbering{roman}
 
 \fancyhead{}
-\fancyhead[RO,LE]{Diseño de los sistemas de intercambio de gases del
-    Motor Rotativo de Combustión a Volumen Constante}
-
+\fancyhead[RO,LE]{Proyecto Integrador Profesional}
 \fancyfoot{}
 \fancyfoot[LE,RO]{\thepage}
-\fancyfoot[LO,CE]{Chapter \thechapter}
-\fancyfoot[CO,RE]{Barrios, Nicolás Daniel}
-
+\fancyfoot[LO,CE]{Capítulo \thechapter}
+\fancyfoot[CO,RE]{Nicolás Daniel Barrios}
 
 % -----------------------------------------------------------------------------
-% Carátula
+% Documento
 % -----------------------------------------------------------------------------
 \begin{document}
-\title{
-    {Diseño de los sistemas de intercambio de gases del Motor Rotativo de
-    Combustión a Volumen Constante
-    }\\
 
-{\large Universidad Nacional del Comahue}\\
-{\includegraphics[width=0.4\textwidth]{logo_unco.jpg}}
-}
-\author{Barrios, Nicolás Daniel}
-\date{}\maketitle
-
-\section*{Resumen}
-
-Este trabajo presenta un procedimiento para optimizar la geometría
-del sistema de intercambio de gases del Motor Rotativo de Combustión a
-Volumen Constante (MRCVC) \cite{toth}, en particular de la geometría y
-posición en el cuerpo estatórico de los puertos de admisón y escape,
-diámetro y longitud de los conductos corresponidentes.
-
-\section*{Abstract}
-
-\section*{Dedicatoria}
-Dedicatoria
-
-\section*{Agradecimientos}
-Agradecimientos
-
+% -- Iniciales
+\include{partes/caratula}
+\setcounter{page}{1}
+\include{partes/agradecimientos}
+\include{partes/resumen}
 \tableofcontents
+\listoffigures
+\listoftables
+\printglossary[type=\acronymtype,title=Abreviaciones]
+\printglossary[title=Nomenclatura]
 
-% -----------------------------------------------------------------------------
-% Contenido Principal
-% -----------------------------------------------------------------------------
-\include{capitulos/1_motivacion}
-\include{capitulos/2_objetivos}
-\include{capitulos/3_metodologia}
-\include{capitulos/4_desripcion_modelos}
-\include{capitulos/5_criterios_adoptados}
-\include{capitulos/6_resultados}
+% -- Cuerpo del texto
+\pagenumbering{arabic}
+\include{partes/introduccion}
+\include{partes/antecedentes}
+\include{partes/analisis_del_problema}
+\include{partes/resultados}
+\include{partes/conclusiones}
 
-% -----------------------------------------------------------------------------
-% Apéndices
-% -----------------------------------------------------------------------------
-
-% -----------------------------------------------------------------------------
-% Bibliografía
-% -----------------------------------------------------------------------------
+% -- Finales
 \printbibliography
-
+\include{partes/apendices}
 \end{document}

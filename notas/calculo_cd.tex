@@ -1,4 +1,3 @@
-
 % Heywood 2Ed, pag 376
 \section{Coeficiente de descarga ($C_D$)}
 
@@ -22,13 +21,16 @@ El caudal másico y la velocidad a las entradas y salidas se obtiene con
 OpenFOAM.
 
 Para flujo no bloqueado se utiliza:
-$$
-C_D^{-1} =  \frac {A_R p_0} {\dot{m} R T_0^{1/2}}
-            \left( \frac{p_T} {p_0} \right)^{1/\gamma}
-            \left{ \frac{2\gamma}{\gamma-1} \left[1 - \left(\frac{p_T}{p_0}^(\gamma-1/\gamma)\right) \right] \right}^{1/2}
+$$ 
+C_D^{-1} = \frac {A_R p_0} {\dot{m} R T_0^{1/2}}
+           \left( \frac{p_T} {p_0} \right)^{1/\gamma}
+           \left{ \frac{2\gamma}{\gamma-1}
+           \left[1 - \left(\frac{p_T}{p_0}^(\gamma-1/\gamma)\right) \right] \right}^{1/2} 
 $$
 
-En caso del que el flujo esté blqueado, es decir $p_T/p_0 \le [2/\gamma+1)]^{\gamma/(\gamma - 1)}$, la ecuación correspondiente es:
+En caso del que el flujo esté bloqueado, es decir
+$p_T/p_0 \le [2/\gamma+1)]^{\gamma/(\gamma - 1)}$
+, la ecuación correspondiente es:
 
 $$
 C_D^{-1} =  \frac {A_R p_0} {\dot{m} (R T_0)^{1/2}}
@@ -39,6 +41,9 @@ $$
 \subsection{Área de referencia}
 El área de referencia utilizada por ICESym es el área de cortina.
 
-$$
-A_R = A_C = \pi D_v L_v
-$$
+$$ A_R = A_C = \pi D_v L_v $$
+
+\subsection{Solape de cámaras}
+Tanto al inicio como al cierre del puerto se ve solape de cámaras, por lo que
+en estos intervalos angulares hay un valor de $C_D$ para cada cámara.
+

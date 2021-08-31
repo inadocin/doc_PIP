@@ -1,0 +1,211 @@
+% Heywood 2Ed, pag 376
+\chapter{Análisis del problema}
+
+
+\section{Optimización de la geometría}
+\subsection{Simulación computacional del ciclo termodinámico MRCVC}
+\subsubsection{ICESym}
+
+ICESym \cite{icesym} es un simulador de motores de combustión interna
+desarrollado en conjunto por la UNCo y UNL, utiliza modelos unidimensionales
+para simular el flujo en los conductos de admisión y escape y modelos cero
+dimensionales para el resto de los componentes.
+
+El simulador incluye un modelo para el solape entre cámaras \cite{lopez16} y
+modificaciones particulares al MRCVC, para este trabajo en particular  y con el
+fin de obtener una mapa del coeficiente de descarga, se ha agregando la
+diferencia de presión entre cámara y puerto como variable de modo que $Cd =
+f(L_v, \delta P)$.
+
+La combustión se realiza a volumen constante, por lo que es de esperarse
+mayores renidmientos de conversión de combustible en relación a motores en los
+que la combustión no se realiza a volumen constante.
+% hace falta mostrar que esto es así? poner algún gráfico del heywood o cosas
+% por el estilo. puedo citar el heywood?
+
+El indicador que se tomará como referencia para evaluar y comparar diferentes
+geometrías es el rendimiento volumétrico ($\eta_v$), este parámetro se define
+como:
+
+\begin{equation}
+    \eta_v = \frac{m_a}{\rho_{a,i}V_d}
+\end{equation}
+
+Dónde:
+\begin{description}
+    \item[$m_i$] es la masa de mezcla fresca inductada
+    \item[$\rho_{a,i}$] es la densidad del aire en el puerto de admisión
+    \item[$V_d$] es el volumen desplazado
+\end{description}
+
+El rendimieto volumétrico tiene una dependecia compleja de varios factores,
+este parámetro es el que da forma a las curvas de \emph{performance} que se
+suelen ver en literatura ya que indica la cantidad de mezcla fresca disponible
+para la combustión. En en caso de motores de inyección directa (tanto de CI SI)
+
+\subsection{Algoritmo Genético}
+
+\section{Flujometrías}
+\subsection{}
+\subsection{Coeficiente de descarga ($C_D$)}
+
+Se parte de la ecuación para flujo compresible a través de una restricción.
+
+Para determinar el $C_D$ se debe conocer
+
+\begin{description}
+    \item[$p_0$] Presión de estancamiento antes de la restricción.
+    \item[$T_0$] Temperatura de estancamiento anes de la restricción.
+    \item[$p_T$] Presión estática justo después de la restricción.
+    \item[$A_R$] Área de referencia.
+    \item[$\dot{m}$] Caudal másico.
+    \item[$\gamma$] Cociente de capacidades térmicas del gas.
+\end{description}
+
+Los valores de presión y temperatura se obtienen de los datos calculados con
+ICESym. De estos valores se calcula el $\gamma$ del gas.
+
+El caudal másico y la velocidad a las entradas y salidas se obtiene con
+OpenFOAM.
+
+Para flujo no bloqueado se utiliza:
+% \begin{math}
+% C_D^{-1} = \frac {A_R p_0} {\dot{m} R T_0^{1/2}}
+%            \left( \frac{p_T} {p_0} \right)^{1/\gamma}
+%            \left{ \frac{2\gamma}{\gamma-1}
+%            \left[1 - \left(\frac{p_T}{p_0}^(\gamma-1/\gamma)\right) \right] \right}^{1/2} 
+% \end{math}
+
+En caso del que el flujo esté bloqueado, es decir
+$p_T/p_0 \le [2/\gamma+1)]^{\gamma/(\gamma - 1)}$
+, la ecuación correspondiente es:
+
+\begin{math}
+C_D^{-1} =  \frac {A_R p_0} {\dot{m} (R T_0)^{1/2}}
+            \gamma^{1/2}
+            \left( \frac{2\gamma}{\gamma+1} \right)^{(\gamma+1)/(2(\gamma-1))}
+\end{math}
+
+\subsection{Área de referencia}
+El área de referencia utilizada por ICESym es el área de cortina.
+
+$$ A_R = A_C = \pi D_v L_v $$
+
+\subsection{Solape de cámaras}
+Tanto al inicio como al cierre del puerto se ve solape de cámaras, por lo que
+en estos intervalos angulares hay un valor de $C_D$ para cada cámara.
+
+\section{Criterios adoptados}
+\subsection{Geometria}
+El puerto se hace recto, igual se podría hacer una entrada más suave.
+
+La altura de la ranura se adopta en 2/3 del alto de la cámara, siendo $h_c=0.0441\ mm$
+
+El eje del puerto se hace perpendicular a una línea que pasa entre el centro
+del motor y el la línea media del puerto.
+
+
+% Capítulo 3 - Metodología:
+
+% En este capítulo describo como es el procedimiento realizado en cada paso de
+% la optimización:
+
+% -> optimización algoritmo genético y simulación con icesym, tendría que
+%    explicar como funciona icesym y el optimizador
+% -> freecad + salome
+% -> openfoam
+
+\section{Metodología}
+
+Se simulará un MRCVC de 3 paletas usando el simulador de motores de combustión
+interna ICESym \cite{icesym} con el propósito de obtener curvas de rendimiento
+volumétrico.
+%
+Estas serán el principal criterio para evaluar el diseño de los sistmas de
+intercambio de gases, que consisten de los puertos y conductos de admisión y
+escape.
+%
+La geometría se optimizará mediante un algoritmo genético, el cual transforma
+los datos de rendimiento volumétrico en un puntaje representativo de cada
+motor.
+
+
+La simulación con ICESym requiere del conocimiento previo de los coeficientes
+de descarga de los puertos los cuales inicialmente serán estimados para poder
+realizar la primer iteración con el simulador.
+%
+Se utilizará la geometría obtenida en esta primer iteración para crear modelos
+en CAD de los puertos de admisión y escape para realizar flujometrías virtuales
+y así poder obtener los coeficientes de descarga de cada puerto en distintos
+grados de apertura.
+
+
+\section{ICESym}
+
+
+
+\section{Algoritmo genético}
+
+Para realizar la optimización de la geometría flujada se utiliza un algorimto
+genético con una población de $N$ motores, los cuales se representan por una
+lista de $k$ números asociados a características geométricas de los sistemas de
+intercambio de gases, concreto cada motor se representa por:
+
+\begin{verbatim}
+[dta dte lta lte iia ifa eia efa]
+\end{verbatim}
+
+
+\section{CAD}
+El modelo 3D de los puertos de admisión, escape y los componentes internos del
+motor que afectan el flujo y son relevantes a la flujometría se realizaron con
+FreeCAD\cite{freecad} para generar un archivo en formato $.BREP$ y luego
+salome\cite{salome} para obtener un archivo .stl "cerrado" en formato ASCII
+
+Dada la cantidad de geometrías posibles y el tiempo que toma el proceso, se
+realizaron algunas simplificaciones
+
+
+\section{Flujometrías}
+
+\subsection{Estudio de convergencia de malla}
+
+El tamaño de la malla debe ser lo suficientemente pequeño para que el resultado
+no depende del tamaño de la malla, es decir que el resultado no cambie si se
+usan tamaños de celdas menores.
+%
+Dada la cantidad de posiciones diferentes a ensayar y la gran cantidad de
+tiempo que significa realizar el estudio para cada posición, se tomará el
+tamaño mínimo de malla como el tamaño que surga de realizar el estudio de
+convergencia de malla en dos posiciones del rotor, una posición cerca de la
+apertura del puerto y otra cercana al cierre del mismo.
+%
+Se eligen estas posiciones porque son las que presentan los mayores gradientes
+de presión.
+
+
+El procedimiento a seguir es el siguiente:
+% en lugar de una lista numerada podría hacer un algoritmo
+\begin{enumerate}
+    \item surfaceFeatures
+    \item blockMesh
+    \item snappyHexMesh
+    \item checkMesh
+\end{enumerate}
+
+
+\subsection{Condiciones de contorno}
+Para determinar las condiciones de contorno se usan los datos 
+\subsubsection{Con solape de cámaras}
+\subsubsection{Sin solape de cámaras}
+
+\subsection{Modelos de viscosidad}
+\subsubsection{k-epsilon}
+\subsubsection{k-omega}
+
+\subsection{Tipos de flujo}
+\subsubsection{Flujo compresible}
+\subsubsection{Flujo incompresible}
+
+\section{Retroalimentación}
+

@@ -1,10 +1,22 @@
+% Algunos links utiles:
+%
+% https://cfdisraelblog.wpcomstaging.com/
+% https://openfoamwiki.net/index.php/OpenFOAM_guide/The_PIMPLE_algorithm_in_OpenFOAM
+% https://www.simscale.com/forum/t/cfd-pimple-algorithm/81418
+% https://holzmann-cfd.com/community/publications/mathematics-numerics-derivations-and-openfoam-free
+
 \section{OpenFOAM}
 \subsection{¿Qué es y para qué sirve?}
-cfd
+OpenFOAM\cite{openfoam} es software libre para fluidodinámica computacional,
+es un programa de volúmenes finitos
+
 \subsection{Malla e indicadores de malla}
 
 Este es un artículo corto e informativo sobre el tema:
 https://www.mechead.com/mesh-good-enough/
+
+
+\subsection{snappyHexMesh}
 
 \subsubsection{"Mesh Skewness"}
 El término hace referencia a la simetría de la celda, un valor alto de
@@ -21,3 +33,36 @@ https://www.cfd-online.com/Forums/main/3388-effect-mesh-skewness.html
 Acá comentan un poco como reducir la asimetría de las mallas, por el momento no
 tuve mucho éxito.
 https://www.cfd-online.com/Forums/openfoam-meshing/70694-snappyhexmesh-how-set-up-avoid-skewfaces.html
+
+\section{Flujometrías}
+Tanto para la simulacón con flujo compresible como incompresible se utilizará
+el solver pimleFoam
+
+\subsection{Algoritmo Pimple}
+% https://openfoamwiki.net/index.php/OpenFOAM_guide/The_PIMPLE_algorithm_in_OpenFOAM
+% https://www.simscale.com/forum/t/cfd-pimple-algorithm/81418
+% All about the pimple algorithm part I - https://www.cfd-online.com/Forums/blogs/tobi/2489-all-about-pimple-algorithm.html
+% All about the pimple algorithm part II - https://www.cfd-online.com/Forums/blogs/tobi/2490-all-about-pimple-algorithm-part-ii.html
+
+
+\subsection{pimpleFoam}
+Es un solver flujo turbulento, incompresible, en régimen transitorio de fluidos
+Newtonianos con opciones de dinámica de malla. Los modelos para turbulencia pueden
+ser RAS o LES.
+
+\verbatim{
+    while pimple.run(runTime)
+        runtime++
+        while pimple.loop()
+            pressure-velocity pimple corrector loop
+        while pimple.correct
+            pressure corrector loop
+}
+
+
+\subsection{rhoPimpleFoam}
+Es un solver transitorio para flujo turbulento compresible por HVAC y
+aplicaciones similares con opciones para movimiento de malla y cambios de
+topología de mala. Usa el algortimo PIMPLE (PISO-SIMPLE) para simulaciones
+"time-resolved" y pseudo transitorias.
+

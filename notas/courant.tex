@@ -1,0 +1,27 @@
+El número de Courant es un indicador adimensional usado en CFD para evaluar el
+tamaño de paso temporal necesario para una simulación en régimen transitorio o
+para un tamaño de malla y velocidad determinados. Está relacioado con la
+estabilidad de esquemas numéricos.
+
+El número de Courant se define como
+\begin{equation}
+    C = \fraq{U \delta t}{\delta h}
+\end{equation}
+
+Dónde
+\begin{description}
+    \item [U] indica la velocidad de flujo
+    \item [$\delta t$] indica el paso temporal
+    \item [$\delta h$] es el tamaño característico de la malla
+\end{description}
+
+Para probelmas multi dimensionales se define como la suma de los componentes en
+cada dimensión
+\begin{equation}
+    C = \sum_i \fraq{U_i \delta t}{\delta h_i}
+\end{equation}
+
+En términos de fluidodinámica computacional, el número de Courant indica que tanto
+viaja la información (U) a través de una celda de la malla ($\delta h$), si $C_o > 1$
+la información se propaga a través de una o más celdas por paso temporal, lo que
+puede provocar que la simulación diverga o de resultados erroneos.
