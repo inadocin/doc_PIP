@@ -18,7 +18,7 @@ diferencia de presión entre cámara y puerto como variable de modo que $Cd =
 f(L_v, \delta P)$.
 
 La combustión se realiza a volumen constante, por lo que es de esperarse
-mayores renidmientos de conversión de combustible en relación a motores en los
+mayores rendimientos de conversión de combustible en relación a motores en los
 que la combustión no se realiza a volumen constante.
 % hace falta mostrar que esto es así? poner algún gráfico del heywood o cosas
 % por el estilo. puedo citar el heywood?
@@ -38,7 +38,7 @@ Dónde:
     \item[$V_d$] es el volumen desplazado
 \end{description}
 
-El rendimieto volumétrico tiene una dependecia compleja de varios factores,
+El rendimiento volumétrico tiene una dependencia compleja de varios factores,
 este parámetro es el que da forma a las curvas de \emph{performance} que se
 suelen ver en literatura ya que indica la cantidad de mezcla fresca disponible
 para la combustión. En en caso de motores de inyección directa (tanto de CI SI)
@@ -55,7 +55,7 @@ Para determinar el $C_D$ se debe conocer
 
 \begin{description}
     \item[$p_0$] Presión de estancamiento antes de la restricción.
-    \item[$T_0$] Temperatura de estancamiento anes de la restricción.
+    \item[$T_0$] Temperatura de estancamiento antes de la restricción.
     \item[$p_T$] Presión estática justo después de la restricción.
     \item[$A_R$] Área de referencia.
     \item[$\dot{m}$] Caudal másico.
@@ -96,7 +96,7 @@ Tanto al inicio como al cierre del puerto se ve solape de cámaras, por lo que
 en estos intervalos angulares hay un valor de $C_D$ para cada cámara.
 
 \section{Criterios adoptados}
-\subsection{Geometria}
+\subsection{Geometría}
 El puerto se hace recto, igual se podría hacer una entrada más suave.
 
 La altura de la ranura se adopta en 2/3 del alto de la cámara, siendo $h_c=0.0441\ mm$
@@ -121,7 +121,7 @@ Se simulará un MRCVC de 3 paletas usando el simulador de motores de combustión
 interna ICESym \cite{icesym} con el propósito de obtener curvas de rendimiento
 volumétrico.
 %
-Estas serán el principal criterio para evaluar el diseño de los sistmas de
+Estas serán el principal criterio para evaluar el diseño de los sistemas de
 intercambio de gases, que consisten de los puertos y conductos de admisión y
 escape.
 %
@@ -146,7 +146,7 @@ grados de apertura.
 
 \section{Algoritmo genético}
 
-Para realizar la optimización de la geometría flujada se utiliza un algorimto
+Para realizar la optimización de la geometría flujada se utiliza un algoritmo
 genético con una población de $N$ motores, los cuales se representan por una
 lista de $k$ números asociados a características geométricas de los sistemas de
 intercambio de gases, concreto cada motor se representa por:
