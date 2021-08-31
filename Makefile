@@ -6,16 +6,14 @@ BUILDTEX=$(TEX) $(MAIN).tex
 
 all:
 	$(BUILDTEX)
-	$(NOMENCL) $(MAIN).nlo -s nomencl.ist -o $(MAIN).nls
-	$(BUILDTEX)
 	$(BIBTEX) $(MAIN)
 	$(BUILDTEX)
 	$(BUILDTEX)
 
 
 clean-all:
-	rm -f *.log *.aux *.bcf *.bbl *.blg *.pdf *.idx *.toc *.out *.xml  main-blx.bib 
+	rm -f *.pdf *.acn *.aux *.bbl *.bcf *.blg *.glo *.ist *.lof *.log *.lot *.run.xml *.toc
 clean:
-	rm -f *.log *.aux *.bbl *.blg *.idx *.toc *.out
+	rm -f *.acn *.aux *.bbl *.bcf *.blg *.glo *.ist *.lof *.log *.lot *.run.xml *.toc
 open:
 	zathura $(MAIN).pdf &

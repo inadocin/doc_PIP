@@ -2,6 +2,11 @@
 *.log
 *.blg
 *.bbl
+*.glo
+*.ist
+*.lof
+*.lot
+*.acn
 *.toc
 *.xml
 *.pdf
