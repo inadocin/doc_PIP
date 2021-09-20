@@ -1,9 +1,10 @@
 % Heywood 2Ed, pag 376
 \chapter{Análisis del problema}
 
-
 \section{Optimización de la geometría}
+
 \subsection{Simulación computacional del ciclo termodinámico MRCVC}
+
 \subsubsection{ICESym}
 
 ICESym \cite{icesym} es un simulador de motores de combustión interna
@@ -43,48 +44,6 @@ este parámetro es el que da forma a las curvas de \emph{performance} que se
 suelen ver en literatura ya que indica la cantidad de mezcla fresca disponible
 para la combustión. En en caso de motores de inyección directa (tanto de CI SI)
 
-\subsection{Algoritmo Genético}
-
-\section{Flujometrías}
-\subsection{}
-\subsection{Coeficiente de descarga ($C_D$)}
-
-Se parte de la ecuación para flujo compresible a través de una restricción.
-
-Para determinar el $C_D$ se debe conocer
-
-\begin{description}
-    \item[$p_0$] Presión de estancamiento antes de la restricción.
-    \item[$T_0$] Temperatura de estancamiento antes de la restricción.
-    \item[$p_T$] Presión estática justo después de la restricción.
-    \item[$A_R$] Área de referencia.
-    \item[$\dot{m}$] Caudal másico.
-    \item[$\gamma$] Cociente de capacidades térmicas del gas.
-\end{description}
-
-Los valores de presión y temperatura se obtienen de los datos calculados con
-ICESym. De estos valores se calcula el $\gamma$ del gas.
-
-El caudal másico y la velocidad a las entradas y salidas se obtiene con
-OpenFOAM.
-
-Para flujo no bloqueado se utiliza:
-% \begin{math}
-% C_D^{-1} = \frac {A_R p_0} {\dot{m} R T_0^{1/2}}
-%            \left( \frac{p_T} {p_0} \right)^{1/\gamma}
-%            \left{ \frac{2\gamma}{\gamma-1}
-%            \left[1 - \left(\frac{p_T}{p_0}^(\gamma-1/\gamma)\right) \right] \right}^{1/2} 
-% \end{math}
-
-En caso del que el flujo esté bloqueado, es decir
-$p_T/p_0 \le [2/\gamma+1)]^{\gamma/(\gamma - 1)}$
-, la ecuación correspondiente es:
-
-\begin{math}
-C_D^{-1} =  \frac {A_R p_0} {\dot{m} (R T_0)^{1/2}}
-            \gamma^{1/2}
-            \left( \frac{2\gamma}{\gamma+1} \right)^{(\gamma+1)/(2(\gamma-1))}
-\end{math}
 
 \subsection{Área de referencia}
 El área de referencia utilizada por ICESym es el área de cortina.
@@ -95,7 +54,6 @@ $$ A_R = A_C = \pi D_v L_v $$
 Tanto al inicio como al cierre del puerto se ve solape de cámaras, por lo que
 en estos intervalos angulares hay un valor de $C_D$ para cada cámara.
 
-\section{Criterios adoptados}
 \subsection{Geometría}
 El puerto se hace recto, igual se podría hacer una entrada más suave.
 
@@ -156,6 +114,12 @@ intercambio de gases, concreto cada motor se representa por:
 \end{verbatim}
 
 
+\subsection{Creación de la población}
+\subsection{Selección}
+\subsection{Cruza}
+\subsection{Mutación}
+\subsection{Nueva población}
+
 \section{CAD}
 El modelo 3D de los puertos de admisión, escape y los componentes internos del
 motor que afectan el flujo y son relevantes a la flujometría se realizaron con
@@ -169,9 +133,12 @@ realizaron algunas simplificaciones
 \section{Flujometrías}
 
 \subsection{Estudio de convergencia de malla}
+% fuentes
+% https://www.grc.nasa.gov/WWW/wind/valid/tutorial/spatconv.html
+% https://curiosityfluids.com/2016/09/09/establishing-grid-convergence/
 
 El tamaño de la malla debe ser lo suficientemente pequeño para que el resultado
-no depende del tamaño de la malla, es decir que el resultado no cambie si se
+no dependa del tamaño de la malla, es decir que el resultado no cambie si se
 usan tamaños de celdas menores.
 %
 Dada la cantidad de posiciones diferentes a ensayar y la gran cantidad de
@@ -182,17 +149,34 @@ apertura del puerto y otra cercana al cierre del mismo.
 %
 Se eligen estas posiciones porque son las que presentan los mayores gradientes
 de presión.
+(imagen o tabla con las posiciones seleccionadas)
 
 
-El procedimiento a seguir es el siguiente:
-% en lugar de una lista numerada podría hacer un algoritmo
-\begin{enumerate}
-    \item surfaceFeatures
-    \item blockMesh
-    \item snappyHexMesh
-    \item checkMesh
-\end{enumerate}
+Para cada posición se harán por lo menos 3 simulaciones con diferentes
+refinamientos de malla, manteniendo constante el grado de refinamiento.
+%
+Como parámetro de refinamiento se utiliza la longitud de lado de celdas $h$,
+que serán cúbicas, de la malla inicial generada con \emph{blockMesh}.
+%
+El flujo másico o volumétrico $\dot{m}_{vol}$ a través del parche indicado como
+puerto se utiliza como parámetro para determinar la convergencia de malla.
 
+El orden de convergencia p se calcula con:
+
+$$ p = \ln \left( \frac{f3 - f2} {f2 - f1} \right) / \ln(r) / \ln(r) $$
+
+Se usa una extrapolación de Richardson para estimar el valor del indicador con
+$h = 0$
+
+$$ f_{h=0} = f_{1} + \frac{f_1 - f_2}{r^P - 1} $$
+
+Si se usa r=2, que es lo tradicional segun la pagina de la nasa, se puede
+simplificar la ec. anterior a:
+$$ f_{h=0} = \frac{4}{3}f_{1} - \frac{1}{3}f_2 $$
+
+Con estos datos se puede calcluar el índice de convergencia de malla (ICM) para
+los refinamientos medio y fino.
+$$ GCI = \frac{E}{h^P} $$
 
 \subsection{Condiciones de contorno}
 Para determinar las condiciones de contorno se usan los datos 
@@ -206,6 +190,45 @@ Para determinar las condiciones de contorno se usan los datos
 \subsection{Tipos de flujo}
 \subsubsection{Flujo compresible}
 \subsubsection{Flujo incompresible}
+
+\subsection{Coeficiente de descarga ($C_D$)}
+
+Se parte de la ecuación para flujo compresible a través de una restricción.
+
+Para determinar el $C_D$ se debe conocer
+
+\begin{description}
+    \item[$p_0$] Presión de estancamiento antes de la restricción.
+    \item[$T_0$] Temperatura de estancamiento antes de la restricción.
+    \item[$p_T$] Presión estática justo después de la restricción.
+    \item[$A_R$] Área de referencia.
+    \item[$\dot{m}$] Caudal másico.
+    \item[$\gamma$] Cociente de capacidades térmicas del gas.
+\end{description}
+
+Los valores de presión y temperatura se obtienen de los datos calculados con
+ICESym. De estos valores se calcula el $\gamma$ del gas.
+
+El caudal másico y la velocidad a las entradas y salidas se obtiene con
+OpenFOAM.
+
+Para flujo no bloqueado se utiliza:
+% \begin{math}
+% C_D^{-1} = \frac {A_R p_0} {\dot{m} R T_0^{1/2}}
+%            \left( \frac{p_T} {p_0} \right)^{1/\gamma}
+%            \left{ \frac{2\gamma}{\gamma-1}
+%            \left[1 - \left(\frac{p_T}{p_0}^(\gamma-1/\gamma)\right) \right] \right}^{1/2} 
+% \end{math}
+
+En caso del que el flujo esté bloqueado, es decir
+$p_T/p_0 \le [2/\gamma+1)]^{\gamma/(\gamma - 1)}$
+, la ecuación correspondiente es:
+
+\begin{math}
+C_D^{-1} =  \frac {A_R p_0} {\dot{m} (R T_0)^{1/2}}
+            \gamma^{1/2}
+            \left( \frac{2\gamma}{\gamma+1} \right)^{(\gamma+1)/(2(\gamma-1))}
+\end{math}
 
 \section{Retroalimentación}
 
