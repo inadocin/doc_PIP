@@ -1,0 +1,284 @@
+\chapter{Algoritmo Genético}
+\section{Introducción}
+%%
+%Se seleccionó un algoritmo genético para realizar la optimziación de la
+%geometría del MRCVC por la simplicidad y facilidad de implementación.
+%%
+%Este método de optimización es de los llamados \emph{sin grediente} ya que no
+%requieren información del gradiente de la función que se está estudiando.
+
+%Los métodos que utilizan información sobre el gradiente de una función en un
+%punto suelen ser muy eficientes si el espacio solución es diferenciable en todo
+%el dominio, una desventaja de estos métdos es que pueden ser suceptibles a
+%óptimos locales.
+%%
+%Por este motivo si la función a evaluar tiene muchos máximos/mínimos locales,
+%el proceso de solución puede ser sensible al valor inicial utilizado.
+
+%La relación entre el rendimiento volumétrico y los parámetros libres (diámetro
+%y longitudes de tubos de admisión y escape, ángulos de apertura y cierre de los
+%puertos) puede ser compleja con una variedad de óptimos locales,
+
+%En casos en que no se puede asegurar que la función a estudiar sea
+%diferenciable o que haya una gran cantidad de óptimos locales se vuelven
+%atractivos los algoritmos genéticos.
+%%
+%Son básicamente métodos de búsqueda aleatoria que aprovechan la información de
+%iteraciones previas para determinar la composición futura de la población.
+%%
+%Representan individuos como un conjunto de númreos que indican características
+%particualres.
+%%
+%Se parte generalmente de una población o conjunto de individuos generados al
+%azar, motivo por el cual estos algoritmos no son suceptibles a caer en una
+%solución óptima a nivel local.
+
+%Una ventaja importatnte de este método es que no es necesario hacer ninguna
+%hipótesis sobre la diferenciabilidad o continuidad del dominio que se está
+%estudiand, basta con poder evaluar la función para obtener un valor de aptitud.
+
+
+%Para realizar la optimización de la geometría flujada se utiliza un algoritmo
+%genético con una población de $N$ motores, los cuales se representan por una
+%lista de $k$ números asociados a características geométricas de los sistemas de
+%intercambio de gases, concreto cada motor se representa por:
+
+%\begin{verbatim}
+%[dta dte lta lte iia ifa eia efa]
+%\end{verbatim}
+
+
+%\subsection{Creación de la población}
+%\subsection{Selección}
+%\subsection{Cruza}
+%\subsection{Mutación}
+%\subsection{Nueva población}
+
+%
+Se seleccionó un algoritmo genético para realizar la optimización de la
+geometría del MRCVC por la simplicidad y facilidad de implementación.
+%
+Si bien estos métodos no garantizan que se alcance un resultado óptimo, en la
+práctica\cite{goldberg}\cite{shi} se ha observado que alcanzan soluciones muy
+cercanas a las óptimas tras algunas iteraciones del método.
+%
+Este método de optimización no requiere información del gradiente de la función
+que se está estudiando, esto es útil cuando no se puede asegurar la que existe
+la derivada de la función en todo el dominio o cuando se tiene una función con
+más de un máximo o mínimo local.
+%
+
+% Los métodos que utilizan información sobre el gradiente de una función en un
+% punto suelen ser muy eficientes si el espacio solución es diferenciable en
+% todo el dominio, una desventaja de estos métdos es que pueden ser suceptibles
+% a óptimos locales.
+%
+% Por este motivo si la función a evaluar tiene muchos máximos/mínimos locales,
+% el proceso de solución puede ser sensible al valor inicial utilizado.
+
+% La relación entre el rendimiento volumétrico y los parámetros libres
+% (diámetro y longitudes de tubos de admisión y escape, ángulos de apertura y
+% cierre de los puertos) puede ser compleja con una variedad de óptimos
+% locales,
+
+En casos en que no se puede asegurar que la función a estudiar sea
+diferenciable o que haya una gran cantidad de óptimos locales se vuelven
+atractivos los algoritmos genéticos.
+%
+Son básicamente métodos de búsqueda aleatoria que aprovechan la información de
+iteraciones previas para determinar la composición futura de la población,
+representando individuos como un conjunto de números que indican
+características particulares.
+%
+Se parte generalmente de una población o conjunto de individuos generados al
+azar, motivo por el cual estos algoritmos no son susceptibles a caer en una
+solución óptima a nivel local.
+
+
+Es probable que no se alcance el óptimo, sin embargo se busca que la solución
+encontrada sea la mejor de las evaluadas y que en la cantidad se obtenga una
+solución satisfactoria.
+
+
+¿Cómo difieren los AG de los métodos tradicionales de búsqueda?
+%
+\begin{enumerate}
+    %
+    \item "GA work with a coding of the parameter set, no the parameters
+        themselves".
+    %
+    \item Trabajan con una población de puntos de datos, no con un solo punto.
+    %
+    \item Los AG funcionan con una función objetivo, no con derivadas u otra
+        información.
+    %
+    \item Los AG usan reglas probabilísticas, no deterministas.
+    %
+\end{enumerate}
+
+Los AG requieren que las variables del problema estén expresadas en forma de
+coordenadas $(x_1, x_2, x_3, ..., x_n)$.
+
+Otros métodos de optimización se mueven de un punto al siguiente en el espacio
+solución, basándose en alguna regla de decisión, esto puede ser riesgo porque
+se puede caer en un óptimo local.
+
+Al buscar varios puntos por iteración, por lo que la probabilidad de caer en 
+un óptimo local se ve reducida.
+
+
+\section{Un algoritmo genético sencillo}
+%
+Un AG se puede construir con 3 operadores básicos:
+\begin{enumerate}
+    \item Reproducción
+    \item Cruza
+    \item Mutación
+\end{enumerate}
+
+La reproducción consiste en crear individuos a partir del puntaje que devuelve
+en la función objetivo, la función objetivo es una medida del valor que
+queremos optimizar.
+%
+Este paso significa que aquellos individuos que tengan valores, por ejemplo más
+altos, de función objetivo tendrán más posibilidades de ser "copiados", de esta
+forma se imita a la selección natural.
+
+La cruza consiste en combinar los "vectores" de dos individuos para obtener uno
+nuevo.
+
+La mutación consiste en modificar aleatoriamente uno o más parámetros de cada
+nuevo individuo.
+
+Estos 3 simples mecanismos le dan a los AG su ¿poder?
+
+La mutación juega un rol secundario pero muy importante, es secundario porque
+se pueden alcanzar soluciones satisfactorias sin incluir este mecanismo, sin
+embargo se utiliza con probabilidades pequeñas para evitar la pérdida temprana
+de información relevante.
+%
+Si la probabilidad de mutación es muy alta, el AG se convierte en una simple
+búsqueda aleatoria.
+
+\section{\emph{Schema} y paralelismo implícito}
+
+\emph{Schema} o esquema es una plantilla, un subconjunto de los parámetros que
+definen al individuo en un AG que contienen información relevante al problema
+en estudio.
+%
+Estas plantillas surgen de similitudes en posiciones y valores que dan buena
+aptitud a un individuo.
+%
+Un AG procesa $n$ individuos y $n^k$ \emph{schematas} por iteración
+\cite{goldberg}, cuanto mayor sea el tamaño del \emph{schema}, mayor la
+probabilidad de ser truncado durante la cruza o mutación, esto produce que los
+patrones de menor tamaño tengan mayor probabilidad de supervivencia de una
+generación a otra.
+%
+Este proceso en el que bloques de información de menor tamaño al total de
+parámetros que se está evaluado sobreviven de una generación a otra sin
+necesidad de ingresar alguna modificación algoritmo es conocido como paralelismo
+implícito.
+
+\section{Implementación}
+%
+\subsection{Población}
+%
+El tamaño de la población se elige arbitrariamente en $N=100$ individuos, los
+parámetros que representan a cada individuo son los que definen la geometría
+del sistema de intercambio de gases, estos son:
+
+\centerline{$(DTA,\ DTE,\ LTA,\ LTE,\ IIA,\ IFA,\ EIA,\ EFA)$}
+%
+Dónde:
+%
+\begin{itemize}
+        %
+    \item DTA es el diámetro de tubo de admisión
+        %
+    \item DTE es el diámetro de tubo de escape
+        %
+    \item LTA es el largo de tubo de admisión
+        %
+    \item LTE es el largo de tubo de escape
+        %
+    \item IIA es el ángulo de apertura del puerto de admisión
+        %
+    \item IFA es el ángulo de cierre del puerto de admisión
+        %
+    \item EIA es el ángulo de apertura del puerto de escape
+        %
+    \item EFA es el ángulo de cierre del puerto de escape
+        %
+\end{itemize}
+
+Los diámetros pueden tomar valores de hasta 100mm, el largo de los
+tubos puede variar entre $0.5$ y $1$ metro, los ángulos tanto de
+admisión y escape se definen de la siguiente manera:
+
+% aca un grafico de como están definidos los ángulos y el porque
+
+
+Para seleccionar la población se utilizó 
+
+
+\subsection{Reproducción}
+
+Para crear la nueva población se debe elegir a los nuevos candidatos basándose
+en los puntajes de candidatos previos, esto se implementó de la siguiente
+manera:
+
+\subsection{Cruza}
+%
+El operador de cruza se encarga de combinar los genes de dos individuos para
+producir un individuo nuevo.
+
+\subsection{Mutación}
+%
+La mutación juega un rol secundario pero importante, una pequeña probabilidad
+de que alguno de los genes se modifique en un valor aleatorio contribuye a que
+el algoritmo genético no se estanque en soluciones máximos o mínimos locales.
+
+\subsection{Función objetivo}
+%
+La función objetivo es la encargada de dar puntaje a los individuos, en la
+analogía con la selección natura, esta función es el ambiente, el que determina
+que tan bien se desempeña un motor con respecto a otro en lo que respecta a
+rendimiento volumétrico.
+%
+Inicialmente se propuso que la función objetivo sea la suma de los rendimientos
+volumétricos a todas las velocidades simuladas, este tipo de funciones da como
+resultado una curva de rendimiento volumétrico aserrada como se muestra en la
+figura (falta).
+
+Este comportamiento aserrado es poco deseable, por lo que se modificó la
+función para conseguir una curva de rendimiento volumétrico suave.
+%
+Además se implementó una suma ponderada, para obtener un rendimiento volumétrico
+máximo en un valor arbitrario de 5000 RPM.
+
+Para prevenir el comportamiento aserrado se introdujo un sistema de penalidades,
+que resta puntaje si la derivada de la función se modifica
+de una velocidad a otra.
+
+
+Otro tema a tener en cuenta es la convergencia prematura del algoritmo que es
+causado por es la dominancia temprana de unos pocos individuos con puntaje
+superior al resto de la población.
+%
+Para evitar esto se realiza un cambio de escala puntaje de todos los
+individuos, alguno de los métodos utilizados son: transformación lineal,
+truncado $\sigma$ y transformación exponencial.
+%
+El método seleccionado es la transformación lineal, que funciona bien \cite{goldberg}
+si no se tienen valores de aptitud negativos.
+
+\begin{equation}
+    f' = af + b
+\end{equation}
+
+Los coeficientes $a$ y $b$ se eligen de modo tal de que haya unicidad entre el
+puntaje sin modificar y el transformado, otra función es que se asigne un
+puntaje de 2 a los individuos con mayor puntaje, lo que asegura que para
+puntajes medios tengan posibilidades de generar un individuo como descendencia y
+los mejores individuos tengan múltiples "hijos".

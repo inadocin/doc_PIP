@@ -1,31 +1,82 @@
-\documentclass[11pt]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[a4paper,width=170mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
-\usepackage[spanish]{babel}
-\usepackage[T1]{fontenc}
-\usepackage{graphicx}
-\usepackage{longtable}
-\usepackage{amsmath}
-\usepackage{booktabs}
-\usepackage{rotating}
-\usepackage{amssymb}
+\chapter{Flujometrías}
+%
+El simulador ICESym requiere de información sobre el coeficiente de descarga
+(CD) para simular el flujo a través de los puertos, como se mencionó en el
+capítulo \ref{cap:antecedentes} en trabajos anteriores se realizaron
+simulaciones computacionales del motor con valores de Cd estimados
+\cite{lopez13}.
+%
+Para obtener una mejor caracterización del funcionamiento de los puertos de
+admisión y escape es necesario tener mayor conocimiento del Cd para una
+variedad de regímenes de funcionamiento del motor.
+%
+Con esto en mente se realizaron una serie de flujometrías, para obtener un mapa
+de Cd en función de una diferencia de presión y alzada válvula \footnote{ICESym
+utiliza alzada, por lo que se traduce área de pasaje de puerto en alzada de
+válvula equivalente.}, $Cd = f(\delta P,lv)$.
+%
+Este mapa de Cd se usa en ICESym para obtener una simulación más precisa del
+motor.
 
-\addto\captionsspanish{%
-    \def\tablename{Tabla}%
-}
+% \section{Condiciones de contorno}
+% Para determinar las condiciones de contorno se usan los datos 
+% \subsection{Con solape de cámaras}
+% \subsection{Sin solape de cámaras}
 
-\graphicspath{ {figuras/} }
+\section{Modelos de viscosidad}
+%
+% Tengo que decidir que modelo de viscosidad utilizar y dejar explicado por que
+% es k-epsilon
 
-\title{Estudio de convergencia}
-\author{}
-\date{}
+\subsection{k-epsilon}
+\subsubsection{Funciones de pared}
+% \subsection{k-omega}
+
+% \section{Tipos de flujo}
+% \subsection{Flujo compresible}
+% \subsection{Flujo incompresible}
 
 
-\begin{document}
+\section{Coeficiente de descarga ($C_D$)}
 
-\maketitle
+Se parte de la ecuación para flujo compresible a través de una restricción.
 
-\subsection{Introducción}
+Para determinar el $C_D$ se debe conocer
+
+\begin{description}
+    \item[$p_0$] Presión de estancamiento antes de la restricción.
+    \item[$T_0$] Temperatura de estancamiento antes de la restricción.
+    \item[$p_T$] Presión estática justo después de la restricción.
+    \item[$A_R$] Área de referencia.
+    \item[$\dot{m}$] Caudal másico.
+    \item[$\gamma$] Cociente de capacidades térmicas del gas.
+\end{description}
+
+Los valores de presión y temperatura se obtienen de los datos calculados con
+ICESym. De estos valores se calcula el $\gamma$ del gas.
+
+El caudal másico y la velocidad a las entradas y salidas se obtiene con
+OpenFOAM.
+
+Para flujo no bloqueado se utiliza:
+% \begin{math}
+% C_D^{-1} = \frac {A_R p_0} {\dot{m} R T_0^{1/2}}
+%            \left( \frac{p_T} {p_0} \right)^{1/\gamma}
+%            \left{ \frac{2\gamma}{\gamma-1}
+%            \left[1 - \left(\frac{p_T}{p_0}^(\gamma-1/\gamma)\right) \right] \right}^{1/2} 
+% \end{math}
+
+En caso del que el flujo esté bloqueado, es decir
+$p_T/p_0 \le [2/\gamma+1)]^{\gamma/(\gamma - 1)}$
+, la ecuación correspondiente es:
+
+\begin{math}
+C_D^{-1} =  \frac {A_R p_0} {\dot{m} (R T_0)^{1/2}}
+            \gamma^{1/2}
+            \left( \frac{2\gamma}{\gamma+1} \right)^{(\gamma+1)/(2(\gamma-1))}
+\end{math}
+
+\section{Estudio de convergencia de malla}
 
 Un estudio de convergencia de malla es una herramienta para evaluar los errores
 de discretización espacial de un estudio de CFD y consiste básicamente en:
@@ -96,7 +147,7 @@ Hay que distinguir en entre los refinamientos necesarios de flujometrías en
 régimen compresible e incompresible, los casos a tomar como referencia son el
 0, 4 y 5.
 
-\subsubsection{Selección de $h$, $r$ y $f$}
+\subsection{Selección de $h$, $r$ y $f$}
 %
 El procedimiento para generar la malla consiste en crear una malla inicial con
 la utilidad \emph{blockMesh} la cual es un punto de partida de
@@ -148,7 +199,7 @@ másico.
     \label{fig:parches}
 \end{figure}
 
-\subsubsection{Orden de convergencia}
+\subsection{Orden de convergencia}
 %
 El orden de convergencia $p$ indica que tan rápido se acerca una secuencia a un
 límite.
@@ -187,7 +238,7 @@ p = \ln \left( \frac{ f_3 - f_2 } { f_2 - f_1 } \right) / \ln(r)
 \label{eq:ord-conv}
 \end{equation}
 
-\subsubsection{Resultado ''exacto``}
+\subsection{Resultado ''exacto``}
 %
 El resultado de una simulación numérica se puede expresar de forma general
 como:
@@ -203,7 +254,7 @@ independientes $h$, la cantidad $f$ es considerada de segundo orden si $g1 =
 El valor de $f_{h=0}$ es el resultado que tendría la simulación con una malla
 infinitamente fina, $h \rightarrow 0$.
 
-\subsection{Índice de convergencia de malla}
+\section{Índice de convergencia de malla}
 %
 El índice de convergencia de malla o GCI por sus siglas en inglés es una forma
 de reportar los resultados de convergencia de malla, es un indicador de qué tan
@@ -268,13 +319,13 @@ se deberá evaluar si es necesario revisar la hipótesis de flujo incompresible.
     \label{tab:mach}
 \end{table}
 
-\subsection{Caso 0 - 1000rpm}
+\section{Caso 0 - 1000rpm}
 
 El caso simulado tiene solape de cámaras, una a $-10^{\circ}$ y otra a
 $110^{\circ}$, con el motor girando a 1000 RPM.
 %
 El flujo se modela como incompresible\footnote{Ver Tabla \ref{tab:mach}}, la
-geometría del caso y la ubicación de los parches correspondeintes a la cámara
+geometría del caso y la ubicación de los parches correspondientes a la cámara
 0, 1 y a la "boca" del puerto.
 
 \begin{figure}
@@ -307,7 +358,7 @@ geometría del caso y la ubicación de los parches correspondeintes a la cámara
 
 
 En la tabla \ref{tab:res_caso0}se muestran los resultados de 3 pasos de
-refinamiento. TENGO QUE REHACER TODOS EN REGIMEN COMPRESIBLE
+refinamiento. TENGO QUE REHACER TODOS EN RÉGIMEN COMPRESIBLE
 
 \begin{table}
     \centering
@@ -321,7 +372,7 @@ refinamiento. TENGO QUE REHACER TODOS EN REGIMEN COMPRESIBLE
     \label{tab:res_caso0}
 \end{table}
 
-Con estos datos se puede calcular el orden de convergncia y el resultado
+Con estos datos se puede calcular el orden de convergencia y el resultado
 extrapolado a $h=0$.
 
 \begin{table}
@@ -335,7 +386,7 @@ extrapolado a $h=0$.
     \label{tab:res1_caso0}
 \end{table}
 
-Y con el orden de convegencia se pueden calcular los valores de GCI.
+Y con el orden de convergencia se pueden calcular los valores de GCI.
 
 \begin{table}
     \centering
@@ -363,17 +414,17 @@ másicos de ambas cámaras se encuentran en rango de convergencia asintótica.
 \end{table}
 
 
-\subsection{Caso 0 - 7000 rpm}
+\section{Caso 0 - 7000 rpm}
 
-\subsection{Caso 4 - 7000 rpm}
+\section{Caso 4 - 7000 rpm}
 
-\subsection{Caso 5 - 1000rpm}
+\section{Caso 5 - 1000rpm}
 
 El caso simulado tiene una sola cámara a $100^{\circ}$ del ciclo, con el motor
 girando a 1000 RPM.
 %
 El flujo se modela como incompresible\footnote{Ver Tabla \ref{tab:mach}}, la
-geometría del caso y la ubicación de los parches correspondeintes a la cámara
+geometría del caso y la ubicación de los parches correspondientes a la cámara
 0, 1 y a la "boca" del puerto.
 
 \begin{figure}
@@ -416,7 +467,7 @@ refinamiento.
     \label{tab:res_caso5}
 \end{table}
 
-Con estos datos se puede calcular el orden de convergncia y el resultado
+Con estos datos se puede calcular el orden de convergencia y el resultado
 extrapolado a $h=0$.
 
 \begin{table}[h]
@@ -430,7 +481,7 @@ extrapolado a $h=0$.
     \label{tab:res1_caso5}
 \end{table}
 
-Y con el orden de convegencia se pueden calcular los valores de GCI.
+Y con el orden de convergencia se pueden calcular los valores de GCI.
 
 \begin{table}
     \centering
@@ -443,10 +494,6 @@ Y con el orden de convegencia se pueden calcular los valores de GCI.
     \label{tab:gci_caso_5}
 \end{table}
 
-Con estos resultados se verifica que se esté en rango de convergencia
-asintótica, como se indica en la Tabla \ref{tab:rac_caso_5}, los flujos
-másicos de ambas cámaras se encuentran en rango de convergencia asintótica.
-
 \begin{table}
     \centering
     \begin{tabular}{rccc}\toprule
@@ -457,8 +504,12 @@ másicos de ambas cámaras se encuentran en rango de convergencia asintótica.
     \label{tab:rac_caso_5}
 \end{table}
 
-\subsection{Caso 5 - 7000rpm}
+Con estos resultados se verifica que se esté en rango de convergencia
+asintótica, como se indica en la Tabla \ref{tab:rac_caso_5}, los flujos
+másicos de ambas cámaras se encuentran en rango de convergencia asintótica.
 
-\subsection{Resultado final}
+\section{Caso 5 - 7000rpm}
 
-\end{document}
+\section{Resultado final}
+
+

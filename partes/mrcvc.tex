@@ -1,0 +1,120 @@
+\chapter{MRCVC}
+
+\section{Simulación computacional del ciclo termodinámico MRCVC}
+
+\section{ICESym}
+%
+ICESym \cite{icesym} es un simulador de motores de combustión interna
+desarrollado en conjunto por la UNCo y UNL, utiliza modelos unidimensionales
+para simular el flujo en los conductos de admisión y escape y modelos cero
+dimensionales para el resto de los componentes.
+%
+El simulador incluye un modelo para el solape entre cámaras \cite{lopez16} y
+modificaciones particulares al MRCVC, para este trabajo en particular  y con el
+fin de obtener una mapa del coeficiente de descarga, se ha agregando la
+diferencia de presión entre cámara y puerto como variable de modo que $Cd =
+f(L_v, \delta P)$.
+
+La combustión se realiza a volumen constante, por lo que es de esperarse
+mayores rendimientos de conversión de combustible en relación a motores en los
+que la combustión no se realiza a volumen constante.
+% hace falta mostrar que esto es así? poner algún gráfico del heywood o cosas
+% por el estilo. puedo citar el heywood?
+
+El indicador que se tomará como referencia para evaluar y comparar diferentes
+geometrías es el rendimiento volumétrico ($\eta_v$), este parámetro se define
+como:
+
+\begin{equation}
+    \eta_v = \frac{m_a}{\rho_{a,i}V_d}
+\end{equation}
+
+Dónde:
+%
+\begin{description}
+    %
+    \item[$m_i$] es la masa de mezcla fresca inductada
+        %
+    \item[$\rho_{a,i}$] es la densidad del aire en el puerto de admisión
+        %
+    \item[$V_d$] es el volumen desplazado
+        %
+\end{description}
+
+El rendimiento volumétrico tiene una dependencia compleja de varios factores,
+este parámetro es el que da forma a las curvas de \emph{performance} que se
+suelen ver en literatura ya que indica la cantidad de mezcla fresca disponible
+para la combustión. 
+%
+En en caso de motores de inyección directa (tanto de CI SI)
+
+\section{Sistemas de intercambio de gases}
+%
+\subsection{Área de referencia}
+%
+El área de referencia utilizada por ICESym es el área de cortina.
+
+$$ A_R = A_C = \pi D_v L_v $$
+
+\subsection{Solape de cámaras}
+%
+Tanto al inicio como al cierre del puerto se ve solape de cámaras, por lo que
+en estos intervalos angulares hay un valor de $C_D$ para cada cámara.
+
+\section{CAD}
+%
+El modelo 3D de los puertos de admisión, escape y los componentes internos del
+motor que afectan el flujo y son relevantes a la flujometría se realizaron con
+FreeCAD\cite{freecad} para generar un archivo en formato $.BREP$ y luego
+salome\cite{salome} para obtener un archivo .stl "cerrado" en formato ASCII
+
+Dada la cantidad de geometrías posibles y el tiempo que toma el proceso, se
+realizaron algunas simplificaciones
+
+\section{Geometría}
+%
+El puerto se hace recto, igual se podría hacer una entrada más suave.
+
+La altura de la ranura se adopta en 2/3 del alto de la cámara, siendo $h_c=0.0441\ mm$
+
+El eje del puerto se hace perpendicular a una línea que pasa entre el centro
+del motor y el la línea media del puerto.
+
+% En este capítulo describo como es el procedimiento realizado en cada paso de
+% la optimización:
+
+% -> optimización algoritmo genético y simulación con icesym, tendría que
+%    explicar como funciona icesym y el optimizador
+% -> freecad + salome
+% -> openfoam
+\section{Metodología}
+%
+Se simulará un MRCVC de 3 paletas usando el simulador de motores de combustión
+interna ICESym \cite{icesym} con el propósito de obtener curvas de rendimiento
+volumétrico.
+%
+Estas serán el principal criterio para evaluar el diseño de los sistemas de
+intercambio de gases, que consisten de los puertos y conductos de admisión y
+escape.
+%
+La geometría se optimizará mediante un algoritmo genético, el cual transforma
+los datos de rendimiento volumétrico en un puntaje representativo de cada
+motor.
+
+
+La simulación con ICESym requiere del conocimiento previo de los coeficientes
+de descarga de los puertos los cuales inicialmente serán estimados para poder
+realizar la primer iteración con el simulador.
+%
+Se utilizará la geometría obtenida en esta primer iteración para crear modelos
+en CAD de los puertos de admisión y escape para realizar flujometrías virtuales
+y así poder obtener los coeficientes de descarga de cada puerto en distintos
+grados de apertura.
+
+
+
+
+
+
+\section{Retroalimentación}
+

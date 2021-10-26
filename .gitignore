@@ -1,4 +1,11 @@
 *.aux
+*.fls
+*.gz
+*.fdb_latexmk
+*.bak
+*.svg
+*.org
+*.png~
 *.log
 *.blg
 *.bbl

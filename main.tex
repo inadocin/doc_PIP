@@ -2,30 +2,39 @@
 % Paquetes y configuracion
 % -----------------------------------------------------------------------------
 \documentclass[11pt,twoside]{report}
-\usepackage[utf8]{inputenc}
-\usepackage[spanish]{babel}
+% \usepackage{fancyhdr}
 \usepackage[a4paper,width=170mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
-\usepackage{fancyhdr}
+\usepackage[acronym]{glossaries}
 \usepackage[backend=biber]{biblatex}  % bibliografia
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
 \usepackage{csquotes}
 \usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{rotating}
 
-\usepackage{longtable}  % required by gloassaries package?
-\usepackage[acronym]{glossaries} % nomenclatura y abreviaciones
 \include{partes/glosarios}  % esto esta mejor si lo pongo en cada entrada de texto
+
 \makeglossaries
+
+\addto\captionsspanish{%
+    \def\tablename{Tabla}%
+}
 
 \graphicspath{ {figuras/} }
 \addbibresource{bib.bib}
 
 \pagenumbering{roman}
 
-\fancyhead{}
-\fancyhead[RO,LE]{Proyecto Integrador Profesional}
-\fancyfoot{}
-\fancyfoot[LE,RO]{\thepage}
-\fancyfoot[LO,CE]{Capítulo \thechapter}
-\fancyfoot[CO,RE]{Nicolás Daniel Barrios}
+% \fancyhead{}
+% \fancyhead[RO,LE]{Proyecto Integrador Profesional}
+% \fancyfoot{}
+% \fancyfoot[LE,RO]{\thepage}
+% \fancyfoot[LO,CE]{Capítulo \thechapter}
+% \fancyfoot[CO,RE]{Nicolás Daniel Barrios}
 
 % -----------------------------------------------------------------------------
 % Documento
@@ -47,11 +56,13 @@
 \pagenumbering{arabic}
 \include{partes/introduccion}
 \include{partes/antecedentes}
-\include{partes/analisis_del_problema}
+\include{partes/mrcvc}
+\include{partes/genetico}
+\include{partes/flujometrias}
 \include{partes/resultados}
 \include{partes/conclusiones}
 
 % -- Finales
 \printbibliography
-\include{partes/apendices}
+% \include{partes/apendices}
 \end{document}
