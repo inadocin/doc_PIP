@@ -71,11 +71,12 @@ utilizar para todos los casos.
 
 % Se utilizará el mismo paso tempral en todos los refinamientos.
 
-\begin{sidewaysfigure}
+\begin{figure}
+    \centering
     \includegraphics[width=1\textwidth]{flujometrias_admision.png}
     \caption{Flujometrías para el puerto de admisión}
     \label{fig:flujometrias}
-\end{sidewaysfigure}
+\end{figure}
 
 \begin{table}
     \centering
@@ -119,7 +120,7 @@ Se realizarán refinamientos con mallas de $11.25mm \rightarrow 7.5mm
 \end{equation}
 
 
-\begin{figure}[h]
+\begin{figure}
     \centering
     \includegraphics{celdas_block_mesh.png}
     \caption{Refinamiento con $r=2$}
@@ -141,7 +142,7 @@ En caso de flujo presente un $Ma < 0.3$, el \emph{solver} a utilizar devuelve
 el flujo volumétrico, por lo que se usa este como indicador en lugar del flujo
 másico.
 
-\begin{figure}[ht]
+\begin{figure}
     \centering
     \includegraphics[width=0.4\textwidth]{nombres-parches.png}
     \caption{Vista superior del volumen de control}

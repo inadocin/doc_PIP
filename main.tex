@@ -8,24 +8,23 @@
 \usepackage{luacode}
 \usepackage{pgfplots}
 \usepackage[a4paper,width=170mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
-\usepackage[acronym]{glossaries}
-\usepackage[backend=biber]{biblatex}  % bibliografia
+% \usepackage[acronym]{glossaries}
+\usepackage[backend=biber]{biblatex}
 % \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage{csquotes}
 \usepackage{graphicx}
-\usepackage{longtable}
-\usepackage{rotating}
-\usepackage{minted}
-\usepackage{verbatimbox}
-\usepackage{algorithm}
-\usepackage{algpseudocode}
+% \usepackage{longtable}
+% \usepackage{rotating}
+% \usepackage{verbatimbox}
+\usepackage[spanish,onelanguage]{algorithm2e}
+% \usepackage{algpseudocode}
+\usepackage[bookmarks]{hyperref}
 
-\include{partes/glosarios}  % esto esta mejor si lo pongo en cada entrada de texto
-
-\makeglossaries
+% \include{partes/glosarios}  % esto esta mejor si lo pongo en cada entrada de texto
+% \makeglossaries
 
 \addto\captionsspanish{%
     \def\tablename{Tabla}%
@@ -57,8 +56,8 @@
 \tableofcontents
 \listoffigures
 \listoftables
-\printglossary[type=\acronymtype,title=Abreviaciones]
-\printglossary[title=Nomenclatura]
+% \printglossary[type=\acronymtype,title=Abreviaciones]
+% \printglossary[title=Nomenclatura]
 
 % -- Cuerpo del texto
 \pagenumbering{arabic}

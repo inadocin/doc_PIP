@@ -2,22 +2,26 @@
 
 \section{Simulación computacional del ciclo termodinámico MRCVC}
 
-\section{ICESym}
+% \section{ICESym}
 %
-ICESym \cite{icesym} es un simulador de motores de combustión interna
-desarrollado en conjunto por la UNCo y UNL, utiliza modelos unidimensionales
-para simular el flujo en los conductos de admisión y escape y modelos cero
-dimensionales para el resto de los componentes.
+Para simular el ciclo operativo del motor, se utilizó el simulador de motores
+de combustión interna ICESym \cite{icesym},
+desarrollado en conjunto por la UNCo y UNL.
 %
-El simulador incluye un modelo para el solape entre cámaras \cite{lopez16} y
-modificaciones particulares al MRCVC, para este trabajo en particular  y con el
-fin de obtener una mapa del coeficiente de descarga, se ha agregando la
-diferencia de presión entre cámara y puerto como variable de modo que $Cd =
-f(L_v, \delta P)$.
+Este simulador utiliza modelos unidimensionales para simular el flujo en los
+conductos de admisión y escape y modelos cero dimensionales para el resto de
+los componentes.
+%
+Incluye un modelo para el solape entre cámaras \cite{lopez16} y modificaciones
+particulares al MRCVC, para este trabajo en particular  y con el fin de obtener
+una mapa del coeficiente de descarga, se ha agregando la diferencia de presión
+entre cámara y puerto como variable de modo que $Cd = f(L_v, \delta P)$.
 
-La combustión se realiza a volumen constante, por lo que es de esperarse
-mayores rendimientos de conversión de combustible en relación a motores en los
-que la combustión no se realiza a volumen constante.
+\subsection{Ciclo operativo}
+% La combustión se realiza a volumen constante, por lo que es de esperarse
+% mayores rendimientos de conversión de combustible en relación a motores en los
+% que la combustión no se realiza a volumen constante.
+
 % hace falta mostrar que esto es así? poner algún gráfico del heywood o cosas
 % por el estilo. puedo citar el heywood?
 
@@ -126,8 +130,13 @@ lugar.
     \item La combustión es estequeométrica con $a_weibe=5$ y $m_weibe=2$
     \item El modelo de combustión es 1
     \item scavange = 0
-    \item el combustible utilizado tiene estas caracteristicas "y": 2.25, "hvap_fuel": 0.01, "Q_fuel": 44000000.0, supongo que es isooctano, revisar.
-
+    \item El combustible utilizado es \emph{isooctano} y tiene estas
+        caracteristicas 
+        \begin{itemize}
+            \item $y = 2.25$
+            \item $H_{vap} = 2.25 MJ/kg$
+            \item $Q_{fuel} = 44 MJ/kg_f$
+        \end{itemize}
 \end{enumerate}
 
 \section{Dudas}

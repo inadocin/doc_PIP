@@ -21,5 +21,6 @@
 *.nls
 *.nlo
 *.bcf
+*.out
 main-blx.bib
 
