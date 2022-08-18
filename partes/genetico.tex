@@ -1,133 +1,68 @@
 \chapter{Algoritmo Genético}
+
 \section{Introducción}
-%%
-%Se seleccionó un algoritmo genético para realizar la optimziación de la
-%geometría del MRCVC por la simplicidad y facilidad de implementación.
-%%
-%Este método de optimización es de los llamados \emph{sin grediente} ya que no
-%requieren información del gradiente de la función que se está estudiando.
-
-%Los métodos que utilizan información sobre el gradiente de una función en un
-%punto suelen ser muy eficientes si el espacio solución es diferenciable en todo
-%el dominio, una desventaja de estos métdos es que pueden ser suceptibles a
-%óptimos locales.
-%%
-%Por este motivo si la función a evaluar tiene muchos máximos/mínimos locales,
-%el proceso de solución puede ser sensible al valor inicial utilizado.
-
-%La relación entre el rendimiento volumétrico y los parámetros libres (diámetro
-%y longitudes de tubos de admisión y escape, ángulos de apertura y cierre de los
-%puertos) puede ser compleja con una variedad de óptimos locales,
-
-%En casos en que no se puede asegurar que la función a estudiar sea
-%diferenciable o que haya una gran cantidad de óptimos locales se vuelven
-%atractivos los algoritmos genéticos.
-%%
-%Son básicamente métodos de búsqueda aleatoria que aprovechan la información de
-%iteraciones previas para determinar la composición futura de la población.
-%%
-%Representan individuos como un conjunto de númreos que indican características
-%particualres.
-%%
-%Se parte generalmente de una población o conjunto de individuos generados al
-%azar, motivo por el cual estos algoritmos no son suceptibles a caer en una
-%solución óptima a nivel local.
-
-%Una ventaja importatnte de este método es que no es necesario hacer ninguna
-%hipótesis sobre la diferenciabilidad o continuidad del dominio que se está
-%estudiand, basta con poder evaluar la función para obtener un valor de aptitud.
-
-
-%Para realizar la optimización de la geometría flujada se utiliza un algoritmo
-%genético con una población de $N$ motores, los cuales se representan por una
-%lista de $k$ números asociados a características geométricas de los sistemas de
-%intercambio de gases, concreto cada motor se representa por:
-
-%\begin{verbatim}
-%[dta dte lta lte iia ifa eia efa]
-%\end{verbatim}
-
-
-%\subsection{Creación de la población}
-%\subsection{Selección}
-%\subsection{Cruza}
-%\subsection{Mutación}
-%\subsection{Nueva población}
-
-%
 Se seleccionó un algoritmo genético para realizar la optimización de la
 geometría del MRCVC por la simplicidad y facilidad de implementación.
 %
 Si bien estos métodos no garantizan que se alcance un resultado óptimo, en la
 práctica\cite{goldberg}\cite{shi} se ha observado que alcanzan soluciones muy
-cercanas a las óptimas tras algunas iteraciones del método.
+cercanas a las óptimas tras pocas iteraciones del método.
 %
-Este método de optimización no requiere información del gradiente de la función
-que se está estudiando, esto es útil cuando no se puede asegurar la que existe
-la derivada de la función en todo el dominio o cuando se tiene una función con
-más de un máximo o mínimo local.
+Una de las ventajas de este método es que no requiere información del gradiente
+de la función que se está evaluando, lo cual es útil cuando no se puede asegurar
+la existencia de la derivada de la función en todo el dominio ó cuando se tiene
+una función con más de un máximo o mínimo local.
 %
-
-% Los métodos que utilizan información sobre el gradiente de una función en un
-% punto suelen ser muy eficientes si el espacio solución es diferenciable en
-% todo el dominio, una desventaja de estos métdos es que pueden ser suceptibles
-% a óptimos locales.
+Además, el punto de partida de la optimización es una población generada al
+azar, de modo que se tiene un muestreo aleatorio del dominio que se está
+evaluando.
 %
-% Por este motivo si la función a evaluar tiene muchos máximos/mínimos locales,
-% el proceso de solución puede ser sensible al valor inicial utilizado.
+Esto hace que el método sea poco susceptible a caer en un óptimo local.
 
-% La relación entre el rendimiento volumétrico y los parámetros libres
-% (diámetro y longitudes de tubos de admisión y escape, ángulos de apertura y
-% cierre de los puertos) puede ser compleja con una variedad de óptimos
-% locales,
 
-En casos en que no se puede asegurar que la función a estudiar sea
-diferenciable o que haya una gran cantidad de óptimos locales se vuelven
-atractivos los algoritmos genéticos.
+
+Se puede decir que un algoritmo genético es un método de búsqueda aleatoria guiada.
 %
-Son básicamente métodos de búsqueda aleatoria que aprovechan la información de
-iteraciones previas para determinar la composición futura de la población,
-representando individuos como un conjunto de números que indican
-características particulares.
+De manera resumida, estos algoritmos son básicamente métodos de búsqueda
+aleatoria que aprovechan la información de iteraciones previas para determinar
+la composición futura de la población, representando individuos como un conjunto
+de escalares que indican características particulares.
 %
-Se parte generalmente de una población o conjunto de individuos generados al
-azar, motivo por el cual estos algoritmos no son susceptibles a caer en una
-solución óptima a nivel local.
-
-
-Es probable que no se alcance el óptimo, sin embargo se busca que la solución
-encontrada sea la mejor de las evaluadas y que en la cantidad se obtenga una
-solución satisfactoria.
-
+Si bien es probable que no se alcance el óptimo, el método alcanza una solución satisfactoria en un tiempo relativamente corto.
 
 ¿Cómo difieren los AG de los métodos tradicionales de búsqueda?
 %
 \begin{enumerate}
     %
-    \item "GA work with a coding of the parameter set, no the parameters
-        themselves".
+  \item Los AG trabajan sobre una representación de las variables estudiadas y no necesariamente sobre las variables de estudio.
+        % Por ejemplo una una representación binaria de conjunto de decimales.
     %
-    \item Trabajan con una población de puntos de datos, no con un solo punto.
+    \item Trabajan con un conjunto de datos, no con un solo punto.
     %
-    \item Los AG funcionan con una función objetivo, no con derivadas u otra
-        información.
+    \item Utilizan una función objetivo para evaluar cada punto de datos, sin necesidad de conocer la derivada de la función que se está evaluando.
     %
     \item Los AG usan reglas probabilísticas, no deterministas.
     %
 \end{enumerate}
 
-Los AG requieren que las variables del problema estén expresadas en forma de
-coordenadas $(x_1, x_2, x_3, ..., x_n)$.
+% Los AG requieren que las variables del problema estén expresadas en forma de
+% coordenadas $(x_1, x_2, x_3, ..., x_n)$.
 
 Otros métodos de optimización se mueven de un punto al siguiente en el espacio
 solución, basándose en alguna regla de decisión, esto puede ser riesgo porque
 se puede caer en un óptimo local.
 
-Al buscar varios puntos por iteración, por lo que la probabilidad de caer en 
-un óptimo local se ve reducida.
+El proceso de optimización se puede resumir en:
+
+Crear una población al azar
+generación actual < total generaciones do
+evaluar la población
+Seleccionar los individuos que formarán la próxima generación
+Cruzar los candidatos seleccioados y crear la nueva población
+Mutar a los individuos de la nueva población
 
 
-\section{Un algoritmo genético sencillo}
+\section{Componentes básicos}
 %
 Un AG se puede construir con 3 operadores básicos:
 \begin{enumerate}
@@ -182,6 +117,8 @@ implícito.
 
 \section{Implementación}
 %
+Se utilizó como punto de partida la librería DEAP \cite{DEAP_JMLR2012}.
+
 \subsection{Población}
 %
 El tamaño de la población se elige arbitrariamente en $N=100$ individuos, los
@@ -225,8 +162,8 @@ Para seleccionar la población se utilizó
 \subsection{Reproducción}
 
 Para crear la nueva población se debe elegir a los nuevos candidatos basándose
-en los puntajes de candidatos previos, esto se implementó de la siguiente
-manera:
+en los puntajes de candidatos previos con un método de selección de tipo
+torneo, (iba por aca)
 
 \subsection{Cruza}
 %
@@ -254,12 +191,12 @@ figura (falta).
 Este comportamiento aserrado es poco deseable, por lo que se modificó la
 función para conseguir una curva de rendimiento volumétrico suave.
 %
-Además se implementó una suma ponderada, para obtener un rendimiento volumétrico
-máximo en un valor arbitrario de 5000 RPM.
+Además se implementó una suma ponderada, para obtener un rendimiento
+volumétrico máximo en un valor arbitrario de 5000 RPM.
 
-Para prevenir el comportamiento aserrado se introdujo un sistema de penalidades,
-que resta puntaje si la derivada de la función se modifica
-de una velocidad a otra.
+Para prevenir el comportamiento aserrado se introdujo un sistema de
+penalidades, que resta puntaje si la derivada de la función se modifica de una
+velocidad a otra.
 
 
 Otro tema a tener en cuenta es la convergencia prematura del algoritmo que es
@@ -270,8 +207,8 @@ Para evitar esto se realiza un cambio de escala puntaje de todos los
 individuos, alguno de los métodos utilizados son: transformación lineal,
 truncado $\sigma$ y transformación exponencial.
 %
-El método seleccionado es la transformación lineal, que funciona bien \cite{goldberg}
-si no se tienen valores de aptitud negativos.
+El método seleccionado es la transformación lineal, que funciona bien
+\cite{goldberg} si no se tienen valores de aptitud negativos.
 
 \begin{equation}
     f' = af + b
@@ -282,3 +219,212 @@ puntaje sin modificar y el transformado, otra función es que se asigne un
 puntaje de 2 a los individuos con mayor puntaje, lo que asegura que para
 puntajes medios tengan posibilidades de generar un individuo como descendencia y
 los mejores individuos tengan múltiples "hijos".
+
+\section{Implementación}
+
+
+\subsection{Representación de los individuos}
+
+Para representar a cada individuo se utilizan 8 características geométricas:
+
+\begin{enumerate}
+    \item [DTA] Diámetro de tubo de admisión.
+    \item [DTE] Diámetro de tubo de escape.
+    \item [LIT] Largo de tubo de admisión.
+    \item [LET] Largo de tubo de escape.
+    \item [IIA] Ángulo geométrico de apertura de puerto de admisión.
+    \item [IFA] Ángulo geométrico de cierre de puerto de admisión.
+    \item [IIE] Ángulo geométrico de apertura de puerto de escape.
+    \item [IFE] Ángulo geométrico de cierre de puerto de escape.
+\end{enumerate}
+
+Cada variable se representa como un número binario de 5 dígitos, los cuales se
+concatenan para formar un conjunto de 40 dígitos.
+%
+Con esto se genera la población a simular, con lo que queda algo como esto, cada
+motor queda de la forma:
+
+\begin{equation}
+  0011001110110010001100110010011010100110 \nonumber
+\end{equation}
+
+El orden de los mismos se mantiene constante, por lo que cada sección del número
+representa una característica en particular del motor, de modo que:
+
+\begin{equation}
+    INDIVIDUO = (DTA, DTE, LIT, LET, IIA, IFA, EIA, EFA) \nonumber
+\end{equation}
+
+Este número luego se convierte a decimales y se mapea a la lista que se utiliza
+para generar el archivo de configuración para ICESym.
+%
+\begin{minted}{python}
+def map_to_engine(num, bin_len):
+    t = utils.separate_list(num, bin_len)
+    dta = (d_coeff[0]*utils.bin2dec(t[0]) + d_coeff[1]) * 0.001
+    dte = (d_coeff[0]*utils.bin2dec(t[1]) + d_coeff[1]) * 0.001
+    lit = (l_coeff[0]*utils.bin2dec(t[2]) + l_coeff[1]) * 0.001
+    let = (l_coeff[0]*utils.bin2dec(t[3]) + l_coeff[1]) * 0.001
+
+    iia = a_coeff[0]*utils.bin2dec(t[4]) + a_coeff[1]
+    ifa = a_coeff[0]*utils.bin2dec(t[5]) + a_coeff[1]
+    eia = a_coeff[0]*utils.bin2dec(t[6]) + a_coeff[1]
+    efa = a_coeff[0]*utils.bin2dec(t[7]) + a_coeff[1]
+    ind = (dta, dte, lit, let, iia, ifa, eia, efa)
+    return ind
+\end{minted}
+
+% NOTA: antes de esto tendría que explicar como funciona icesym y como
+interactúa mi programa.  Con esta lista de decimales luego se generan los
+archivos de alzada que representan la apertura de la válvula, la misma es una
+alzada ficticia que se utiliza para calcular el área de referencia de puerto.
+
+\begin{equation}
+  A_{C} = \pi \cdot D_{v}\cdot l_{v}
+\end{equation}
+
+El área de referencia utilizada por ICESym es el área de cortina, esquematizada
+en la figura \ref{fig:area_cortina}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{valve_curtain.jpg}
+  \caption{Área de cortina}
+  \label{fig:area_cortina}
+\end{figure}
+
+Con la población definida se procede a los evaluar cada motor con la función
+objetivo, la cual se definió de manera tal de favorecer curvas de rendimiento
+volumétrico suaves y valores altos a mayores RPM.
+
+La suavidad de la curva de rendimiento volumétrico se calcula midiendo los
+cambios de pendiente de la derivada la cual se aproxima con la fórmula de
+diferencia progresiva \ref{eq:derivada}.
+%
+Solamente interesa el signo, por lo que el valor de $h$ en el denominador no
+interesa y se hace 1, con esto la función objetivo queda como el algoritmo
+\ref{alg:funcObj}.
+
+\begin{equation}
+  f' = \frac{f(i+1) - u(i)}{h}
+  \label{eq:derivada}
+\end{equation}
+
+
+\begin{algorithm}
+\caption{Calculo del puntaje de una curva de rendimiento volumétrico [r], con N valores y [w] pesos}\label{alg:funcObj}
+\begin{algorithmic}[1]
+\Procedure{Función Objetivo}{$r,w,N$}
+  \State $d\gets 0$\Comment{Aproximación a la derivada de r}
+  \State $p\gets 0$\Comment{Penalidad}
+  \State $N\gets length(r)$\Comment{Penalidad}
+
+  % Aprox de la derivada
+  \For{$i=1:N$}
+    \State $d[i]\gets r[i+1]-r[i]$
+  \EndFor
+
+  % Calculo de la penalidad
+  \For{$i=1:N-1$}
+    \If{$d[i] \cdot d[i+1] < 0$}
+      \State $p\gets p + 1$
+    \EndIf
+  \EndFor
+  \State $p \gets 1 - \frac{p}{N-1}$
+
+  % Puntaje bruto
+  \State $w \gets 0$\Comment{Puntaje sin penalizar}
+  \For{$i=1:N$}
+    \State $w \gets r[i] \cdot w[i]$
+  \EndFor
+
+  % Puntaje con penalidad
+  \State $s \gets w \cdot p$
+  \State \textbf{return} $s$\Comment{s es el puntaje de la curva de rendimiento volumétrico}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+El conjunto de pesos utilizados para ponderar los rendimientos es el indicado en la tabla \ref{tab:pesos}
+\begin{table}
+  \centering
+  \begin{tabular}{rccccccccc}
+    RPM  & 1000 & 2000 & 3000 & 4000 & 5000 & 6000 & 7000 & 8000 & 9000 \\
+    PESO & 1    & 1    & 1    & 6    & 8    & 9    & 8    & 7    & 7 \\
+  \end{tabular}
+  \caption{Pesos}
+  \label{tab:pesos}
+\end{table}
+
+
+Una vez evaluados todos los motores de la población, se debe seleccionar los
+individuos que forman la población para la siguiente iteración.
+%
+El método de selección es de tipo TORNEO, en el cual se seleccionan los mejores
+$k$ individuos de un grupo al azar de $N$ candidatos.
+%
+
+Con los nuevos candidatos seleccionados, se procede a variar la población,
+realizando la cruza y mutación.
+
+luego se toman pares de individuos y de acuerdo a la probabilidad de cruza, se
+combinan con el método seleccionado.
+
+Finalmente se realiza una segunda iteración sobre la nueva población, aplicando
+el método de mutación a cada individuo, de acuerdo a la probabilidad de mutación
+indicada.
+
+
+El método de cruza seleccionado es \emph{cruza de dos puntos}, en este método se
+corta el vector que forma al individuo en dos puntos, la posición de estos
+puntos se selecciona al azar, manteniendo el largo original de los vectores.
+%
+Luego los individuos ``cruzados'' se combinan de forma complementaria, como en
+la figura \ref{fig:cr2puntos}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{cruza2puntos.png}
+  \caption{Cruza de dos puntos}
+  \label{fig:cr2puntos}
+\end{figure}
+
+\begin{algorithm}
+\caption{Cruza de dos punos}\label{alg:c2puntos}
+\begin{algorithmic}[1]
+\Procedure{Cruza}{$a,b,n$}
+
+  \State $i\gets random(1:n)$
+  \State $j\gets random(1:n)$
+
+  % Aprox de la derivada
+  \For{$i=1:N$}
+    \State $d[i]\gets r[i+1]-r[i]$
+  \EndFor
+
+  % Calculo de la penalidad
+  \For{$i=1:N-1$}
+    \If{$d[i] \cdot d[i+1] < 0$}
+      \State $p\gets p + 1$
+    \EndIf
+  \EndFor
+  \State $p \gets 1 - \frac{p}{N-1}$
+
+  % Puntaje bruto
+  \State $w \gets 0$\Comment{Puntaje sin penalizar}
+  \For{$i=1:N$}
+    \State $w \gets r[i] \cdot w[i]$
+  \EndFor
+
+  % Puntaje con penalidad
+  \State $s \gets w \cdot p$
+  \State \textbf{return} $s$\Comment{s es el puntaje de la curva de rendimiento volumétrico}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+El método de mutación seleccioand es mutShuffleIndexes (también podria se
+mutFlipBit), en el cual se modifica el orden los números que componen al vector,
+dando lugar a por ejemplo:
+
+(figura con ejemplo)

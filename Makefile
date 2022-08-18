@@ -1,6 +1,6 @@
 MAIN=main
 # TEX=pdflatex
-TEX=latexmk -pdf
+TEX=latexmk -pdflatex=lualatex -pdf --shell-escape
 BIBTEX=biber
 NOMENCL=makeindex
 BUILDTEX=$(TEX) $(MAIN).tex

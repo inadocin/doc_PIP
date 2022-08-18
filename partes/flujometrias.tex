@@ -1,8 +1,8 @@
 \chapter{Flujometrías}
 %
 El simulador ICESym requiere de información sobre el coeficiente de descarga
-(CD) para simular el flujo a través de los puertos, como se mencionó en el
-capítulo \ref{cap:antecedentes} en trabajos anteriores se realizaron
+(Cd) para simular el flujo a través de los puertos, como se mencionó en el
+capítulo \ref{cap:antecedentes}, en trabajos anteriores se realizaron
 simulaciones computacionales del motor con valores de Cd estimados
 \cite{lopez13}.
 %
@@ -10,14 +10,19 @@ Para obtener una mejor caracterización del funcionamiento de los puertos de
 admisión y escape es necesario tener mayor conocimiento del Cd para una
 variedad de regímenes de funcionamiento del motor.
 %
-Con esto en mente se realizaron una serie de flujometrías, para obtener un mapa
-de Cd en función de una diferencia de presión y alzada válvula \footnote{ICESym
+Con esto en mente se realizaron una serie de flujometrías para obtener un mapa
+de Cd en función de: una diferencia de presión y alzada válvula \footnote{ICESym
 utiliza alzada, por lo que se traduce área de pasaje de puerto en alzada de
 válvula equivalente.}, $Cd = f(\delta P,lv)$.
 %
 Este mapa de Cd se usa en ICESym para obtener una simulación más precisa del
 motor.
 
+% Se realizarán las flujometrías utilizando el \emph{software} libre OpenFoam,
+% utilizando el solver \emph{pimleFoam} cuando el flujo se pueda asumir como
+% incompresible ($Ma < 0.3$) y \emph{rhoPimpleFoam} para flujo compresible.
+%
+% Con un modelo de turbulencia \emph{k-epsilon}
 % \section{Condiciones de contorno}
 % Para determinar las condiciones de contorno se usan los datos 
 % \subsection{Con solape de cámaras}
@@ -28,20 +33,92 @@ motor.
 % Tengo que decidir que modelo de viscosidad utilizar y dejar explicado por que
 % es k-epsilon
 
-\subsection{k-epsilon}
-\subsubsection{Funciones de pared}
+
+De los modelos de dos ecuaciones, el \emph{k-epsilon} es el más utilizado
+de los modelos de turbulencia, anda bien para números de Reynolds bajos y
+diferencias de presión relativamente bajas.
+%
+El modelo requiere que se aproximen los valores iniciales de $\kappa$ y
+$\epsilon$, que a su vez requieren de una estimación de la longitud de mezcla o
+escala de la viscosidad $l_m$.
+%
+Los valores iniciales se calculan a partir de:
+
+
+\begin{align}
+    %
+    C_{\mu}  &= 0.09 \\
+    %
+    I        &= 0.05 \\
+    %
+    L_m      &= 0.07 \cdot D_m \\
+    %
+    \kappa   &= 1.5 \cdot \left( u_{ref} \cdot I \right) ^ 2 \\
+    %
+    \epsilon &= \frac{C_\mu ^{3/4} \cdot \kappa ^{3/2}} {L_m}
+    %
+\end{align}
+
+Dónde:
+%
+\begin{description}
+    \item[$C_{\mu}$] es un coeficiente del modelo
+        %
+    \item[I] es la intensidad de turbulencia estimada, en este trabajo se utilizó 0.05.
+        %
+    \item[$l_m$] es la longitud de mezcla o escala de viscosidad, para flujos
+        internos se suele usar el diámetro hidráulico de la cañería.
+        %
+    \item[$\kappa$] es la energía cinética turbulenta
+        %
+    \item[$\epsilon$] es la disipación de energía cinética turbulenta
+        %
+\end{description}
+
+La aproximación de $l_m = D_h$ viene dada porque la longitud de mezcla, que
+determina el tamaño que pueden tener los \emph{eddys} turbulentos, para las
+flujometrías de los puertos se utilizo inicialmente el diámetro de la entrada
+al puerto, en el extremo que limita con los conductos de admisión o escape.
+%
+Sin embargo el área de pasaje es menor a la de la boca de los puertos por lo
+que se decidió utilizar un valor de $l_m$ más cercano a la altura de la cámara.
+% esto teniendo en cuneta que para realizar las flujometrías se utiliza el
+% algoritmo PIMPLE, el cual se puede utilizar en casos con malas estimaciones
+% iniciales a las variables viscosas o mal inicializados.
+
+% \subsection{k-epsilon}
+% \subsubsection{Funciones de pared}
 % \subsection{k-omega}
 
 % \section{Tipos de flujo}
 % \subsection{Flujo compresible}
 % \subsection{Flujo incompresible}
 
-
 \section{Coeficiente de descarga ($C_D$)}
 
-Se parte de la ecuación para flujo compresible a través de una restricción.
+El coeficiente másico se calcula a partir de las ecuaciones de flujo compresible
+a través de una restricción.
+%
+Para el caso en que el flujo no esté bloqueado, la ecuación de $\dot{m}$ es:
 
-Para determinar el $C_D$ se debe conocer
+\begin{equation}
+   \label{eq:m_not_choked}
+   \dot{m} = \frac{C_D A_R p_0}{\sqrt{R T_0}}
+             {\left(\frac{p_T}{p_0} \right)}^{1/\gamma}
+             {\left( \frac{2\gamma}{\gamma-1} \left[1- {(\frac{p_T}{p_0})}^{{\gamma-1}/\gamma} \right] \right)} ^{1/2}
+\end{equation}
+
+En caso del que el flujo esté bloqueado, es decir
+$p_T/p_0 \le [2/\gamma+1)]^{\gamma/(\gamma - 1)}$
+, la ecuación correspondiente es:
+
+\begin{equation}
+C_D^{-1} =  \frac {A_R p_0} {\dot{m} (R T_0)^{1/2}}
+            \gamma^{1/2}
+            \left( \frac{2\gamma}{\gamma+1} \right)^{(\gamma+1)/(2(\gamma-1))}
+\end{equation}
+
+Para determinar $C_D$ se debe conocer
 
 \begin{description}
     \item[$p_0$] Presión de estancamiento antes de la restricción.
@@ -52,232 +129,300 @@ Para determinar el $C_D$ se debe conocer
     \item[$\gamma$] Cociente de capacidades térmicas del gas.
 \end{description}
 
-Los valores de presión y temperatura se obtienen de los datos calculados con
-ICESym. De estos valores se calcula el $\gamma$ del gas.
+El área de referencia utilizada en ICESym es el área de cortina, que se define
+como $A_{R} = \pi D_{V} L_{{v}}$ dónde $D_{V}$ es el diámetro de la válvula,
+$L_{v}$ es la alzada de la válvula.
+
+% NOTA: poner referencia al script del chiquito
+Debido a que el MRCVC no tiene válvulas, en trabajos anteriores se confeccionó
+un script para convertir el área de la apertura del puerto en una alzada
+equivalente.
+
+Los valores de presión y temperatura se obtienen de los datos de salida de
+ICESym.
+%
+A partir de estos datos se calculan varias propiedades termodinámicas del gas,
+incluyendo la constante del gas, masa molar, viscosidad cinemática y demás.
+%
+Para calcular estas propiedades se asume que el gas no contiene gases residuales.
 
 El caudal másico y la velocidad a las entradas y salidas se obtiene con
 OpenFOAM.
 
-Para flujo no bloqueado se utiliza:
-% \begin{math}
-% C_D^{-1} = \frac {A_R p_0} {\dot{m} R T_0^{1/2}}
-%            \left( \frac{p_T} {p_0} \right)^{1/\gamma}
-%            \left{ \frac{2\gamma}{\gamma-1}
-%            \left[1 - \left(\frac{p_T}{p_0}^(\gamma-1/\gamma)\right) \right] \right}^{1/2} 
-% \end{math}
 
-En caso del que el flujo esté bloqueado, es decir
-$p_T/p_0 \le [2/\gamma+1)]^{\gamma/(\gamma - 1)}$
-, la ecuación correspondiente es:
 
-\begin{math}
-C_D^{-1} =  \frac {A_R p_0} {\dot{m} (R T_0)^{1/2}}
-            \gamma^{1/2}
-            \left( \frac{2\gamma}{\gamma+1} \right)^{(\gamma+1)/(2(\gamma-1))}
-\end{math}
-
-\section{Estudio de convergencia de malla}
-
-Un estudio de convergencia de malla es una herramienta para evaluar los errores
-de discretización espacial de un estudio de CFD y consiste básicamente en:
-
-\begin{enumerate}
-    %
-    \item Seleccionar un indicador del tamaño de malla $h$.
-    %
-    \item Elegir un indicador de la convergencia de malla $f$, suele ser la
-        variable de estudio.
-    %
-    \item Seleccionar un coeficiente de refinamiento $r$ y realizar al menos 2
-        simulaciones, manteniendo $r$ constante.
-    %
-    \item Calcular el orden de convergencia de la serie de datos $p$.
-    %
-    \item Estimar $f_{h=0}$
-    %
-    \item Calcular el Índice de Convergencia de Malla (GCI por sus siglas en
-        inglés).
-    %
-    \item Comprobar que se está dentro del rango asintótico de convergencia.
-    %
-\end{enumerate}
-
-El error de discretización surge de aplicar las ecuaciones de gobierno a un
-dominio espacial discreto (la malla).
+\section{Mapa de Cd}
 %
-A medida que se reduce el tamaño de celda, el resultado del estudio de CFD se
-vuelve menos sensible a mayores refinamientos y es esperable que el error de
-discretización tienda asintóticamente a cero cuando el tamaño de la malla
-tiende a cero.
-
-En la Figura \ref{fig:flujometrias} y la Tabla \ref{tab:casos} se indican los
-puntos donde se va a ensayar el puerto de admisión con el fin de obtener el
-valor de caudal másico o volumétrico que fluja por el puerto en distintas
-posiciones del rotor y a distintas velocidades de rotación.
+Para obtener el mapa se tomaran valores de flujo másico en las combinaciones de
+$\delta P$ y alzada que están indicadas en la tabla \ref{tab:casos}.
 %
-Dada la cantidad de flujometrías a realizar se opta por realizar el estudio de
-convergencia solo en algunos de los casos, los cuales serán utilizados como
-referencia e indicarán el nivel mínimo de refinamiento mínimo necesario a
-utilizar para todos los casos.
-
-% Se utilizará el mismo paso tempral en todos los refinamientos.
+En la figura \ref{fig:flujometrias} se ve que se eligieron más cantidad de
+muestreos en las zonas donde hay mayores cambios de presión.
+%
+La figura \ref{fig:flujometrias} fué obtenida a partir de los resultados del
+simulador ICESym, restando para las velocidades seleccionadas la presión de la
+cámara a la presión en la boca del puerto.
 
 \begin{sidewaysfigure}
     \includegraphics[width=1\textwidth]{flujometrias_admision.png}
-    \caption{Flujometrías para el puerto de admisión}
+    \caption{Flujometrías para el puerto de Admisión}
     \label{fig:flujometrias}
 \end{sidewaysfigure}
 
 \begin{table}
     \centering
-    \begin{tabular}{rcc} \toprule
+    \begin{tabular}{rll} \toprule
         Caso & Ángulos & Velocidades (rpm) \\ \midrule
-        0 & -10, 110 & 1000, 2000, 3000, 7000, 8000\\
-        1 & 0, 120 & 2000, 7000\\
-        2 & 10, 130 & 2000, 7000\\
-        3 & 50, 170 & 3000, 7000, 9000\\
-        4 & 60, 180 & 3000, 5000, 6000, 7000\\
+        0 & -10, 110 & 1000, 2000, 3000, 7000, 8000 \\
+        1 & 0, 120 & 2000, 7000 \\
+        2 & 10, 130 & 2000, 7000 \\
+        3 & 50, 170 & 3000, 7000, 9000 \\
+        4 & 60, 180 & 3000, 5000, 6000, 7000 \\
         5 & 95 & 1000, 7000\\ \bottomrule
     \end{tabular}
-    \caption{Flujometrías para el puerto de admisión}
+    \caption{Flujometrías a realizar}
     \label{tab:casos}
 \end{table}
 
-Hay que distinguir en entre los refinamientos necesarios de flujometrías en
-régimen compresible e incompresible, los casos a tomar como referencia son el
-0, 4 y 5.
+Como se ve en la Figura \ref{fig:flujometrias}, los puntos a evaluar son los
+listados en la Tabla \ref{tab:casos}.
 
-\subsection{Selección de $h$, $r$ y $f$}
-%
-El procedimiento para generar la malla consiste en crear una malla inicial con
-la utilidad \emph{blockMesh} la cual es un punto de partida de
-\emph{snappyHexMesh}.
-%
-Se busca que la malla creada por \emph{blockMesh} este compuesta por celdas
-cúbicas, como se ilustra en la Figura \ref{fig:celdas_bm} el lado de estas
-celdas es el que se toma como indicador del tamaño de malla $h$.
-%
-El coeficiente de refinamiento es el cociente entre el tamaño $h$ de dos pasos
-de refinamiento, como se indica en la ecuación \ref{eq:r}, el mismo se toma
-igual a 1.5 y se mantiene constante para todos los refinamientos.
-%
-Se realizarán refinamientos con mallas de $11.25mm \rightarrow 7.5mm
-\rightarrow 5mm$.
 
-\begin{equation}
-    \label{eq:r}
-    r = \frac{h_{i+1}}{h_{i}} = 1.5
-\end{equation}
+En todos los casos se tomará como velocidad de referencia a la media entre la
+velocidad en la punta del tubo de las cámaras que se estén solapando.
+%
+Del mismo modo, la temperatura será la temperatura de cámara media.
 
+Si hay o no solape de cámaras va a depender tanto de la geometría del puerto
+como de la posición del ciclo en la que se encuentre, para determinar las
+condiciones iniciales se debe tener en cuenta el solape.
+%
+En la figura \ref{fig:geom} se muestra un corte del puerto con un plano cuya
+normal está en $\vec{z}$, se denominará a la cámara que esté a la izquierda
+como cámara 0 y a la que esté a la derecha cámara 1
+%
+Al haber solape de cámaras, para definir la presión del puerto y estimar las
+condiciones iniciales de los parámetros viscosos que requiere el modelo
+$k-\epsilon$ se utilizan valores medios de presión, velocidad y temperatura de
+ambas cámaras.
+%
+Además, las condiciones inicales de que se aplican al parche denominado
+\emph{puerto} es igual a la media aritmética de la velocidad de las velocidades
+de los puertos de ambas cámaras, Lo mismo sucede con la presión, densidad y
+temperatura.
 
 \begin{figure}[h]
-    \centering
-    \includegraphics{celdas_block_mesh.png}
-    \caption{Refinamiento con $r=2$}
-    \label{fig:celdas_bm}
+    \includegraphics[width=0.8\textwidth]{caso_1-cc.png}
+    \caption{Condiciones de borde}
+    \label{fig:geom}
 \end{figure}
 
-Para verificar la convergencia de malla se utiliza el flujo másico a través
-de las superficies definidas como entrada/salida de cámaras.
-%
-En la figura \ref{fig:parches} se indican las superficies por las cuales hay
-flujo másico, siempre que haya solape de cámaras, la cámara que esté a la
-izquierda será llamada cámara 0 y la que esté a derecha cámara 1.
-%
-La superficie que indica la conexión entre el puerto y el resto de los conductos
-de intercambio de gases se denominará puerto.
+Dentro del volumen de control, el campo de presiones se inicializa con el valor
+medio de presiones de las cámaras y el campo de velocidades se hace
+inicialmente (0,0,0).
+
+%\section{Estudio de convergencia de malla}
+
+%Un estudio de convergencia de malla es una herramienta para evaluar los errores
+%de discretización espacial de un estudio de CFD y consiste básicamente en:
+
+%\begin{enumerate}
+%    %
+%    \item Seleccionar un indicador del tamaño de malla $h$.
+%    %
+%    \item Elegir un indicador de la convergencia de malla $f$, suele ser la
+%        variable de estudio.
+%    %
+%    \item Seleccionar un coeficiente de refinamiento $r$ y realizar al menos 2
+%        simulaciones, manteniendo $r$ constante.
+%    %
+%    \item Calcular el orden de convergencia de la serie de datos $p$.
+%    %
+%    \item Estimar $f_{h=0}$
+%    %
+%    \item Calcular el Índice de Convergencia de Malla (GCI por sus siglas en
+%        inglés).
+%    %
+%    \item Comprobar que se está dentro del rango asintótico de convergencia.
+%    %
+%\end{enumerate}
+
+%El error de discretización surge de aplicar las ecuaciones de gobierno a un
+%dominio espacial discreto (la malla).
+%%
+%A medida que se reduce el tamaño de celda, el resultado del estudio de CFD se
+%vuelve menos sensible a mayores refinamientos y es esperable que el error de
+%discretización tienda asintóticamente a cero cuando el tamaño de la malla
+%tiende a cero.
+
+%En la Figura \ref{fig:flujometrias} y la Tabla \ref{tab:casos} se indican los
+%puntos donde se va a ensayar el puerto de admisión con el fin de obtener el
+%valor de caudal másico o volumétrico que fluja por el puerto en distintas
+%posiciones del rotor y a distintas velocidades de rotación.
+%%
+%Dada la cantidad de flujometrías a realizar se opta por realizar el estudio de
+%convergencia solo en algunos de los casos, los cuales serán utilizados como
+%referencia e indicarán el nivel mínimo de refinamiento mínimo necesario a
+%utilizar para todos los casos.
+
+%% Se utilizará el mismo paso tempral en todos los refinamientos.
+
+%\begin{sidewaysfigure}
+%    \includegraphics[width=1\textwidth]{flujometrias_admision.png}
+%    \caption{Flujometrías para el puerto de admisión}
+%    \label{fig:flujometrias}
+%\end{sidewaysfigure}
+
+%\begin{table}
+%    \centering
+%    \begin{tabular}{rcc} \toprule
+%        Caso & Ángulos & Velocidades (rpm) \\ \midrule
+%        0 & -10, 110 & 1000, 2000, 3000, 7000, 8000\\
+%        1 & 0, 120 & 2000, 7000\\
+%        2 & 10, 130 & 2000, 7000\\
+%        3 & 50, 170 & 3000, 7000, 9000\\
+%        4 & 60, 180 & 3000, 5000, 6000, 7000\\
+%        5 & 95 & 1000, 7000\\ \bottomrule
+%    \end{tabular}
+%    \caption{Flujometrías para el puerto de admisión}
+%    \label{tab:casos}
+%\end{table}
+
+%Hay que distinguir en entre los refinamientos necesarios de flujometrías en
+%régimen compresible e incompresible, los casos a tomar como referencia son el
+%0, 4 y 5.
+
+%\subsection{Selección de $h$, $r$ y $f$}
+%%
+%El procedimiento para generar la malla consiste en crear una malla inicial con
+%la utilidad \emph{blockMesh} la cual es un punto de partida de
+%\emph{snappyHexMesh}.
+%%
+%Se busca que la malla creada por \emph{blockMesh} este compuesta por celdas
+%cúbicas, como se ilustra en la Figura \ref{fig:celdas_bm} el lado de estas
+%celdas es el que se toma como indicador del tamaño de malla $h$.
+%%
+%El coeficiente de refinamiento es el cociente entre el tamaño $h$ de dos pasos
+%de refinamiento, como se indica en la ecuación \ref{eq:r}, el mismo se toma
+%igual a 1.5 y se mantiene constante para todos los refinamientos.
+%%
+%Se realizarán refinamientos con mallas de $11.25mm \rightarrow 7.5mm
+%\rightarrow 5mm$.
+
+%\begin{equation}
+%    \label{eq:r}
+%    r = \frac{h_{i+1}}{h_{i}} = 1.5
+%\end{equation}
 
 
-En caso de flujo presente un $Ma < 0.3$, el \emph{solver} a utilizar devuelve
-el flujo volumétrico, por lo que se usa este como indicador en lugar del flujo
-másico.
+%\begin{figure}[h]
+%    \centering
+%    \includegraphics{celdas_block_mesh.png}
+%    \caption{Refinamiento con $r=2$}
+%    \label{fig:celdas_bm}
+%\end{figure}
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.4\textwidth]{nombres-parches.png}
-    \caption{Vista superior del volumen de control}
-    \label{fig:parches}
-\end{figure}
+%Para verificar la convergencia de malla se utiliza el flujo másico a través
+%de las superficies definidas como entrada/salida de cámaras.
+%%
+%En la figura \ref{fig:parches} se indican las superficies por las cuales hay
+%flujo másico, siempre que haya solape de cámaras, la cámara que esté a la
+%izquierda será llamada cámara 0 y la que esté a derecha cámara 1.
+%%
+%La superficie que indica la conexión entre el puerto y el resto de los conductos
+%de intercambio de gases se denominará puerto.
 
-\subsection{Orden de convergencia}
-%
-El orden de convergencia $p$ indica que tan rápido se acerca una secuencia a un
-límite.
-%
-Una secuencia ${x_n}$ que converge a $x^*$ tiene orden de convergencia $p \ge
-1$ y constante asintótica de error $\mu$.
 
-\begin{equation}
-    \lim_{n\rightarrow \infty} \frac{|x_{n+1} - x^*|} {|x_{n} - x^*|^p} = \mu
-\end{equation}
+%En caso de flujo presente un $Ma < 0.3$, el \emph{solver} a utilizar devuelve
+%el flujo volumétrico, por lo que se usa este como indicador en lugar del flujo
+%másico.
 
-El orden de convergencia se puede obtener de comparando el comportamiento del
-error, definido como la diferencia ente la solución exacta o del continuo y la
-discreta.
+%\begin{figure}[ht]
+%    \centering
+%    \includegraphics[width=0.4\textwidth]{nombres-parches.png}
+%    \caption{Vista superior del volumen de control}
+%    \label{fig:parches}
+%\end{figure}
 
-\begin{equation}
-    E = f(h) - f_{exacta} = Ch^p + \xi
-    \label{eq:1}
-\end{equation}
+%\subsection{Orden de convergencia}
+%%
+%El orden de convergencia $p$ indica que tan rápido se acerca una secuencia a un
+%límite.
+%%
+%Una secuencia ${x_n}$ que converge a $x^*$ tiene orden de convergencia $p \ge
+%1$ y constante asintótica de error $\mu$.
 
-Dónde $C$ es una constante, $h$ es una medida del nivel de refinamiento de la
-malla, $p$ es el orden de convergencia y $\xi$ son términos de orden superior.
-%
-Despreciando los términos de orden superior $\xi$ y tomando logaritmo a ambos
-lados, se puede expresar la ecuación \ref{eq:1} como:
+%\begin{equation}
+%    \lim_{n\rightarrow \infty} \frac{|x_{n+1} - x^*|} {|x_{n} - x^*|^p} = \mu
+%\end{equation}
 
-\begin{equation}
-    \log(E) = \log(C) + p \cdot \log(h)
-\end{equation}
+%El orden de convergencia se puede obtener de comparando el comportamiento del
+%error, definido como la diferencia ente la solución exacta o del continuo y la
+%discreta.
 
-De esta forma $p$ es la pendiente de la curva de $\log(E)=f(\log(h))$ y
-conociendo al menos 3 puntos puede calcular $p$ como:
+%\begin{equation}
+%    E = f(h) - f_{exacta} = Ch^p + \xi
+%    \label{eq:1}
+%\end{equation}
 
-\begin{equation}
-p = \ln \left( \frac{ f_3 - f_2 } { f_2 - f_1 } \right) / \ln(r)
-\label{eq:ord-conv}
-\end{equation}
+%Dónde $C$ es una constante, $h$ es una medida del nivel de refinamiento de la
+%malla, $p$ es el orden de convergencia y $\xi$ son términos de orden superior.
+%%
+%Despreciando los términos de orden superior $\xi$ y tomando logaritmo a ambos
+%lados, se puede expresar la ecuación \ref{eq:1} como:
 
-\subsection{Resultado ''exacto``}
-%
-El resultado de una simulación numérica se puede expresar de forma general
-como:
+%\begin{equation}
+%    \log(E) = \log(C) + p \cdot \log(h)
+%\end{equation}
 
-\begin{equation} \label{eq:expansion}
-    f = f_{h=0} + g_1 h + g_2 h^2 + g_3 h^3 + ...
-\end{equation}
+%De esta forma $p$ es la pendiente de la curva de $\log(E)=f(\log(h))$ y
+%conociendo al menos 3 puntos puede calcular $p$ como:
 
-Dónde $h$ es el tamaño de la malla y $g_1$, $g_2$ y $g_3$ son funciones
-independientes $h$, la cantidad $f$ es considerada de segundo orden si $g1 =
-0$.
-%
-El valor de $f_{h=0}$ es el resultado que tendría la simulación con una malla
-infinitamente fina, $h \rightarrow 0$.
+%\begin{equation}
+%p = \ln \left( \frac{ f_3 - f_2 } { f_2 - f_1 } \right) / \ln(r)
+%\label{eq:ord-conv}
+%\end{equation}
 
-\section{Índice de convergencia de malla}
-%
-El índice de convergencia de malla o GCI por sus siglas en inglés es una forma
-de reportar los resultados de convergencia de malla, es un indicador de qué tan
-lejos se encuentran los resultados obtenidos del resultado numérico exacto
-($f_{h=0}$) y surge de la siguiente ecuación:
+%\subsection{Resultado ''exacto``}
+%%
+%El resultado de una simulación numérica se puede expresar de forma general
+%como:
 
-\begin{equation} \label{eq:gci}
-GCI_{i \rightarrow j} = \frac{F_S |\epsilon|}{r^p - 1}
-\end{equation}
+%\begin{equation} \label{eq:expansion}
+%    f = f_{h=0} + g_1 h + g_2 h^2 + g_3 h^3 + ...
+%\end{equation}
 
-Dónde:
-\begin{description}
-    \item[$F_S$] es un factor de seguridad, se toma 1.25.
-    \item[$\epsilon$] es el error relativo $\epsilon = (f_i - f_j) / f_j$
-    \item[$r$] es el factor de refinamiento $r = h_i/h_j$
-    \item[$p$] es el orden de convergencia relativo a los pasos i, j
-\end{description}
+%Dónde $h$ es el tamaño de la malla y $g_1$, $g_2$ y $g_3$ son funciones
+%independientes $h$, la cantidad $f$ es considerada de segundo orden si $g1 =
+%0$.
+%%
+%El valor de $f_{h=0}$ es el resultado que tendría la simulación con una malla
+%infinitamente fina, $h \rightarrow 0$.
 
-De este modo, si para un nivel de refinamiento $h_i$ la simulación da como
-resultado un valor $x_i$ con $GCI_i$ dado, se puede decir que el resultado
-de la simulación es $x_i \pm GCI_i \cdot 100$.
-%
-Se tomará como GCI aceptable o banda de error un valor cercano a 5\%.
+%\section{Índice de convergencia de malla}
+%%
+%El índice de convergencia de malla o GCI por sus siglas en inglés es una forma
+%de reportar los resultados de convergencia de malla, es un indicador de qué tan
+%lejos se encuentran los resultados obtenidos del resultado numérico exacto
+%($f_{h=0}$) y surge de la siguiente ecuación:
+
+%\begin{equation} \label{eq:gci}
+%GCI_{i \rightarrow j} = \frac{F_S |\epsilon|}{r^p - 1}
+%\end{equation}
+
+%Dónde:
+%\begin{description}
+%    \item[$F_S$] es un factor de seguridad, se toma 1.25.
+%    \item[$\epsilon$] es el error relativo $\epsilon = (f_i - f_j) / f_j$
+%    \item[$r$] es el factor de refinamiento $r = h_i/h_j$
+%    \item[$p$] es el orden de convergencia relativo a los pasos i, j
+%\end{description}
+
+%De este modo, si para un nivel de refinamiento $h_i$ la simulación da como
+%resultado un valor $x_i$ con $GCI_i$ dado, se puede decir que el resultado
+%de la simulación es $x_i \pm GCI_i \cdot 100$.
+%%
+%Se tomará como GCI aceptable o banda de error un valor cercano a 5\%.
 
 \section{Resultados}
 

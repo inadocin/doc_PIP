@@ -1,2 +1,80 @@
 \chapter{Resultados}
-Falta
+
+En las tablas~\ref{tab:mapa_cd_admision} y~\ref{tab:mapa_cd_escape} se muestran los
+resultados de realizar las flujometrías de los puertos de admisión y escape.
+
+\begin{table}
+  \centering
+    \begin{tabular}{cccc} \toprule
+      Caso  & lv        & $\Delta P$    & $C_{D}$   \\ \midrule
+      0     & 0.016826  & -100331.39    &  0.213882 \\
+      0     & 0.106775  & 5723.72       &  0.489375 \\
+      0     & 0.016826  & -263797.72    &  0.011021 \\
+      0     & 0.106775  & -3296.18      &  0.803197 \\
+      0     & 0.016826  & -652902.78    &  0.011106 \\
+      0     & 0.106775  & -9613.29      &  0.815804 \\
+      0     & 0.016826  & -513568.73    &  0.011280 \\
+      0     & 0.106775  & -3232.97      &  0.813186 \\
+      1     & 0.026960  & -116996.12    &  0.375219 \\
+      1     & 0.096641  & -3643.9       &  0.878414 \\
+      1     & 0.026960  & -237724.11    &  0.018632 \\
+      1     & 0.096641  & -6684.11      &  0.867774 \\
+      1     &  0.02696  & -496509.46    &  0.111212 \\
+      1     &  0.09664  & -18256.20     &  0.805830 \\
+      1     & 0.026960  & -237724.11    &  0.022716 \\
+      1     & 0.096641  & -6684.11      &  0.862647 \\
+      2     & 0.047228  & -49343.47     &  0.541857 \\
+      2     & 0.076373  & -5712.86      &  0.918061 \\
+      2     & 0.047228  & -109348.67    &  0.487137 \\
+      2     & 0.076373  & -17090.38     &  0.914182 \\
+      3     & 0.067496  & 13.83         &  0.696967 \\
+      3     & 0.071759  & -134.24       &  0.707263 \\
+      3     & 0.067496  & -100073.52    &  0.731100 \\
+      3     & 0.071759  & -24077.34     &  0.723965 \\
+      4     & 0.075750  & -11793.31     &  0.946392 \\
+      4     & 0.087764  & -33418.12     &  0.235717 \\
+      4     & 0.087764  & -10715.70     &  0.221632 \\
+      4     & 0.075750  & -5167.81      &  0.897169 \\
+      6     & 0.123601  & -73.94        &  0.878522 \\ \bottomrule
+    \end{tabular}
+  \caption{Mapa de Cd del puerto de escape} \label{tab:mapa_cd_escape}
+\end{table}
+
+\begin{table}
+  \centering
+  \begin{tabular}{cccc} \toprule
+      Caso  & lv        & $\Delta P$    & $C_{D}$   \\ \midrule
+      0     & 0.014432  & -6574.97      &  0.206543 \\
+      0     & 0.081937  & -87.24        &  0.828822 \\
+      0     & 0.014432  & 21856.29      &  0.243975 \\
+      0     & 0.081937  & -573.65       &  0.738459 \\
+      0     & 0.014432  & -19738.67     &  0.222406 \\
+      0     & 0.081937  & 519.60        &  0.487115 \\
+      0     & 0.081937  & 1571.95       &  0.587277 \\
+      0     & 0.014432  & 18077.97      &  0.256415 \\
+      0     & 0.014432  & 2668.61       &  0.247292 \\
+      0     & 0.081937  & 0.98          &  0.025970 \\
+      2     & 0.062951  & -297.79       &  0.816487 \\
+      2     & 0.081937  & 292.92        &  0.466147 \\
+      2     & 0.062951  & -7374.88      &  0.980617 \\
+      2     & 0.081937  & 4953.85       &  0.541619 \\
+      3     & 0.071763  & 4092.13       &  0.501641 \\
+      3     & 0.025832  & -3689.81      &  0.289852 \\
+      4     & 0.069767  & -789.00       &  0.615690 \\
+      4     & 0.069767  & 7869.92       &  0.599348 \\
+      4     & 0.005564  & -12539.15     &  0.534555 \\
+      4     & 0.005564  & -10091.84     &  0.583979 \\ \bottomrule
+    \end{tabular}
+  \caption{Mapa de Cd del puerto de Admisión} \label{tab:mapa_cd_admision}
+\end{table}
+
+
+La geometría obtenida luego de realizar la optimización con los mapas de Cd
+incorporados a la simulación de ICESym se muestra en la figura \ref{fig:geom_nueva}.
+%
+Se puede ver que la geometría es similar a la inicial, siendo el puerto de
+admisión algo menor en cuanto a diámetro que en el caso inicial.
+
+Como es de esperarse, incorporar estos mapa al modelo del motor tiene un efecto
+en el comportamiento del mismo, esto se puede observar principalmente en las
+curvas de presión del motor.

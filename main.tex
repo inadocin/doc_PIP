@@ -1,13 +1,16 @@
-% -----------------------------------------------------------------------------
+% -------- ---------------------------------------------------------------------
 % Paquetes y configuracion
 % -----------------------------------------------------------------------------
 \documentclass[11pt,twoside]{report}
-% \usepackage{fancyhdr}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{spanish}
+\usepackage{luacode}
+\usepackage{pgfplots}
 \usepackage[a4paper,width=170mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
 \usepackage[acronym]{glossaries}
 \usepackage[backend=biber]{biblatex}  % bibliografia
-\usepackage[spanish]{babel}
-\usepackage[utf8]{inputenc}
+% \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}
@@ -15,6 +18,10 @@
 \usepackage{graphicx}
 \usepackage{longtable}
 \usepackage{rotating}
+\usepackage{minted}
+\usepackage{verbatimbox}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 \include{partes/glosarios}  % esto esta mejor si lo pongo en cada entrada de texto
 
@@ -36,6 +43,7 @@
 % \fancyfoot[LO,CE]{Capítulo \thechapter}
 % \fancyfoot[CO,RE]{Nicolás Daniel Barrios}
 
+
 % -----------------------------------------------------------------------------
 % Documento
 % -----------------------------------------------------------------------------
@@ -45,7 +53,7 @@
 \include{partes/caratula}
 \setcounter{page}{1}
 \include{partes/agradecimientos}
-\include{partes/resumen}
+% \include{partes/resumen}
 \tableofcontents
 \listoffigures
 \listoftables
@@ -54,13 +62,14 @@
 
 % -- Cuerpo del texto
 \pagenumbering{arabic}
-\include{partes/introduccion}
-\include{partes/antecedentes}
-\include{partes/mrcvc}
-\include{partes/genetico}
-\include{partes/flujometrias}
-\include{partes/resultados}
-\include{partes/conclusiones}
+\include{partes/introduccion}   % 1
+\include{partes/antecedentes}   % 2
+\include{partes/mrcvc}          % 3
+\include{partes/genetico}       % 4
+\include{partes/optimizacion}   % 5
+\include{partes/flujometrias}   % 6
+\include{partes/resultados}     % 7
+\include{partes/conclusiones}   % 8
 
 % -- Finales
 \printbibliography

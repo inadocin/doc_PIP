@@ -114,7 +114,27 @@ grados de apertura.
 
 
 
+\section{Notas}
+Algunas notas sobre el mrcvc o la simulacion de icesym que todavia no tienen
+lugar.
 
+\begin{enumerate}
+    \item La temperatura de pared se asume en 450 K
+    \item El área de referencia es el área de cortina
+    \item No cambie la cantidad de puntos en que se discretiza cada tubo
+    \item Agregue una interpolación 2D para el cálculo del Cd
+    \item La combustión es estequeométrica con $a_weibe=5$ y $m_weibe=2$
+    \item El modelo de combustión es 1
+    \item scavange = 0
+    \item el combustible utilizado tiene estas caracteristicas "y": 2.25, "hvap_fuel": 0.01, "Q_fuel": 44000000.0, supongo que es isooctano, revisar.
 
-\section{Retroalimentación}
+\end{enumerate}
+
+\section{Dudas}
+Con respecto al diccionario de configuración de ICESym:
+
+\begin{enumerate}
+    \item ¿Que es histo?
+    \item ¿Que es position?
+\end{enumerate}
 
