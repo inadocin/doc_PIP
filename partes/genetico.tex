@@ -1,17 +1,21 @@
 \chapter{Algoritmo Genético}
 
 \section{Introducción}
+%
 Se seleccionó un algoritmo genético para realizar la optimización de la
 geometría del MRCVC por la simplicidad y facilidad de implementación.
 %
+Los componente
+%
+
 Si bien estos métodos no garantizan que se alcance un resultado óptimo, en la
 práctica\cite{goldberg}\cite{shi} se ha observado que alcanzan soluciones muy
 cercanas a las óptimas tras pocas iteraciones del método.
 %
 Una de las ventajas de este método es que no requiere información del gradiente
-de la función que se está evaluando, lo cual es útil cuando no se puede asegurar
-la existencia de la derivada de la función en todo el dominio ó cuando se tiene
-una función con más de un máximo o mínimo local.
+de la función que se está evaluando, lo cual es útil cuando no se puede
+asegurar la existencia de la derivada de la función en todo el dominio ó cuando
+se tiene una función con más de un máximo o mínimo local.
 %
 Además, el punto de partida de la optimización es una población generada al
 azar, de modo que se tiene un muestreo aleatorio del dominio que se está
@@ -21,14 +25,16 @@ Esto hace que el método sea poco susceptible a caer en un óptimo local.
 
 
 
-Se puede decir que un algoritmo genético es un método de búsqueda aleatoria guiada.
+Se puede decir que un algoritmo genético es un método de búsqueda aleatoria
+guiada.
 %
 De manera resumida, estos algoritmos son básicamente métodos de búsqueda
 aleatoria que aprovechan la información de iteraciones previas para determinar
-la composición futura de la población, representando individuos como un conjunto
-de escalares que indican características particulares.
+la composición futura de la población, representando individuos como un
+conjunto de escalares que indican características particulares.
 %
-Si bien es probable que no se alcance el óptimo, el método alcanza una solución satisfactoria en un tiempo relativamente corto.
+Si bien es probable que no se alcance el óptimo, el método alcanza una solución
+satisfactoria en un tiempo relativamente corto.
 
 ¿Cómo difieren los AG de los métodos tradicionales de búsqueda?
 %

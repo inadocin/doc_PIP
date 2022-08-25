@@ -2,15 +2,15 @@
 % Paquetes y configuracion
 % -----------------------------------------------------------------------------
 \documentclass[11pt,twoside]{report}
-\usepackage{fontspec}
-\usepackage{polyglossia}
-\setdefaultlanguage{spanish}
-\usepackage{luacode}
-\usepackage{pgfplots}
-\usepackage[a4paper,width=170mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
-% \usepackage[acronym]{glossaries}
-\usepackage[backend=biber]{biblatex}
-% \usepackage[utf8]{inputenc}
+\usepackage{fontspec}  % variante de fontenc compatilbe con lualatex
+\usepackage{polyglossia}  % variante de babel compatible con lualatex
+\setdefaultlanguage{spanish}  % asi se configura el idioma en polyglossia
+\usepackage{luacode}  % para ejecutar funciones de lua, funciona solo con lualatex como compilador
+\usepackage{pgfplots}  % para crear graficos desde aca
+\usepackage[a4paper,width=170mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry} % para cambiar los margenes
+% \usepackage[acronym]{glossaries
+\usepackage[backend=biber]{biblatex}  % 
+% \usepackage[utf8]{inputenc
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}
@@ -62,7 +62,7 @@
 % -- Cuerpo del texto
 \pagenumbering{arabic}
 \include{partes/introduccion}   % 1
-\include{partes/antecedentes}   % 2
+% \include{partes/antecedentes}   % 2
 \include{partes/mrcvc}          % 3
 \include{partes/genetico}       % 4
 \include{partes/optimizacion}   % 5

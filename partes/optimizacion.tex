@@ -1,15 +1,13 @@
 \chapter{Optimización}
 
 Para realizar la optimización con el algoritmo genético, primero fué necesario
-crear una comunicación entre el optimizador e ICESym, a modo de poder utilizar
-el simulador de motores como una función que se pueda incorporar en un script y poder hacer:
+crear una comunicación entre el optimizador e ICESym a modo de poder utilizar
+el simulador de motores como una función que se pueda incorporar en un script.
 
-% \emph{resultados_de_la_corrida = ICESym(configuración_del_motor)}.
-
-ICESym en su versión de Linux se puede ejecutar desde una línea de comandos como
-\emph{python main.py}, el archivo \emph{main.py} importa el simulador y lo
-ejecuta, con los argumentos de un archivo de Python (en este caso mrcvc.py) que
-contiene toda la información requerida para realizar la simulación.
+ICESym se puede ejecutar desde una línea de comandos como \emph{python
+main.py}, el archivo \emph{main.py} importa el simulador y lo ejecuta, con los
+argumentos de un archivo de Python (en este caso mrcvc.py) que contiene toda la
+información requerida para realizar la simulación.
 
 Aprovechando esta característica de ICESym, una vez generado el archivo de
 configuración, este se guarda en un formato que puede ser leído
@@ -79,14 +77,19 @@ gases residuales $x_{r}$.
 Para calificar cada motor y proceder con el proceso de selección, se utiliza la
 curva de rendimiento volumétrico y un conjunto de pesos como entrada para la
 función objetivo.
-%
+
 
 \section{Primer Iteración}
 
-La primer iteración se hizo partiendo con datos de $C_{d}$ constantes, asumiendo
-$0.75$ y $0.7$ para el puerto de admisión y escape respectivamente.
+La primer iteración se hizo con datos de $C_{d}$ constantes, asumiendo $0.75$ y
+$0.7$ para el puerto de admisión y escape respectivamente.
 %
-Los parámetros para el algoritmo genético son:
+
+La población inicial es dopada con un individuo cuyos parámetros corresponden a
+la geometría de un modelo desarrollado en un trabajo anterior \cite{lopez13},
+por este motivo en la figura \ref{fig:primer_it} se observa que inicialente se
+tiene un individuo con puntaje alto y una media alta, la cual cae en
+iteraciones posteriores por la aleatoriedad del método.
 
 \begin{itemize}
         \item Ciclos de simulación de ICESym = 2
@@ -101,16 +104,12 @@ Los parámetros para el algoritmo genético son:
         \item Escalado de función objetivo: No
 \end{itemize}
 
-La población inicial es dopada más de un individuo cuyos parámetros corresponden
-a la geometría de un modelo desarrollado en un trabajo anterior \cite{lopez13},
-por este motivo se observa que inicialente se tiene un individuo con puntaje
-alto y una media alta, la cual cae en iteraciones posteriores por la
-aleatoriedad del método.
+Para ICESym se utilizaron dos ciclos de simulación, por considerarse que es
+suficientemente preciso para esta primer aproximación.
+%
 
-% \begin{figure}
-%   \centering
-%     \caption{Primer Optimización}
-% \end{figure}
+
+
 
 \begin{center}
   \begin{tabular}{rl}
@@ -208,7 +207,7 @@ parámetros indicados en la tabla \ref{tab:primer_it}, la geometría resultante 
 ilustra en la figura \ref{fig:primer_it}.
 %
 El rendimiento volumétrico obtenido tiene un máximo en 7000 rpm de 0.9
-%
+
 \begin{table}
     \centering
     \begin{tabular}{ccc}
