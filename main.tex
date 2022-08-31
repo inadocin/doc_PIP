@@ -7,24 +7,18 @@
 \setdefaultlanguage{spanish}  % asi se configura el idioma en polyglossia
 \usepackage{luacode}  % para ejecutar funciones de lua, funciona solo con lualatex como compilador
 \usepackage{pgfplots}  % para crear graficos desde aca
+\pgfplotsset{compat=1.18}  % para crear graficos desde aca
 \usepackage[a4paper,width=170mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry} % para cambiar los margenes
-% \usepackage[acronym]{glossaries
 \usepackage[backend=biber]{biblatex}  % 
-% \usepackage[utf8]{inputenc
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage{csquotes}
 \usepackage{graphicx}
-% \usepackage{longtable}
-% \usepackage{rotating}
-% \usepackage{verbatimbox}
 \usepackage[spanish,onelanguage]{algorithm2e}
-% \usepackage{algpseudocode}
 \usepackage[bookmarks]{hyperref}
-
-% \include{partes/glosarios}  % esto esta mejor si lo pongo en cada entrada de texto
-% \makeglossaries
+\usepackage{listings}
+\usepackage{xcolor}
 
 \addto\captionsspanish{%
     \def\tablename{Tabla}%
@@ -35,12 +29,33 @@
 
 \pagenumbering{roman}
 
-% \fancyhead{}
-% \fancyhead[RO,LE]{Proyecto Integrador Profesional}
-% \fancyfoot{}
-% \fancyfoot[LE,RO]{\thepage}
-% \fancyfoot[LO,CE]{Capítulo \thechapter}
-% \fancyfoot[CO,RE]{Nicolás Daniel Barrios}
+% --- Listings --- 
+% Sacado de https://www.overleaf.com/learn/latex/Code_listing
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
 
 
 % -----------------------------------------------------------------------------
@@ -52,12 +67,9 @@
 \include{partes/caratula}
 \setcounter{page}{1}
 \include{partes/agradecimientos}
-% \include{partes/resumen}
 \tableofcontents
 \listoffigures
 \listoftables
-% \printglossary[type=\acronymtype,title=Abreviaciones]
-% \printglossary[title=Nomenclatura]
 
 % -- Cuerpo del texto
 \pagenumbering{arabic}

@@ -5,8 +5,6 @@
 Se seleccionó un algoritmo genético para realizar la optimización de la
 geometría del MRCVC por la simplicidad y facilidad de implementación.
 %
-Los componente
-%
 
 Si bien estos métodos no garantizan que se alcance un resultado óptimo, en la
 práctica\cite{goldberg}\cite{shi} se ha observado que alcanzan soluciones muy
@@ -23,29 +21,63 @@ evaluando.
 %
 Esto hace que el método sea poco susceptible a caer en un óptimo local.
 
-
-
 Se puede decir que un algoritmo genético es un método de búsqueda aleatoria
 guiada.
 %
-De manera resumida, estos algoritmos son básicamente métodos de búsqueda
-aleatoria que aprovechan la información de iteraciones previas para determinar
-la composición futura de la población, representando individuos como un
-conjunto de escalares que indican características particulares.
+
+Gran parte de este trabajo fue fue utilizar a ICESym como parte de la función
+con la que se evalúan los motores.
 %
-Si bien es probable que no se alcance el óptimo, el método alcanza una solución
-satisfactoria en un tiempo relativamente corto.
+Para lograr esto se modificó parte del código de ICESym, con el objetivo de
+facilitar la lectura de los resultados que arroja el simulador.
+%
+Además, se es necesario poder ejecutar de manera automatica una simulación con
+una configuración particular del motor.
+%
+Otro aspecto del optimizador que se desarrolló es el de poder ejecutar
+múltiples instancias de ICESym en paralelo, para poder aprovechar el hecho de
+que los CPU's modernos tiene más de un núcleo físico, pudiendo ejecutar
+múltiples procesos de manera simultánea y así reducir el tiempo de ejecución de
+las simulaciones. 
+%
+
+\subsection{$r_v = ICESym(motor)$}
+%
+ICESym lee un archivo de configuración en formato \emph{Python} que consta de
+un arrego llamado \emph{diccionario} con las siguientes entradas
+
+\begin{lstlisting}[language=Python]
+kargs = {
+    "Simulator": Simulator,
+    "Cylinders": Cylinders,
+    "Junctions": Junctions,
+    "Tubes": Tubes,
+    "Tanks": Tanks,
+    "Atmospheres": Atmospheres,
+}
+\end{lstlisting}
+
+
+% De manera resumda, son básicamente métodos de búsqueda aleatoria que
+% aprovechan la información de iteraciones previas para determinar la composición
+% futura de la población, representando individuos como un conjunto de datos.
+% La representación
+% %
+% Si bien es probable que no se alcance el óptimo, el método alcanza una solución
+% satisfactoria en un tiempo relativamente corto.
 
 ¿Cómo difieren los AG de los métodos tradicionales de búsqueda?
 %
 \begin{enumerate}
     %
-  \item Los AG trabajan sobre una representación de las variables estudiadas y no necesariamente sobre las variables de estudio.
+  \item Los AG trabajan sobre una representación de las variables estudiadas y
+      no necesariamente sobre las variables de estudio.
         % Por ejemplo una una representación binaria de conjunto de decimales.
     %
     \item Trabajan con un conjunto de datos, no con un solo punto.
     %
-    \item Utilizan una función objetivo para evaluar cada punto de datos, sin necesidad de conocer la derivada de la función que se está evaluando.
+    \item Utilizan una función objetivo para evaluar cada punto de datos, sin
+        necesidad de conocer la derivada de la función que se está evaluando.
     %
     \item Los AG usan reglas probabilísticas, no deterministas.
     %

@@ -40,12 +40,13 @@ Estos datos son \emph{$(DTA,\ DTE,\ LTA,\ LTE,\ IIA,\ IFA,\ EIA,\ EFA)$}, dónde
 %
 
 Con estos valore definidos se procede a calcular el perfil de alzada vs ángulo
-del puerto y configurar ICESym y proceder a la simulación para las velocidades seleccionadas.
+del puerto y configurar ICESym y proceder a la simulación para las velocidades
+seleccionadas.
 
 Durante la simulación, se guardan los valores de distintas variables del motor
 en una serie de archivos, los archivos relevantes al optimizados son
-\emph{$cyl\_\*.txt$} y \emph{$cyl\_extras\_\*.txt$} y se genera un archivo de estos por
-cada velocidad simulada.
+\emph{$cyl\_\*.txt$} y \emph{$cyl\_extras\_\*.txt$} y se genera un archivo de
+estos por cada velocidad simulada.
 
 
 El archivo \emph{$cyl\_\*.txt$} contiene datos en grupos de 3 filas con:
@@ -84,12 +85,14 @@ función objetivo.
 La primer iteración se hizo con datos de $C_{d}$ constantes, asumiendo $0.75$ y
 $0.7$ para el puerto de admisión y escape respectivamente.
 %
+Estos coeficientes fueron los asumidos en un trabajo anterior\cite{lopez13},
+para realizar el diseño básico de los sistemas de admisión y escape.
 
 La población inicial es dopada con un individuo cuyos parámetros corresponden a
-la geometría de un modelo desarrollado en un trabajo anterior \cite{lopez13},
-por este motivo en la figura \ref{fig:primer_it} se observa que inicialente se
-tiene un individuo con puntaje alto y una media alta, la cual cae en
-iteraciones posteriores por la aleatoriedad del método.
+la geometría obtenida del diseño básico\cite{lopez13}, por este motivo en la
+figura \ref{fig:primer_it} se observa que inicialente se tiene un individuo con
+puntaje alto y una media alta, la cual cae en iteraciones posteriores por la
+aleatoriedad del método.
 
 \begin{itemize}
         \item Ciclos de simulación de ICESym = 2

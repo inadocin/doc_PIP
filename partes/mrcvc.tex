@@ -1,9 +1,14 @@
-\chapter{MRCVC}
+\chapter{ICESym y MRCVC}
+
+El Simulador de Motores de Combustión Interna (ICESym) permite la simulacion de
+motores tanto alternativos como rotativos en general y el MRCVC en particular.
+%
+En su código se incluyen modelos de la geometría del motor, la transferencia
+de calor y el solape de cámaras.
 
 \section{Simulación computacional del ciclo termodinámico MRCVC}
 
 % \section{ICESym}
-%
 Para simular el ciclo operativo del motor, se utilizó el simulador de motores
 de combustión interna ICESym \cite{icesym},
 desarrollado en conjunto por la UNCo y UNL.
@@ -17,6 +22,20 @@ particulares al MRCVC, para este trabajo en particular  y con el fin de obtener
 una mapa del coeficiente de descarga, se ha agregando la diferencia de presión
 entre cámara y puerto como variable de modo que $Cd = f(L_v, \delta P)$.
 
+En trabajos anteriores se tienen estudios más detallados del MRCVC, por lo que
+aquí se presenta de manera breve los aspectos geométricos y mecánicos del motor
+que son relevantes a este trabajo.
+
+\subsection{Geometría}
+%
+La geometría del MRCVC permite que gran parte de la combustión se de a volumen
+constante\cite{mrcvc_geom}, por lo que se espera un rendimeinto mayor en
+comparación al ciclo otto de un motor convencional de encendido por chispa.
+%
+Para un MRCVC con $n$ paletas de radio nulo la geometría como función del
+ángulo del cigüeñal queda totalmente definida por el radio de trayectoria de
+paletas $R$, semiancho de paletas $r$ y altura de cámara $h$.
+
 \subsection{Ciclo operativo}
 % La combustión se realiza a volumen constante, por lo que es de esperarse
 % mayores rendimientos de conversión de combustible en relación a motores en los
@@ -24,6 +43,26 @@ entre cámara y puerto como variable de modo que $Cd = f(L_v, \delta P)$.
 
 % hace falta mostrar que esto es así? poner algún gráfico del heywood o cosas
 % por el estilo. puedo citar el heywood?
+
+En otros trabajos se detallo el ciclo operativo del motor, la variación de la
+geometría y el funcionamiento en detalle de ICESym, así como también el modelo
+de solape de cámaras desarrollado para el uso con el MRCVC.
+%
+A modo introductorio, se describ brevemente el funcionamiento de ICESym y del
+MRCVC.
+
+% La combustión se realiza casi en su totalidad a volumen constante
+%
+% El gas de admisión es una mezcla estequeométrica de aire y vapor de combustible
+% perfectamentes mezclados.
+%
+% En caso de que exista flujo revertido, este no se mezcla con el gas fresco,
+% sino que se vuelve a admitir.
+%
+% No se tienen en cuenta las péridas de masa por los huelgos entre partes
+% móviles(\emph{crevice flow})
+%
+% La combustión se simula con el modelo de liberación de calor de Weibe
 
 El indicador que se tomará como referencia para evaluar y comparar diferentes
 geometrías es el rendimiento volumétrico ($\eta_v$), este parámetro se define
