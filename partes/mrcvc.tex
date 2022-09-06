@@ -10,18 +10,20 @@ de calor y el solape de cámaras.
 
 % \section{ICESym}
 Para simular el ciclo operativo del motor, se utilizó el simulador de motores
-de combustión interna ICESym \cite{icesym},
-desarrollado en conjunto por la UNCo y UNL.
+de combustión interna ICESym \cite{icesym}, desarrollado en conjunto por la
+UNCo y UNL.
 %
 Este simulador utiliza modelos unidimensionales para simular el flujo en los
-conductos de admisión y escape y modelos cero dimensionales para el resto de
-los componentes.
+conductos de admisión y escape y modelos cero dimensionales o termodinámicos
+para la cámara de combustión, la transferencia de calor y los modelos de
+fricción.
 %
+
 Incluye un modelo para el solape entre cámaras \cite{lopez16} y modificaciones
 particulares al MRCVC, para este trabajo en particular  y con el fin de obtener
 una mapa del coeficiente de descarga, se ha agregando la diferencia de presión
 entre cámara y puerto como variable de modo que $Cd = f(L_v, \delta P)$.
-
+%
 En trabajos anteriores se tienen estudios más detallados del MRCVC, por lo que
 aquí se presenta de manera breve los aspectos geométricos y mecánicos del motor
 que son relevantes a este trabajo.
@@ -48,8 +50,28 @@ En otros trabajos se detallo el ciclo operativo del motor, la variación de la
 geometría y el funcionamiento en detalle de ICESym, así como también el modelo
 de solape de cámaras desarrollado para el uso con el MRCVC.
 %
-A modo introductorio, se describ brevemente el funcionamiento de ICESym y del
-MRCVC.
+
+Para una misma relación de compresión, una combustión a volumen constante
+alcanza valores de presión y temperatura mayores en comparación a otros ciclos.
+%
+Este presenta un mayor rendimiento térmico
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{comparacion_ciclos.png}
+    \caption{Comparación de ciclos ideales (cambiar por una imagen propia}
+    \label{fig:comparacion_ciclos}
+\end{figure}
+
+En la figura \ref{fig:comparacion_rendimientos} se ve como para una $r_c$ dada,
+el ciclo a volumen constante tiene el mayor rendimiento.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{rendimiento_conv_comb.png}
+    \caption{Comparación de rendimientos (cambiar por una imagen propia}
+    \label{fig:comparacion_rendimientos}
+\end{figure}
+
 
 % La combustión se realiza casi en su totalidad a volumen constante
 %
@@ -155,6 +177,38 @@ y así poder obtener los coeficientes de descarga de cada puerto en distintos
 grados de apertura.
 
 
+\section{Modificaciones a ICESym} \subsection{Coeficiente de descarga}
+%
+Se introdujo una opción para poder ejecutar ejectura ICESym con un modelo de
+$C_d$ que dependa de dos variables, diferencia de presión y \emph{alzada}.
+%
+Esto significó agregar una opcion que permita seleccionar entre un Cd que
+depende únicamente de la alzada o de una o dos variables.
+
+Con esto se construye una mapa del coeficiente de descarga de la forma $C_d =
+f(lv, dp)$, que se utiliza en \emph{def\_valve.f90} para calcular el área
+efectiva de la válvula.
+%
+En la porción de código que sigue, se llama la rutina interpolant para calcular
+el valor de Cd para un valor de Lv dado, en caso de utilizar el modelo de dos
+variables, se llama la rutina interpolant2d.
+%
+Ambas realizan una interpolación lineal entre los valores conocidos de Cd.
+
+
+\begin{lstlisting}[language=fortran]
+SUBROUTINE area_valve(theta, Dv, VO, VC, Lvmax, Nval, type_dat, &
+    Lv_array, cd_model, Cd, Cd_lv, Cd_dp, deltaP, theta_cycle, F_v)
+    [...]
+     IF (cd_model .EQ. 0) THEN
+        CALL interpolant(Cd(:, 1), Cd(:, 2), Lv, Cd_int)
+     ELSE
+        CALL interpolant2d(Cd_lv, Cd_dp, Cd, Lv, deltaP, Cd_int)
+     END IF
+     F_v = Cd_int*Nval*pi*Dv*Lv
+    [...]
+END SUBROUTINE area_valve
+\end{lstlisting}
 
 
 \section{Notas}

@@ -5,7 +5,6 @@
 Se seleccionó un algoritmo genético para realizar la optimización de la
 geometría del MRCVC por la simplicidad y facilidad de implementación.
 %
-
 Si bien estos métodos no garantizan que se alcance un resultado óptimo, en la
 práctica\cite{goldberg}\cite{shi} se ha observado que alcanzan soluciones muy
 cercanas a las óptimas tras pocas iteraciones del método.
@@ -296,21 +295,22 @@ representa una característica en particular del motor, de modo que:
 Este número luego se convierte a decimales y se mapea a la lista que se utiliza
 para generar el archivo de configuración para ICESym.
 %
-% \begin{minted}{python}
-% def map_to_engine(num, bin_len):
-%     t = utils.separate_list(num, bin_len)
-%     dta = (d_coeff[0]*utils.bin2dec(t[0]) + d_coeff[1]) * 0.001
-%     dte = (d_coeff[0]*utils.bin2dec(t[1]) + d_coeff[1]) * 0.001
-%     lit = (l_coeff[0]*utils.bin2dec(t[2]) + l_coeff[1]) * 0.001
-%     let = (l_coeff[0]*utils.bin2dec(t[3]) + l_coeff[1]) * 0.001
-%
-%     iia = a_coeff[0]*utils.bin2dec(t[4]) + a_coeff[1]
-%     ifa = a_coeff[0]*utils.bin2dec(t[5]) + a_coeff[1]
-%     eia = a_coeff[0]*utils.bin2dec(t[6]) + a_coeff[1]
-%     efa = a_coeff[0]*utils.bin2dec(t[7]) + a_coeff[1]
-%     ind = (dta, dte, lit, let, iia, ifa, eia, efa)
-%     return ind
-% \end{minted}
+
+\begin{lstlisting}[language=Python]
+def map_to_engine(num, bin_len):
+    t = utils.separate_list(num, bin_len)
+    dta = (d_coeff[0]*utils.bin2dec(t[0]) + d_coeff[1]) * 0.001
+    dte = (d_coeff[0]*utils.bin2dec(t[1]) + d_coeff[1]) * 0.001
+    lit = (l_coeff[0]*utils.bin2dec(t[2]) + l_coeff[1]) * 0.001
+    let = (l_coeff[0]*utils.bin2dec(t[3]) + l_coeff[1]) * 0.001
+
+    iia = a_coeff[0]*utils.bin2dec(t[4]) + a_coeff[1]
+    ifa = a_coeff[0]*utils.bin2dec(t[5]) + a_coeff[1]
+    eia = a_coeff[0]*utils.bin2dec(t[6]) + a_coeff[1]
+    efa = a_coeff[0]*utils.bin2dec(t[7]) + a_coeff[1]
+    ind = (dta, dte, lit, let, iia, ifa, eia, efa)
+    return ind
+\end{lstlisting}
 
 % NOTA: antes de esto tendría que explicar como funciona icesym y como
 interactúa mi programa.  Con esta lista de decimales luego se generan los
@@ -348,43 +348,37 @@ interesa y se hace 1, con esto la función objetivo queda como el algoritmo
   \label{eq:derivada}
 \end{equation}
 
-
-% \begin{algorithm}
-%     \caption{Calculo del puntaje de una curva de rendimiento volumétrico [r] de
-%     $1xN$ y [w] pesos}\label{alg:funcObj}
-%     \SetAlgoLined
-%
-% \Procedure{Función Objetivo}{$r,w,N$}
-%   \State $d\gets 0$\Comment{Aproximación a la derivada de r}
-%   \State $p\gets 0$\Comment{Penalidad}
-%
-%   % Aprox de la derivada
-%   \For{$i=1:N$}
-%     \State $d[i]\gets r[i+1]-r[i]$
-%   \EndFor
-%
-%   % Calculo de la penalidad
-%   \For{$i=1:N-1$}
-%     \If{$d[i] \cdot d[i+1] < 0$}
-%       \State $p\gets p + 1$
-%     \EndIf
-%   \EndFor
-%   \State $p \gets 1 - \frac{p}{N-1}$
-%
-%   % Puntaje bruto
-%   \State $w \gets 0$\Comment{Puntaje sin penalizar}
-%   \For{$i=1:N$}
-%     \State $w \gets r[i] \cdot w[i]$
-%   \EndFor
-%
-%   % Puntaje con penalidad
-%   \State $s \gets w \cdot p$
-%   \State \textbf{return} $s$\Comment{s es el puntaje de la curva de rendimiento
-%     volumétrico}
-%
-% \EndProcedure
-% \end{algorithmic}
-% \end{algorithm}
+\begin{lstlisting}[language=Python]
+def evaluate_engine(individual, binnary_len, eng_obj, cores):
+    """Takes a global instance of motor.MRCVC and calculates it's score based on
+    volumetric efficiency curve.
+    """
+    if binnary_len:
+        eng = map_to_engine(individual, binnary_len)
+    else:
+        eng = individual
+        print(eng)
+    if m.check_angles(eng):
+        config = m.list_to_config(eng)
+        counter = 0
+        run_flag = False
+        while counter < 2:
+            print("counter", counter)
+            kargs, cyl_data, extras_data = m.run_and_read(eng_obj, config, multi=cores)
+            # kargs, cyl_data, extras_data = m.read(ENGINE_OBJ, config)
+            vol_eff = m.calc_volumetric_efficiency(kargs, extras_data)
+            print("vol eff", vol_eff)
+            if 0 in vol_eff:
+                counter += 1
+            else:
+                run_flag = True
+                break
+        if run_flag is False:
+            return False
+    else:
+        return False
+    return vol_eff
+\end{lstlisting}
 
 El conjunto de pesos utilizados para ponderar los rendimientos es el indicado
 en la tabla \ref{tab:pesos}
