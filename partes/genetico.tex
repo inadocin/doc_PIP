@@ -157,58 +157,111 @@ implícito.
 
 \section{Implementación}
 %
-Se utilizó como punto de partida la librería DEAP \cite{DEAP_JMLR2012}.
+Para la primer iteración se programaron los algoritmos y funciones necesarias
+para llevar a cabo la optimización desde cero.
+%
+Posteriormente se tomo la la librería DEAP \cite{DEAP_JMLR2012} y se
+modificaron los operadores a medida, para poder utilizarlos con ICESym.
 
 \subsection{Población}
 %
-El tamaño de la población se elige arbitrariamente en $N=100$ individuos, los
-parámetros que representan a cada individuo son los que definen la geometría
+Los parámetros que representan a cada individuo son los que definen la geometría
 del sistema de intercambio de gases, estos son:
 
-\centerline{$(DTA,\ DTE,\ LTA,\ LTE,\ IIA,\ IFA,\ EIA,\ EFA)$}
+\begin{enumerate}
+    \item [DTA] Diámetro de tubo de admisión.
+    \item [DTE] Diámetro de tubo de escape.
+    \item [LIT] Largo de tubo de admisión.
+    \item [LET] Largo de tubo de escape.
+    \item [IIA] Ángulo geométrico de apertura de puerto de admisión.
+    \item [IFA] Ángulo geométrico de cierre de puerto de admisión.
+    \item [IIE] Ángulo geométrico de apertura de puerto de escape.
+    \item [IFE] Ángulo geométrico de cierre de puerto de escape.
+\end{enumerate}
+
+Los diámetros pueden tomar valores de hasta 100mm, el largo de los tubos puede
+variar entre 500 y 1000 mm.
 %
-Dónde:
+Con respecto al par de ángulos que marcan la apertura y cierre del ecape,
+el único requisito es que la apertura se de antes que el escape.
+
+\begin{lstlisting}[language=Python]
+def check_angles(eng):
+    """ Validates intake/exhaust angle pair"""
+    iia = eng[-4]
+    ifa = eng[-3]
+    eia = eng[-2]
+    efa = eng[-1]
+    valid = True
+    if iia >= ifa:
+        valid = False
+    if eia <= efa:
+        valid = False
+    return valid
+\end{lstlisting}
+
+Cada una de las variables se representa como un número binario de 5 dígitos,
+los cuales se concatenan para formar un conjunto de 40 dígitos.
 %
-\begin{itemize}
-        %
-    \item DTA es el diámetro de tubo de admisión
-        %
-    \item DTE es el diámetro de tubo de escape
-        %
-    \item LTA es el largo de tubo de admisión
-        %
-    \item LTE es el largo de tubo de escape
-        %
-    \item IIA es el ángulo de apertura del puerto de admisión
-        %
-    \item IFA es el ángulo de cierre del puerto de admisión
-        %
-    \item EIA es el ángulo de apertura del puerto de escape
-        %
-    \item EFA es el ángulo de cierre del puerto de escape
-        %
-\end{itemize}
 
-Los diámetros pueden tomar valores de hasta 100mm, el largo de los
-tubos puede variar entre $0.5$ y $1$ metro, los ángulos tanto de
-admisión y escape se definen de la siguiente manera:
+\begin{table}
+    \centering
+        \begin{tabular}{rc} \toprule
+            0011001110110010001100110010011010100110 $ () \toprule
+            1101011100001100010110011000001110110100 $ () \\ \midrule
+            1101110101001010110000011000010110101010 $ () \\
+            0010010111111010100101111111010011010001 $ () \\
+            0100101110101111110110011001101011011100 $ () \\ \bottom
+        \end{tabular}
+    \caption{Binario a numeros}
+    \label{tab:mapeo}
+\end{table}
 
-% aca un grafico de como están definidos los ángulos y el porque
+El orden de los mismos se mantiene constante, por lo que cada sección del número
+representa una característica en particular del motor, de modo que:
 
+\begin{equation}
+    INDIVIDUO = (DTA, DTE, LIT, LET, IIA, IFA, EIA, EFA) \nonumber
+\end{equation}
 
-Para seleccionar la población se utilizó 
+Este número luego se convierte a decimales y se mapea a la lista que se utiliza
+para generar el archivo de configuración para ICESym.
+%
 
+\begin{lstlisting}[language=Python]
+def map_to_engine(num, bin_len):
+    t = utils.separate_list(num, bin_len)
+    dta = (d_coeff[0]*utils.bin2dec(t[0]) + d_coeff[1]) * 0.001
+    dte = (d_coeff[0]*utils.bin2dec(t[1]) + d_coeff[1]) * 0.001
+    lit = (l_coeff[0]*utils.bin2dec(t[2]) + l_coeff[1]) * 0.001
+    let = (l_coeff[0]*utils.bin2dec(t[3]) + l_coeff[1]) * 0.001
+
+    iia = a_coeff[0]*utils.bin2dec(t[4]) + a_coeff[1]
+    ifa = a_coeff[0]*utils.bin2dec(t[5]) + a_coeff[1]
+    eia = a_coeff[0]*utils.bin2dec(t[6]) + a_coeff[1]
+    efa = a_coeff[0]*utils.bin2dec(t[7]) + a_coeff[1]
+    ind = (dta, dte, lit, let, iia, ifa, eia, efa)
+    return ind
+\end{lstlisting}
+
+El tamaño de la población se elige arbitrariamente en $N=100$ individuos, 
 
 \subsection{Reproducción}
 
 Para crear la nueva población se debe elegir a los nuevos candidatos basándose
-en los puntajes de candidatos previos con un método de selección de tipo
-torneo, (iba por aca)
+en los puntajes de la población actual, por medio de un método de selección de
+tipo torneo, (iba por aca)
+%
+
 
 \subsection{Cruza}
 %
 El operador de cruza se encarga de combinar los genes de dos individuos para
 producir un individuo nuevo.
+
+El operador seleccionado es el de curza de dos puntos, en el que se seleccionan
+al azar dos índices
+
 
 \subsection{Mutación}
 %
@@ -278,42 +331,6 @@ Para representar a cada individuo se utilizan 8 características geométricas:
     \item [IFE] Ángulo geométrico de cierre de puerto de escape.
 \end{enumerate}
 
-Cada variable se representa como un número binario de 5 dígitos, los cuales se
-concatenan para formar un conjunto de 40 dígitos.
-%
-Con esto se genera la población a simular, con lo que queda algo como esto, cada
-motor queda de la forma:
-
-\begin{equation}
-  0011001110110010001100110010011010100110 \nonumber
-\end{equation}
-
-El orden de los mismos se mantiene constante, por lo que cada sección del número
-representa una característica en particular del motor, de modo que:
-
-\begin{equation}
-    INDIVIDUO = (DTA, DTE, LIT, LET, IIA, IFA, EIA, EFA) \nonumber
-\end{equation}
-
-Este número luego se convierte a decimales y se mapea a la lista que se utiliza
-para generar el archivo de configuración para ICESym.
-%
-
-\begin{lstlisting}[language=Python]
-def map_to_engine(num, bin_len):
-    t = utils.separate_list(num, bin_len)
-    dta = (d_coeff[0]*utils.bin2dec(t[0]) + d_coeff[1]) * 0.001
-    dte = (d_coeff[0]*utils.bin2dec(t[1]) + d_coeff[1]) * 0.001
-    lit = (l_coeff[0]*utils.bin2dec(t[2]) + l_coeff[1]) * 0.001
-    let = (l_coeff[0]*utils.bin2dec(t[3]) + l_coeff[1]) * 0.001
-
-    iia = a_coeff[0]*utils.bin2dec(t[4]) + a_coeff[1]
-    ifa = a_coeff[0]*utils.bin2dec(t[5]) + a_coeff[1]
-    eia = a_coeff[0]*utils.bin2dec(t[6]) + a_coeff[1]
-    efa = a_coeff[0]*utils.bin2dec(t[7]) + a_coeff[1]
-    ind = (dta, dte, lit, let, iia, ifa, eia, efa)
-    return ind
-\end{lstlisting}
 
 % NOTA: antes de esto tendría que explicar como funciona icesym y como
 interactúa mi programa.  Con esta lista de decimales luego se generan los
