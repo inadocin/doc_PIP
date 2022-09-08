@@ -385,7 +385,6 @@ def evaluate_engine(individual, binnary_len, eng_obj, cores):
         while counter < 2:
             print("counter", counter)
             kargs, cyl_data, extras_data = m.run_and_read(eng_obj, config, multi=cores)
-            # kargs, cyl_data, extras_data = m.read(ENGINE_OBJ, config)
             vol_eff = m.calc_volumetric_efficiency(kargs, extras_data)
             print("vol eff", vol_eff)
             if 0 in vol_eff:
@@ -405,17 +404,9 @@ en la tabla \ref{tab:pesos}
 
 \begin{table}
   \centering
-  \begin{tabular}{rccccccccc} \toprule
-      RPM  & $w$ \\ \midrule
-      1000 & 1 \\
-      2000 & 1 \\
-      3000 & 1 \\
-      4000 & 6 \\
-      5000 & 8 \\
-      6000 & 9 \\
-      7000 & 8 \\
-      8000 & 7 \\
-      9000 & 7 \\ \bottomrule
+  \begin{tabular}{lccccccccc} \toprule
+      RPM & 1000 & 2000 & 3000 & 4000 & 5000 & 6000 & 7000 & 8000 & 9000 \\ \midrule
+      $w$ & 1 & 1 & 1 & 6 & 8 & 9 & 8 & 7 & 7 \\ \bottomrule 
   \end{tabular}
   \caption{Pesos}
   \label{tab:pesos}
@@ -423,11 +414,12 @@ en la tabla \ref{tab:pesos}
 
 
 Una vez evaluados todos los motores de la población, se debe seleccionar los
-individuos que forman la población para la siguiente iteración.
+individuos que formarán la siguiente iteración del algoritmo.
 %
 El método de selección es de tipo TORNEO, en el cual se seleccionan los mejores
 $k$ individuos de un grupo al azar de $N$ candidatos.
 %
+% meter un dibujo de la selección de tipo torneo
 
 Con los nuevos candidatos seleccionados, se procede a variar la población,
 realizando la cruza y mutación.
@@ -454,40 +446,33 @@ la figura \ref{fig:cr2puntos}
   \label{fig:cr2puntos}
 \end{figure}
 
-% \begin{algorithm}
-% \caption{Cruza de dos punos}\label{alg:c2puntos}
-% \begin{algorithmic}[1]
-% \Procedure{Cruza}{$a,b,n$}
-%
-%   \State $i\gets random(1:n)$
-%   \State $j\gets random(1:n)$
-%
-%   % Aprox de la derivada
-%   \For{$i=1:N$}
-%     \State $d[i]\gets r[i+1]-r[i]$
-%   \EndFor
-%
-%   % Calculo de la penalidad
-%   \For{$i=1:N-1$}
-%     \If{$d[i] \cdot d[i+1] < 0$}
-%       \State $p\gets p + 1$
-%     \EndIf
-%   \EndFor
-%   \State $p \gets 1 - \frac{p}{N-1}$
-%
-%   % Puntaje bruto
-%   \State $w \gets 0$\Comment{Puntaje sin penalizar}
-%   \For{$i=1:N$}
-%     \State $w \gets r[i] \cdot w[i]$
-%   \EndFor
-%
-%   % Puntaje con penalidad
-%   \State $s \gets w \cdot p$
-%   \State \textbf{return} $s$\Comment{s es el puntaje de la curva de rendimiento
-%     volumétrico}
-%   \EndProcedure
-% \end{algorithmic}
-% \end{algorithm}
+
+\begin{lstlisting}[language=Python]
+def cxTwoPoint(ind1, ind2):
+    """Executes a two-point crossover on the input :term:`sequence`
+    individuals. The two individuals are modified in place and both keep
+    their original length.
+
+    :param ind1: The first individual participating in the crossover.
+    :param ind2: The second individual participating in the crossover.
+    :returns: A tuple of two individuals.
+
+    This function uses the :func:`~random.randint` function from the Python
+    base :mod:`random` module.
+    """
+    size = min(len(ind1), len(ind2))
+    cxpoint1 = random.randint(1, size)
+    cxpoint2 = random.randint(1, size - 1)
+    if cxpoint2 >= cxpoint1:
+        cxpoint2 += 1
+    else:  # Swap the two cx points
+        cxpoint1, cxpoint2 = cxpoint2, cxpoint1
+
+    ind1[cxpoint1:cxpoint2], ind2[cxpoint1:cxpoint2]
+        = ind2[cxpoint1:cxpoint2], ind1[cxpoint1:cxpoint2]
+
+    return ind1, ind2
+\end{lstlisting}
 
 El método de mutación seleccioand es mutShuffleIndexes (también podria se
 mutFlipBit), en el cual se modifica el orden los números que componen al vector,
