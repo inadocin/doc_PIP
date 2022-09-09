@@ -203,18 +203,35 @@ def check_angles(eng):
 Cada una de las variables se representa como un número binario de 5 dígitos,
 los cuales se concatenan para formar un conjunto de 40 dígitos.
 %
+Estos 8 números binarios se convierten mediante una transformación lineal
+al número que se envía a ICESym.
 
 \begin{table}
     \centering
         \begin{tabular}{rc} \toprule
-            0011001110110010001100110010011010100110 $ () \toprule
-            1101011100001100010110011000001110110100 $ () \\ \midrule
-            1101110101001010110000011000010110101010 $ () \\
-            0010010111111010100101111111010011010001 $ () \\
-            0100101110101111110110011001101011011100 $ () \\ \bottom
+            No. & String                                   \\ \midrule
+            1   & 0011001110110010001100110010011010100110 \\
+            2   & 1101011100001100010110011000001110110100 \\
+            3   & 1101110101001010110000011000010110101010 \\
+            4   & 0010010111111010100101111111010011010001 \\
+            5   & 0100101110101111110110011001101011011100 \\ \bottomrule
         \end{tabular}
-    \caption{Binario a numeros}
-    \label{tab:mapeo}
+    \caption{Binario a de entrada}
+    \label{tab:mapeo_pre}
+\end{table}
+
+\begin{table}
+    \centering
+        \begin{tabular}{rcccccccc} \toprule
+            No. & dta    & dte    & lit    & let    & iia     & ifa     & eia     & efa     \\ \midrule
+            1   & 0.0435 & 0.0616 & 0.0726 & 0.0087 & 17.4194 & 26.129  & 60.9677 & 17.4194 \\
+            2   & 0.0887 & 0.0932 & 0.0174 & 0.0145 & 55.1613 & 0.0     & 84.1935 & 58.0645 \\
+            3   & 0.091  & 0.0774 & 0.0145 & 0.0348 & 8.7097  & 2.9032  & 37.7419 & 29.0323 \\
+            4   & 0.039  & 0.0819 & 0.0842 & 0.0261 & 43.5484 & 84.1935 & 17.4194 & 49.3548 \\
+            5   & 0.0503 & 0.0616 & 0.0668 & 0.0842 & 55.1613 & 17.4194 & 63.871  & 81.2903 \\ \bottomrule
+        \end{tabular}
+    \caption{Vectores resultantes de la transformación}
+    \label{tab:mapeo_post}
 \end{table}
 
 El orden de los mismos se mantiene constante, por lo que cada sección del número
@@ -474,8 +491,8 @@ def cxTwoPoint(ind1, ind2):
     return ind1, ind2
 \end{lstlisting}
 
+
 El método de mutación seleccioand es mutShuffleIndexes (también podria se
-mutFlipBit), en el cual se modifica el orden los números que componen al vector,
-dando lugar a por ejemplo:
+mutFlipBit), en el cual se modifica el orden los números que componen al vector, dando lugar a por ejemplo:
 
 (figura con ejemplo)
