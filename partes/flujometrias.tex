@@ -1,42 +1,29 @@
 \chapter{Flujometrías}
 %
-El simulador ICESym requiere de información sobre el coeficiente de descarga
-(Cd) para simular el flujo a través de los puertos, como se mencionó en el
-capítulo \ref{cap:antecedentes}, en trabajos anteriores se realizaron
-simulaciones computacionales del motor con valores de Cd estimados
-\cite{lopez13}.
+% El simulador ICESym requiere de información sobre el coeficiente de descarga
+% (Cd) para simular el flujo a través de los puertos, en trabajos anteriores
+% se realizaron simulaciones computacionales del motor con valores de Cd estimados
+% \cite{lopez13}.
 %
 Para obtener una mejor caracterización del funcionamiento de los puertos de
 admisión y escape es necesario tener mayor conocimiento del Cd para una
 variedad de regímenes de funcionamiento del motor.
 %
-Con esto en mente se realizaron una serie de flujometrías para obtener un mapa
-de Cd en función de: una diferencia de presión y alzada válvula \footnote{ICESym
+Con este objetivo se realizaron una serie de flujometrías para obtener un mapa
+de Cd en función de una diferencia de presión y alzada válvula \footnote{ICESym
 utiliza alzada, por lo que se traduce área de pasaje de puerto en alzada de
-válvula equivalente.}, $Cd = f(\delta P,lv)$.
+válvula equivalente.}, de modo que $Cd = f(\delta P,lv)$.
 %
 Este mapa de Cd se usa en ICESym para obtener una simulación más precisa del
 motor.
 
-% Se realizarán las flujometrías utilizando el \emph{software} libre OpenFoam,
-% utilizando el solver \emph{pimleFoam} cuando el flujo se pueda asumir como
-% incompresible ($Ma < 0.3$) y \emph{rhoPimpleFoam} para flujo compresible.
-%
-% Con un modelo de turbulencia \emph{k-epsilon}
-% \section{Condiciones de contorno}
-% Para determinar las condiciones de contorno se usan los datos 
-% \subsection{Con solape de cámaras}
-% \subsection{Sin solape de cámaras}
+Se realizarán las flujometrías con el \emph{software} libre  \emph{OpenFoam},
+con los módulos \emph{pimleFoam} cuando el flujo se pueda asumir como
+incompresible ($Ma < 0.3$) y \emph{rhoPimpleFoam} para flujo compresible.
 
-\section{Modelos de viscosidad}
-%
-% Tengo que decidir que modelo de viscosidad utilizar y dejar explicado por que
-% es k-epsilon
-
-
-De los modelos de dos ecuaciones, el \emph{k-epsilon} es el más utilizado
-de los modelos de turbulencia, anda bien para números de Reynolds bajos y
-diferencias de presión relativamente bajas.
+En todos los casos se utilizó el modelo de \emph{k-epsilon}, es uno de los
+modelos más utilizados por su robustes y buenos resultados para números de
+Reynodls bajos y diferencias de presión relativamente bajas\cite{wilcox}
 %
 El modelo requiere que se aproximen los valores iniciales de $\kappa$ y
 $\epsilon$, que a su vez requieren de una estimación de la longitud de mezcla o
@@ -62,16 +49,16 @@ Los valores iniciales se calculan a partir de:
 Dónde:
 %
 \begin{description}
-    \item[$C_{\mu}$] es un coeficiente del modelo
+    \item[$C_{\mu}$] es un coeficiente propio del modelo.
         %
     \item[I] es la intensidad de turbulencia estimada, en este trabajo se utilizó 0.05.
         %
-    \item[$l_m$] es la longitud de mezcla o escala de viscosidad, para flujos
-        internos se suele usar el diámetro hidráulico de la cañería.
+    \item[$l_m$] es la longitud de mezcla o escala de viscosidad,
+     para flujos internos se suele usar el diámetro hidráulico de la cañería.
         %
-    \item[$\kappa$] es la energía cinética turbulenta
+    \item[$\kappa$] es la energía cinética turbulenta.
         %
-    \item[$\epsilon$] es la disipación de energía cinética turbulenta
+    \item[$\epsilon$] es la disipación de energía cinética turbulenta.
         %
 \end{description}
 
@@ -82,17 +69,10 @@ al puerto, en el extremo que limita con los conductos de admisión o escape.
 %
 Sin embargo el área de pasaje es menor a la de la boca de los puertos por lo
 que se decidió utilizar un valor de $l_m$ más cercano a la altura de la cámara.
-% esto teniendo en cuneta que para realizar las flujometrías se utiliza el
-% algoritmo PIMPLE, el cual se puede utilizar en casos con malas estimaciones
-% iniciales a las variables viscosas o mal inicializados.
 
-% \subsection{k-epsilon}
-% \subsubsection{Funciones de pared}
-% \subsection{k-omega}
-
-% \section{Tipos de flujo}
-% \subsection{Flujo compresible}
-% \subsection{Flujo incompresible}
+esto teniendo en cuneta que para realizar las flujometrías se utiliza el
+algoritmo PIMPLE, el cual se puede utilizar en casos con malas estimaciones
+iniciales a las variables viscosas o mal inicializados.
 
 \section{Coeficiente de descarga ($C_D$)}
 
@@ -102,10 +82,10 @@ a través de una restricción.
 Para el caso en que el flujo no esté bloqueado, la ecuación de $\dot{m}$ es:
 
 \begin{equation}
-   \label{eq:m_not_choked}
-   \dot{m} = \frac{C_D A_R p_0}{\sqrt{R T_0}}
-             {\left(\frac{p_T}{p_0} \right)}^{1/\gamma}
-             {\left( \frac{2\gamma}{\gamma-1} \left[1- {(\frac{p_T}{p_0})}^{{\gamma-1}/\gamma} \right] \right)} ^{1/2}
+    \label{eq:m_not_choked}
+    \dot{m} = \frac{C_D A_R p_0}{\sqrt{R T_0}}
+            {\left(\frac{p_T}{p_0} \right)}^{1/\gamma}
+            {\left( \frac{2\gamma}{\gamma-1} \left[1- {(\frac{p_T}{p_0})}^{{\gamma-1}/\gamma} \right] \right)} ^{1/2}
 \end{equation}
 
 En caso del que el flujo esté bloqueado, es decir
