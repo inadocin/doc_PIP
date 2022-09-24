@@ -37,12 +37,14 @@ La geometría del MRCVC permite que gran parte de la combustión se de a volumen
 constante\cite{mrcvc_geom}, por lo que se espera un rendimeinto mayor en
 comparación al ciclo otto de un motor convencional de encendido por chispa.
 %
+
 \begin{figure}
     \centering
     \includegraphics[width=1\textwidth]{comparacion_ciclos.png}
     \caption{Comparación de ciclos ideales (cambiar por una imagen propia}
     \label{fig:comparacion_ciclos}
 \end{figure}
+
 %
 Para un MRCVC con $n$ paletas de radio de punta nulo la geometría como función del
 ángulo del cigüeñal queda totalmente definida por el radio de trayectoria de
@@ -52,14 +54,21 @@ La variación del volumen se puede ver en la figura \ref{fig:vol_constante}, en
 la que se indica el punto en el que comeienza la combustión y la porción que
 transcurre a volumen constante.
 
-
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{comparacion_ciclos.png}
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel=Angulo $(deg)$,
+            ylabel=Volumen $(mm^3)$,
+            grid=major,
+            mark size=0pt,
+        ]
+        \addplot table [x=Angle,y=Volume] {data/vol.dat};
+        \end{axis}
+    \end{tikzpicture}
     \caption{Combustión a volumen constante}
     \label{fig:vol_constante}
 \end{figure}
-
 
 La geometría utilizada para este trabajo se resumen en la tabla
 \ref{tab:geom_mrcvc} y se ilustra en la figura \ref{fig:geom_mrcvc}.
@@ -89,7 +98,23 @@ la cual se realizó parte del prediseño del sistema de intercambio de gases.
 %     \label{fig:puertos_iniciales}
 % \end{figure}
 
-Se puede ver que se buscó una entrada y salida suave de los gases a la cámara del motor.
+Los ángulos que determinan el reglaje de los puertos de admisión y escpe
+son los de inicio y de cierre del puerto.
+%
+Como ejemplo, la posición del puerto de escape queda determiada por los 
+valores EIA y EFA como se ve en la figura \ref{fig:angulos_escape}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{angulos_escape.png}
+    \caption{Puerto de escape}
+    \label{fig:angulos_escape}
+\end{figure}
+
+Como se puede ver en la figura \ref{fig:primeros_puertos}, se buscó suavizar
+los vértices en donde la pared del puerto intersecta la cámara de combustión.
+%
+
 
 \subsection{Ciclo operativo}
 En otros trabajos se detallo el ciclo operativo del motor, la variación de la

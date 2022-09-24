@@ -4,7 +4,6 @@
 \documentclass[11pt,twoside]{report}
 \usepackage{fontspec}  % variante de fontenc compatilbe con lualatex
 \usepackage{polyglossia}  % variante de babel compatible con lualatex
-\setdefaultlanguage{spanish}  % asi se configura el idioma en polyglossia
 \usepackage{luacode}  % para ejecutar funciones de lua, funciona solo con lualatex como compilador
 \usepackage{pgfplots}  % para crear graficos desde aca
 \pgfplotsset{compat=1.18}  % para crear graficos desde aca
@@ -20,9 +19,9 @@
 \usepackage{listings}
 \usepackage{xcolor}
 
-\addto\captionsspanish{%
-    \def\tablename{Tabla}%
-}
+\setdefaultlanguage{spanish}
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+\addto\captionsspanish{\renewcommand{\listtablename}{Índice de Tablas}}
 
 \graphicspath{ {figuras/} }
 \addbibresource{bib.bib}
