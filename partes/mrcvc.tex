@@ -34,8 +34,7 @@ que son relevantes a este trabajo.
 \subsection{Geometría}
 %
 La geometría del MRCVC permite que gran parte de la combustión se de a volumen
-constante\cite{mrcvc_geom}, por lo que se espera un rendimeinto mayor en
-comparación al ciclo otto de un motor convencional de encendido por chispa.
+constante\cite{mrcvc_geom}, como se ve en la figura \ref{fig:vol_constante}.
 %
 
 \begin{figure}
@@ -46,13 +45,9 @@ comparación al ciclo otto de un motor convencional de encendido por chispa.
 \end{figure}
 
 %
-Para un MRCVC con $n$ paletas de radio de punta nulo la geometría como función del
-ángulo del cigüeñal queda totalmente definida por el radio de trayectoria de
-paletas $R$, semiancho de paletas $r$ y altura de cámara $h$.
-%
-La variación del volumen se puede ver en la figura \ref{fig:vol_constante}, en
-la que se indica el punto en el que comeienza la combustión y la porción que
-transcurre a volumen constante.
+Para un MRCVC con $n$ paletas de radio de punta nulo, la geometría como función
+del ángulo del cigüeñal queda totalmente definida por el radio de trayectoria
+de paletas $R$, semiancho de paletas $r$ y altura de cámara $h$.
 
 \begin{figure}
     \centering
@@ -117,14 +112,14 @@ los vértices en donde la pared del puerto intersecta la cámara de combustión.
 
 
 \subsection{Ciclo operativo}
-En otros trabajos se detallo el ciclo operativo del motor, la variación de la
-geometría y el funcionamiento en detalle de ICESym, así como también el modelo
-de solape de cámaras desarrollado para el uso con el MRCVC.
+%
+La variación de la geometría y el funcionamiento en detalle de ICESym, así como
+también el modelo de solape de cámaras desarrollado para el uso con el MRCVC.
 %
 Para una misma relación de compresión, una combustión a volumen constante
 alcanza valores de presión y temperatura mayores en comparación a otros ciclos.
 %
-Este presenta un mayor rendimiento térmico
+% Este presenta un mayor rendimiento térmico
 
 % \begin{figure}
 %     \centering
@@ -260,12 +255,13 @@ Con esto se construye una mapa del coeficiente de descarga de la forma $C_d =
 f(lv, dp)$, que se utiliza en \emph{def\_valve.f90} para calcular el área
 efectiva de la válvula.
 %
-En la porción de código que sigue, se llama la rutina interpolant para calcular
-el valor de Cd para un valor de Lv dado, en caso de utilizar el modelo de dos
-variables, se llama la rutina interpolant2d.
+En la porción de código que sigue, se llama la rutina \emph{interpolant} para
+calcular el valor de Cd para un valor de Lv dado, en caso de utilizar el modelo
+de dos variables, se llama la rutina \emph{interpolant2d}.
 %
-Ambas realizan una interpolación lineal entre los valores conocidos de Cd.
-
+La primera es una interpolación lineal para obtener Cd para un valor de lv dado
+y la segunda es una interpolación bilineal que se agregó al código original del
+ICESym, para poder aproximar un valor de Cd para un par $(\delta P; l_v)$ dado.
 
 \begin{lstlisting}[language=fortran]
 SUBROUTINE area_valve(theta, Dv, VO, VC, Lvmax, Nval, type_dat, &
@@ -280,6 +276,77 @@ SUBROUTINE area_valve(theta, Dv, VO, VC, Lvmax, Nval, type_dat, &
     [...]
 END SUBROUTINE area_valve
 \end{lstlisting}
+
+La interpolación bilineal se realiza sobre una malla rectangular de datos
+conocidos, con esto se realiza simplemente una interpolación lineal entre dos
+valores en planos con datos conocidos.
+
+\begin{lstlisting}[language=fortran]
+   SUBROUTINE interpolant2d(x, y, z, xi, yi, zi)
+      !
+      ! Bilinear interpolation, requires a rectangular mesh
+      !
+      IMPLICIT NONE
+      REAL*8, DIMENSION(:), INTENT(in) :: x, y
+      REAL*8, DIMENSION(:, :), INTENT(in) :: z
+      REAL*8, INTENT(in) :: xi, yi
+      REAL*8, INTENT(out) :: zi
+      INTEGER :: nx, i
+      REAL*8, DIMENSION(2) :: z_aux
+
+      nx = SIZE(x)
+      IF (xi .LE. x(1)) THEN ! <=
+         CALL interpolant(y, z(1, :), yi, zi)
+         RETURN
+      ELSE IF (xi .GE. x(nx)) THEN  ! >=
+         CALL interpolant(y, z(nx, :), yi, zi)
+         RETURN
+      END IF
+
+      i = iminloc(dabs(x - xi))
+      IF (x(i) .GT. xi) i = i - 1 ! >
+
+      CALL interpolant(y, z(i, :), yi, z_aux(1))   ! z1=f(x1,yi)
+      CALL interpolant(y, z(i + 1, :), yi, z_aux(2)) ! z2=f(x2,yi)
+      CALL interpolant(x(i:i + 1), z_aux, xi, zi)   ! zi=f(xi,yi)
+
+      ! write (*, *) xi, yi, zi
+
+   END SUBROUTINE interpolant2d
+\end{lstlisting}
+
+Si bien hay otros métodos para estimar el valor de Cd para dos valores $(\delta
+P; l_v$, este método es sencillo y da resultados satisfactorios.
+%
+En la figura \ref{fig:bilineal} se muesta un ejemplo del error obtenido
+con este método para interpolar una función de prueba 
+$\sin(\sqrt(x^2 + y^2))$
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{bilineal.png}
+    \caption{Interpolación bilineal de $\sin(\sqrt(x^2 + y^2))$}
+    \label{fig:bilineal}
+\end{figure}
+
+La malla rectangular se realizará a partir de los valores de Cd que se obtengan
+de flujometrías con \emph{OpenFoam} \cite{openfoam}.
+%
+Debido al costo copmutacional que requieren la flujoemtría, solo una cantidad
+necesaria de puntos se obtendrá con este método, las combinaciones de $\delta
+P; l_v$ ensayadas se indican con detalle en apartados posteriores.
+%
+Para generar la malla rectangular se realizó una interpolación con el
+método del punto más cercano y se suavizaron estos resultados promediando
+con un promedio móvil de los $n$ valores más cercanos.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{interpolacion.png}
+    \caption{Combustión a volumen constante}
+    \label{fig:vol_constante}
+\end{figure}
 
 
 \section{Notas}

@@ -11,7 +11,7 @@ MRCVC E ICESYM
 
 2. icesym
     - se describe brevemente el funcionamiento del simulador y su historia
-    - se describe como se modela el mrcvc en ICESuym
+    - se describe como se modela el mrcvc en ICESym
     - se descrbien las modificaiones realizads para poder utilizar el simulador
     dentro del optimizador (el algoritmo genético)
 
