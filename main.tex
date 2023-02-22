@@ -18,6 +18,7 @@
 \usepackage[bookmarks]{hyperref}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{subcaption}
 
 \setdefaultlanguage{spanish}
 \addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
@@ -55,10 +56,16 @@
 }
 \lstset{style=mystyle}
 
+\newcommand\lua[1]{\luaexec{#1}}
+
 % -----------------------------------------------------------------------------
 % Documento
 % -----------------------------------------------------------------------------
 \begin{document}
+
+\begin{luacode}
+dofile("./data/data.lua")
+\end{luacode}
 
 % -- Iniciales
 \include{partes/caratula}

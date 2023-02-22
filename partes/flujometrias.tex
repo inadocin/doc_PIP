@@ -1,28 +1,34 @@
 \chapter{Flujometrías}
 %
 % El simulador ICESym requiere de información sobre el coeficiente de descarga
-% (Cd) para simular el flujo a través de los puertos, en trabajos anteriores
-% se realizaron simulaciones computacionales del motor con valores de Cd estimados
+% (Cd) para simular el flujo a través de los puertos, en trabajos anteriores se
+% realizaron simulaciones computacionales del motor con valores de Cd estimados
 % \cite{lopez13}.
 %
 Para obtener una mejor caracterización del funcionamiento de los puertos de
-admisión y escape es necesario tener mayor conocimiento del Cd para una
-variedad de regímenes de funcionamiento del motor.
+admisión y escape es necesario tener mayor conocimiento del coeficiente de
+descarga para para una deferentes posiciones del rotor y velocidades de giro
+del motor.
 %
 Con este objetivo se realizaron una serie de flujometrías para obtener un mapa
 de Cd en función de una diferencia de presión y alzada válvula \footnote{ICESym
 utiliza alzada, por lo que se traduce área de pasaje de puerto en alzada de
-válvula equivalente.}, de modo que $Cd = f(\delta P,lv)$.
+válvula equivalente.}, de modo que $Cd = f(\Delta P,lv)$.
 %
-Este mapa de Cd se usa en ICESym para obtener una simulación más precisa del
+Este mapa de $C_D$ se usa en ICESym para obtener una simulación más precisa del
 motor.
 
-Se realizarán las flujometrías con el \emph{software} libre  \emph{OpenFoam},
+Se realizarán las flujometrías con el \emph{software} libre \emph{OpenFoam},
 con los módulos \emph{pimleFoam} cuando el flujo se pueda asumir como
 incompresible ($Ma < 0.3$) y \emph{rhoPimpleFoam} para flujo compresible.
 
+Para modelar la turbulencia se utilizó un modelo de dos ecuaciones, esto porque
+son modelos completos, es decir proveen una ecuación para calcular $\kappa$ y
+la escala de longitud turbulenta $l$, parten de la aproximación de Boussinesq y
+la ecuación de energía cinética turbulenta.
+
 En todos los casos se utilizó el modelo de \emph{k-epsilon}, es uno de los
-modelos más utilizados por su robustes y buenos resultados para números de
+modelos más utilizados por su robustez y buenos resultados para números de
 Reynodls bajos y diferencias de presión relativamente bajas\cite{wilcox}
 %
 El modelo requiere que se aproximen los valores iniciales de $\kappa$ y
@@ -30,7 +36,6 @@ $\epsilon$, que a su vez requieren de una estimación de la longitud de mezcla o
 escala de la viscosidad $l_m$.
 %
 Los valores iniciales se calculan a partir de:
-
 
 \begin{align}
     %
@@ -42,7 +47,7 @@ Los valores iniciales se calculan a partir de:
     %
     \kappa   &= 1.5 \cdot \left( u_{ref} \cdot I \right) ^ 2 \\
     %
-    \epsilon &= \frac{C_\mu ^{3/4} \cdot \kappa ^{3/2}} {L_m}
+    \epsilon &= \frac{C_\mu ^{3/4} \cdot \kappa ^{3/2}} {l_m}
     %
 \end{align}
 
@@ -70,16 +75,14 @@ al puerto, en el extremo que limita con los conductos de admisión o escape.
 Sin embargo el área de pasaje es menor a la de la boca de los puertos por lo
 que se decidió utilizar un valor de $l_m$ más cercano a la altura de la cámara.
 
-esto teniendo en cuneta que para realizar las flujometrías se utiliza el
-algoritmo PIMPLE, el cual se puede utilizar en casos con malas estimaciones
-iniciales a las variables viscosas o mal inicializados.
+%% Esto teniendo en cuneta que para realizar las flujometrías se utiliza el %% algoritmo PIMPLE, el cual se puede utilizar en casos con estimaciones
+%% iniciales a las variables viscosas o mal inicializados
 
 \section{Coeficiente de descarga ($C_D$)}
 
-El coeficiente másico se calcula a partir de las ecuaciones de flujo compresible
-a través de una restricción.
-%
-Para el caso en que el flujo no esté bloqueado, la ecuación de $\dot{m}$ es:
+El coeficiente másico se calcula a partir de las ecuaciones de flujo
+compresible a través de una restricción, para el caso en que el flujo no esté
+bloqueado, la ecuación de $\dot{m}$ es:
 
 \begin{equation}
     \label{eq:m_not_choked}
@@ -93,82 +96,108 @@ $p_T/p_0 \le [2/\gamma+1)]^{\gamma/(\gamma - 1)}$
 , la ecuación correspondiente es:
 
 \begin{equation}
-C_D^{-1} =  \frac {A_R p_0} {\dot{m} (R T_0)^{1/2}}
+    \dot{m}=  \frac {C_D A_R p_0} {(R T_0)^{1/2}}
             \gamma^{1/2}
             \left( \frac{2\gamma}{\gamma+1} \right)^{(\gamma+1)/(2(\gamma-1))}
 \end{equation}
 
-Para determinar $C_D$ se debe conocer
+Para determinar $C_D$ se debe conocer:
 
-\begin{description}
-    \item[$p_0$] Presión de estancamiento antes de la restricción.
-    \item[$T_0$] Temperatura de estancamiento antes de la restricción.
-    \item[$p_T$] Presión estática justo después de la restricción.
-    \item[$A_R$] Área de referencia.
-    \item[$\dot{m}$] Caudal másico.
-    \item[$\gamma$] Cociente de capacidades térmicas del gas.
-\end{description}
+\begin{itemize}
+    \item $p_0$, es la presión de estancamiento antes de la restricción.
+    \item $T_0$, es la temperatura de estancamiento antes de la restricción.
+    \item $p_T$, es la presión estática justo después de la restricción.
+    \item $A_R$, es el área de referencia.
+    \item $\dot{m}$, es el caudal másico.
+    \item $\gamma$, es el cociente de capacidades térmicas del gas.
+\end{itemize}
 
-El área de referencia utilizada en ICESym es el área de cortina, que se define
-como $A_{R} = \pi D_{V} L_{{v}}$ dónde $D_{V}$ es el diámetro de la válvula,
-$L_{v}$ es la alzada de la válvula.
-
-% NOTA: poner referencia al script del chiquito
+El área de referencia utilizada en ICESym es el área frontal del puerto expuesta
+a la cámara que se esté analizando, caluclada como $A_{R} = h_{p} \cdot l_{{v}}$.
+%
 Debido a que el MRCVC no tiene válvulas, en trabajos anteriores se confeccionó
-un script para convertir el área de la apertura del puerto en una alzada
-equivalente.
-
-Los valores de presión y temperatura se obtienen de los datos de salida de
-ICESym.
+un script para calcular la distancia $l_v$ en función del ánuglo del ciclo.
 %
-A partir de estos datos se calculan varias propiedades termodinámicas del gas,
-incluyendo la constante del gas, masa molar, viscosidad cinemática y demás.
-%
-Para calcular estas propiedades se asume que el gas no contiene gases residuales.
-
-El caudal másico y la velocidad a las entradas y salidas se obtiene con
-OpenFOAM.
-
-
-
-\section{Mapa de Cd}
-%
-Para obtener el mapa se tomaran valores de flujo másico en las combinaciones de
-$\delta P$ y alzada que están indicadas en la tabla \ref{tab:casos}.
-%
-En la figura \ref{fig:flujometrias} se ve que se eligieron más cantidad de
-muestreos en las zonas donde hay mayores cambios de presión.
-%
-La figura \ref{fig:flujometrias} fué obtenida a partir de los resultados del
-simulador ICESym, restando para las velocidades seleccionadas la presión de la
-cámara a la presión en la boca del puerto.
+En la figura \ref{fig:area_referencia} se ilustran las áreas de referencia para
+una posición del rotor en la que hay solape de cámaras con $\theta = 55^\circ$.
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{flujometrias_admision.png}
-    \caption{Flujometrías para el puerto de Admisión}
-    \label{fig:flujometrias}
+    \includegraphics[]{area_referencia.png}
+    \caption{Área de referencia}
+    \label{fig:area_referencia}
 \end{figure}
 
+Los valores de densidad, velocidad, presión y temperatura se obtienen de los
+datos de salida de ICESym para un puerto, ángulo y velocidad dada, en
+particular del archivo de salida con nombre \emph{$cyl_0.txt$} que contiene
+información relevante a la cámara de combustión.
+%
+Para la temperatura se utiliza la temperatura de cámara, $T_0 = T_C$, la
+presión antes y después del puerto se selecciona de acuerdo al sentido de
+flujo, en caso de ser flujo hacia la cámara de combustión, la presión en el
+puerto se utiliza como inicial $P_0$ y la presión en la cámara es la
+aproximación a la presión en la restricción $P_T$.
+
+Para inicializar el campo de presión y densidades, se usa la media entre las
+cámaras que se estén simulando y se establerce un campo uniforme.
+
+La velocidad se incicializa con un campo nulo de velocidades, que en la
+configuración de OpenFOAM se designa como \emph{internalField uniform (0 0 0)}.
+
+En resumen, los valores iniciales de los campos de presión, temperatura y velocidad
+
 \begin{table}
-    \centering
-    \begin{tabular}{rll} \toprule
-        Caso & Ángulos & Velocidades (rpm) \\ \midrule
-        0 & -10, 110 & 1000, 2000, 3000, 7000, 8000 \\
-        1 & 0, 120 & 2000, 7000 \\
-        2 & 10, 130 & 2000, 7000 \\
-        3 & 50, 170 & 3000, 7000, 9000 \\
-        4 & 60, 180 & 3000, 5000, 6000, 7000 \\
-        5 & 95 & 1000, 7000\\ \bottomrule
+\centering
+    \begin{tabular}{cccc} \toprule
+        Var & Campo         & Parche                      & Pared \\
+        T   & uniforme T0   & inletOutlet                 & uniforme T9\\ \midrule
+        P   & uniform Pavg  & uniformTotalPressure        & Pi \\
+        U   & uniform (0 0 0) & pressureInletOutletVelocity & valor fijo(0 0 0)\\
+        rho & uniform rhoAvg \\ \bottomrule
     \end{tabular}
-    \caption{Flujometrías a realizar}
-    \label{tab:casos}
+    \caption{Condiciones iniciales} \label{tab:cc}
 \end{table}
 
-Como se ve en la Figura \ref{fig:flujometrias}, los puntos a evaluar son los
-listados en la Tabla \ref{tab:casos}.
+En todos los casos se tomará como velocidad de referencia a la media entre la
+velocidad en la punta del tubo de las cámaras solapadas.
+%
+Del mismo modo, la temperatura será la temperatura de cámara media.
 
+Si hay o no solape de cámaras va a depender tanto de la geometría del puerto
+como de la posición del ciclo en la que se encuentre, para determinar las
+condiciones iniciales se debe tener en cuenta el solape.
+%
+En la figura \ref{fig:geom} se muestra un corte del puerto con un plano cuya
+normal está en $\vec{z}$, se denominará a la cámara que esté a la izquierda
+como cámara 0 y a la que esté a la derecha cámara 1
+%
+Al haber solape de cámaras, para definir la presión del puerto y estimar las
+condiciones iniciales de los parámetros viscosos que requiere el modelo
+$k-\epsilon$ se utilizan valores medios de presión, velocidad y temperatura de
+ambas cámaras.
+%
+Además, las condiciones inicales de que se aplican al parche denominado
+\emph{puerto} es igual a la media aritmética de la velocidad de las velocidades
+de los puertos de ambas cámaras, Lo mismo sucede con la presión, densidad y
+temperatura.
 
+A partir de estos datos se calculan varias propiedades termodinámicas del gas,
+incluyendo la constante del gas, masa molar, viscosidad cinemática y demás.
+%
+Para calcular estas propiedades se asume que el gas no contiene gases
+residuales.
+
+Finalmente el caudal másico yse obtiene con OpenFOAM, en donde se simula el
+tiempo suficiente para que los caudales másicos por entradas o salidas se
+estabilice, como se ve en la figura \ref{fig:caudalMasico}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{surfaceFieldValue_405.0.png}
+    \caption{Flujometrías para el puerto de Admisión}
+    \label{fig:caudalMasico}
+\end{figure}
 En todos los casos se tomará como velocidad de referencia a la media entre la
 velocidad en la punta del tubo de las cámaras que se estén solapando.
 %
@@ -192,6 +221,46 @@ Además, las condiciones inicales de que se aplican al parche denominado
 de los puertos de ambas cámaras, Lo mismo sucede con la presión, densidad y
 temperatura.
 
+
+\subsection{Mapa de $C_D$}
+%
+Para obtener el mapa se tomaran valores de flujo másico en las combinaciones de
+$(\Delta P, l_v)$ que están indicadas en la tabla \ref{tab:casos}.
+%
+% En la figura \ref{fig:flujometrias} se ve que se eligieron más cantidad de
+% muestreos en las zonas donde hay mayores cambios de presión.
+%
+% La figura \ref{fig:flujometrias} fué obtenida a partir de los resultados del
+% simulador ICESym, restando para las velocidades seleccionadas la presión de la
+% cámara a la presión en la boca del puerto.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{flujometrias_admision.png}
+    \caption{Flujometrías para el puerto de Admisión}
+    \label{fig:flujometrias}
+\end{figure}
+
+\begin{table}
+    \centering
+    \begin{tabular}{rll} \toprule
+        Caso & Ángulos  & Velocidades (rpm) \\ \midrule
+        0    & -10, 110 & 1000, 2000, 3000, 7000, 8000 \\
+        1    & 0, 120   & 2000, 7000 \\
+        2    & 10, 130  & 2000, 7000 \\
+        3    & 50, 170  & 3000, 7000, 9000 \\
+        4    & 60, 180  & 3000, 5000, 6000, 7000 \\
+        5    & 95       & 1000, 7000\\ \bottomrule
+    \end{tabular}
+    \caption{Flujometrías a realizar}
+    \label{tab:casos}
+\end{table}
+
+Como se ve en la Figura \ref{fig:flujometrias}, los puntos a evaluar son los
+listados en la Tabla \ref{tab:casos}.
+
+
+
 \begin{figure}[h]
     \includegraphics[width=0.8\textwidth]{caso_1-cc.png}
     \caption{Condiciones de borde}
@@ -202,7 +271,16 @@ Dentro del volumen de control, el campo de presiones se inicializa con el valor
 medio de presiones de las cámaras y el campo de velocidades se hace
 inicialmente (0,0,0).
 
-%\section{Estudio de convergencia de malla}
+\section{Estudio de convergencia de malla}
+%
+Para generar la malla primero se representa el volumen a simular con freecad,
+procesada con slaome para obtener un conjunto de parches en formato ASCII stl
+que puede ser procesado por snappyHexMesh.
+
+snappyHexMesh requiere de una malla inicial para poder comenzar a tabajar, esta
+se genera con la aplicaicón blockMesh
+
+
 
 %Un estudio de convergencia de malla es una herramienta para evaluar los errores
 %de discretización espacial de un estudio de CFD y consiste básicamente en:
@@ -417,6 +495,33 @@ se deberá evaluar si es necesario revisar la hipótesis de flujo incompresible.
 
 % ESe dice que el caso converge cuando el flujo másico a través de cualquiera de
 % las entradas/salidas del dominio se estabiliza.
+
+El caso se ejecuta hasta obtener una convergencia del caudal másico para todas
+las cámaras involucradas en la simulación, inicialmente este tiempo es de 0.01
+segundos.
+%
+El objetivo de cada flujometría es obtener un valor de caudal másico, para esto
+se modelo cada puerto en distintas posiciones y velocidades de rotación.
+%
+Como se mencionó,los valores iniciales se determinan a partir de los datos de
+salida del simulador, con un script de nombre \emph{pre.py} que es un compilado
+de funciones para determinar propiedades termodinámicas de las mezclas de gases
+quemados o no quemados.
+
+Con esto se obtiene un mapa de caudales másicos que se utilizan para calcular
+el coeficiente de descarga con el uso de un script de nombre \emph{post.py}.
+
+
+En las imágenes que siguen se muestan el campo de velocidades de un corte de
+algunos puntos del mapa obtenido.
+
+
+El mapa de $C_D$ es un conjunto finito de puntos, estos se utilizan para crear
+una superficie mediante el método de interpolación de punto más cercano con
+suavizamiento.
+
+Los puntos obtenidos se listan en la tabla xxx y la superficie correspondiente
+en la figura xxx.
 
 \begin{table}
     \centering
@@ -633,9 +738,3 @@ Y con el orden de convergencia se pueden calcular los valores de GCI.
 Con estos resultados se verifica que se esté en rango de convergencia
 asintótica, como se indica en la Tabla \ref{tab:rac_caso_5}, los flujos
 másicos de ambas cámaras se encuentran en rango de convergencia asintótica.
-
-\section{Caso 5 - 7000rpm}
-
-\section{Resultado final}
-
-

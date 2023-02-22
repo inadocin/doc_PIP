@@ -29,6 +29,8 @@ RESULTADOS DE PRIMER ITERACION
 
 FLUJOMETRIAS
 - se describen brevemente los modelos a utilzizar
+- hablar del tipo de discretizacion que se usa y los esquemas.
+- como estan configurados los solvers (modelo de discretizacion y demas)
 - se describen como se consideran las condiciones iniciales
 - se descrbier como se sacan las condiciones inciales de ICESym
 - los modelos a utilziar para cada tipo de seimiuacion

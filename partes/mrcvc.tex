@@ -6,26 +6,26 @@ motores tanto alternativos como rotativos en general y el MRCVC en particular.
 En su código se incluyen modelos de la geometría del motor, la transferencia
 de calor y el solape de cámaras.
 
+En este capítulo se describe brevemente el ciclo operativo de MRCVC, los
+aspectos generales de ICESym que hacen a la simulación del mismo, cómo se
+utilizó el simulador y las modificaciones que se realizaron para este trabajo.
+
 \section{Simulación computacional del ciclo termodinámico del MRCVC}
 
-% \section{ICESym}
-Para simular el ciclo operativo del motor, se utilizó el simulador de motores
-de combustión interna ICESym \cite{icesym}, desarrollado en conjunto por la
-UNCo y UNL.
+El MRCVC es un motor rotativo de combustión interna encendido por chispa, en el
+que gran parte de la misma ocurre a volumen constante.
 %
-Este simulador utiliza modelos unidimensionales para simular el flujo en los
-conductos de admisión/escape y modelos cero dimensionales o termodinámicos
-para la cámara de combustión, la transferencia de calor y los modelos de
-fricción.
+ICESym utiliza modelos unidimensionales para simular el flujo en los conductos
+de admisión/escape y modelos cero dimensionales o termodinámicos para la cámara
+de combustión, la transferencia de calor y el modelado de la fricción.
 %
+Además, incluye un modelo para el solape entre cámaras \cite{lopez16} entre
+otras modificaciones particulares al MRCVC.
 
-Incluye un modelo para el solape entre cámaras \cite{lopez16} y modificaciones
-particulares al MRCVC.
-%
-Con el objetivo de pedr simular con mayor precisión el ciclo del motor, se ha 
-modificado el código de ICESym para incluir un modelo de coeficiente de descarga
-que dependa de dos variables presión y alzada de válvula, de modo que  
-$Cd = f(L_v, \delta P)$.
+Con el objetivo de poder simular con más detalle el ciclo del motor, se ha
+modificado el código de ICESym para permitir el uso de modelos de coeficiente
+de descarga dependientes de dos variables: presión y alzada de válvula, de modo
+que $Cd = f(L_v, \Delta P)$.
 %
 En trabajos anteriores se tienen estudios más detallados del MRCVC, por lo que
 aquí se presenta de manera breve los aspectos geométricos y mecánicos del motor
@@ -34,18 +34,18 @@ que son relevantes a este trabajo.
 \subsection{Geometría}
 %
 La geometría del MRCVC permite que gran parte de la combustión se de a volumen
-constante\cite{mrcvc_geom}, como se ve en la figura \ref{fig:vol_constante}.
-%
+constante\cite{mrcvc_geom}, como se puede ver en la figura \ref{fig:vol_constante},
+en donde se esquematiza la variación del volumen con respecto al ciclo.
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{comparacion_ciclos.png}
-    \caption{Comparación de ciclos ideales (cambiar por una imagen propia}
+    \includegraphics[width=0.7\textwidth]{comparacion_ciclos.png}
+    \caption{Comparación de ciclos ideales (cambiar por una imagen propia)}
     \label{fig:comparacion_ciclos}
 \end{figure}
 
-%
-Para un MRCVC con $n$ paletas de radio de punta nulo, la geometría como función
+
+Para un motor de $n$ paletas de radio de punta nulo, la geometría como función
 del ángulo del cigüeñal queda totalmente definida por el radio de trayectoria
 de paletas $R$, semiancho de paletas $r$ y altura de cámara $h$.
 
@@ -74,13 +74,15 @@ la cual se realizó parte del prediseño del sistema de intercambio de gases.
 \begin{table}
     \centering
     \begin{tabular}{rcc} \toprule
-        Parámetro & Valor & Unidades \\ \midrule
-        n & 3 & unidades \\
-        R & 116.1 & mm \\
-        r & 44.1 & mm \\
-        h & 44.1 & mm \\
-        rc & 9 & - \\
-        V0 & 500 & $cm^3$ \\
+        Parámetro & Valor                            & Unidades \\ \midrule
+        n         & \lua{tex.print(myData.n)}        & unidades \\
+        R         & \lua{tex.print(myData.R)}        & mm \\
+        r         & \lua{tex.print(myData.r)}        & mm \\
+        $h_c$     & \lua{tex.print(myData.hc)}       & mm \\
+        rc        & \lua{tex.print(myData.rc)}       & - \\
+        V0        & \lua{tex.print(myData.V0)}       & $cm^3$ \\
+        $R_i$     & \lua{tex.print(trunc(myData.Ri))} & mm \\
+        $R_e$     & \lua{tex.print(trunc(myData.Re))} & mm \\
     \end{tabular}
     \caption{Geometría del MRCVC}
     \label{tab:geom_mrcvc}
@@ -177,7 +179,9 @@ este parámetro es el que da forma a las curvas de \emph{performance} que se
 suelen ver en literatura ya que indica la cantidad de mezcla fresca disponible
 para la combustión. 
 %
-En en caso de motores de inyección directa (tanto de CI SI)
+% En caso de motores de inyección directa (tanto de CI SI)
+% NOTA: no se que quise poner aca, voy a tener que leerlo con mas de talle de
+% nuevo
 
 \section{Sistemas de intercambio de gases}
 %
@@ -187,29 +191,71 @@ El área de referencia utilizada por ICESym es el área de cortina.
 
 $$ A_R = A_C = \pi D_v L_v $$
 
-\subsection{Solape de cámaras}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{valve_curtain.jpg}
+  \caption{Área de cortina}
+  \label{fig:area_cortina}
+\end{figure}
+
+Dónde $D_v$ es el diámetro de la válvula y $L_v$ es la alzada de la misma.
+
+El área de referencia utilizada en este trabajo es el área del puerto expuesta
+a la cámara.
 %
-Tanto al inicio como al cierre del puerto se ve solape de cámaras, por lo que
+Se calcula como el producto entre la longitud del puerto descubierta en el
+plano del estator $l_v$ y la altura de la ranura del puerto $h_p$.
+% NOTA: aca hay que meter un croquis
+
+% \subsection{Solape de cámaras}
+%
+Tanto al inicio como al cierre del puerto ocurre solape de cámaras, por lo que
 en estos intervalos angulares hay un valor de $C_D$ para cada cámara.
+%
+Este se calcula con el flujo másico que atraviesa los parches correspondientes
+a cada cámara y el área de puerto expuesta por cada cámara.
+% NOTA:A ver nota 8
 
 \section{CAD}
 %
 El modelo 3D de los puertos de admisión, escape y los componentes internos del
 motor que afectan el flujo y son relevantes a la flujometría se realizaron con
-FreeCAD\cite{freecad} para generar un archivo en formato $.BREP$ y luego
-salome\cite{salome} para obtener un archivo .stl "cerrado" en formato ASCII
+FreeCAD\cite{freecad} para generar un archivo en formato \emph{.BREP} para cada
+posición analizada.
+%
+Estos archivos son importados al software salome\cite{salome}, ese permite
+generar una malla cerrada que se puede utilizar para OpenFOAM. 
+%
+Antes de generar la malla se apliacn los nombres de los parches, en los que
+luego se toman de referencia para aplicar las reglas para realizar el
+refinamiento con snappyHexMesh, aplicar condiciones de contorno, iniciales y
+demás.
+%
+Se genera la malla con el mallador NETGEN 1D-2D-3D y se exporta parche por
+parche en formato \emph{ASCII .stl}.
+
+%
+El archivo \emph{stl} se utiliza en OpenFOAM para generar la malla con
+\emph{snappyHexMesh}.
 
 Dada la cantidad de geometrías posibles y el tiempo que toma el proceso, se
-realizaron algunas simplificaciones
+realizaron algunas simplificaciones, las cuales se listan a continuación.
 
-\section{Geometría}
+% \subsection{Geometría}
 %
-El puerto se hace recto, igual se podría hacer una entrada más suave.
+\begin{enumerate}
 
-La altura de la ranura se adopta en 2/3 del alto de la cámara, siendo $h_c=0.0441\ mm$
+    \item La interfaz entre los puertos de admisón y escape con sus respectivos
+        conductos de conexión con la atmósfera es de sección circular.
+        %
+    \item La altura de la ranura se adopta en 2/3 del alto de la cámara, siendo
+        $h_c=\lua{tex.print(myData.hc)}\ mm$.
+        %
+    \item El eje del puerto se hace perpendicular a una línea que pasa entre el
+        centro del motor y el la línea media del puerto.
+        %
 
-El eje del puerto se hace perpendicular a una línea que pasa entre el centro
-del motor y el la línea media del puerto.
+\end{enumerate}
 
 % En este capítulo describo como es el procedimiento realizado en cada paso de
 % la optimización:
@@ -225,8 +271,7 @@ interna ICESym \cite{icesym} con el propósito de obtener curvas de rendimiento
 volumétrico.
 %
 Estas serán el principal criterio para evaluar el diseño de los sistemas de
-intercambio de gases, que consisten de los puertos y conductos de admisión y
-escape.
+intercambio de gases, que consisten de los puertos y conductos.
 %
 La geometría se optimizará mediante un algoritmo genético, el cual transforma
 los datos de rendimiento volumétrico en un puntaje representativo de cada
@@ -234,118 +279,193 @@ motor.
 
 
 La simulación con ICESym requiere del conocimiento previo de los coeficientes
-de descarga de los puertos los cuales inicialmente serán estimados para poder
-realizar la primer iteración con el simulador.
+de descarga de los puertos, en la primer iteracion se asume un valor constante
+para cada puerto, siendo 0.7 y 0.75 para admisión y escape respectivamente.
 %
 Se utilizará la geometría obtenida en esta primer iteración para crear modelos
-en CAD de los puertos de admisión y escape para realizar flujometrías virtuales
-y así poder obtener los coeficientes de descarga de cada puerto en distintos
-grados de apertura.
-
-
-\section{Modificaciones a ICESym} \subsection{Coeficiente de descarga}
+en CAD de los puertos de admisión y escape, junto con una porción de la cámara
+pde combustion para realizar flujometrías virtuales.
 %
-Se introdujo una opción para poder ejecutar ejectura ICESym con un modelo de
-$C_d$ que dependa de dos variables, diferencia de presión y \emph{alzada}.
+De este modo se puede obtener los coeficientes de descarga de cada puerto en
+distintos grados de apertura.
+
+Con el resutlado de las flujometrias se contruye un mapa del $C_D$ en función
+de la alzada, que representa la posición del puerto y la diferencia de presión
+entre el puerto y la cámara de combustión.
+
+Este mapa se introduce en ICESym y se vuelve a realizar el proceso de optimización
+con el algoritmo genético.
+
+\section{Modificaciones a ICESym}
+%
+Para poder realizar lo indicado en el apartado anterior, fue necesario
+realiziar algunas modificaciones menores al simulador de motores, tales como:
+modificar los arhcivos de salida para facilitar la lectura y procesamiento de
+datos, incluir una opción para elegir entre un modelo de Cd de una o dos
+variables, modificar el área de referencia y  agregar una interpolación
+bilineal de los datos de Cd.
+
+\subsection{Flujo a través de los puertos}
+%
+Para tener un mejor modelado del flujo de gas a través dee los puertos de los
+puertos de admisión y escape, se introdujo una opción para poder ejecutar
+ICESym con un modelo del coeficiente de descarga que dependa de dos variables,
+diferencia de presión y \emph{alzada} o apertura del puerto $C_D = f(\Delta P;
+lv)$.
 %
 Esto significó agregar una opcion que permita seleccionar entre un Cd que
-depende únicamente de la alzada o de una o dos variables.
+depende únicamente de una o dos variables.
 
 Con esto se construye una mapa del coeficiente de descarga de la forma $C_d =
 f(lv, dp)$, que se utiliza en \emph{def\_valve.f90} para calcular el área
 efectiva de la válvula.
-%
-En la porción de código que sigue, se llama la rutina \emph{interpolant} para
-calcular el valor de Cd para un valor de Lv dado, en caso de utilizar el modelo
-de dos variables, se llama la rutina \emph{interpolant2d}.
-%
-La primera es una interpolación lineal para obtener Cd para un valor de lv dado
-y la segunda es una interpolación bilineal que se agregó al código original del
-ICESym, para poder aproximar un valor de Cd para un par $(\delta P; l_v)$ dado.
 
-\begin{lstlisting}[language=fortran]
-SUBROUTINE area_valve(theta, Dv, VO, VC, Lvmax, Nval, type_dat, &
-    Lv_array, cd_model, Cd, Cd_lv, Cd_dp, deltaP, theta_cycle, F_v)
-    [...]
-     IF (cd_model .EQ. 0) THEN
-        CALL interpolant(Cd(:, 1), Cd(:, 2), Lv, Cd_int)
-     ELSE
-        CALL interpolant2d(Cd_lv, Cd_dp, Cd, Lv, deltaP, Cd_int)
-     END IF
-     F_v = Cd_int*Nval*pi*Dv*Lv
-    [...]
-END SUBROUTINE area_valve
-\end{lstlisting}
+La interpolación bilineal se realiza sobre una malla rectangular , con esto se
+realiza simplemente una interpolación lineal entre dos valores en planos con
+datos conocidos.
 
-La interpolación bilineal se realiza sobre una malla rectangular de datos
-conocidos, con esto se realiza simplemente una interpolación lineal entre dos
-valores en planos con datos conocidos.
+% \begin{lstlisting}[language=fortran]
+%    SUBROUTINE interpolant2d(x, y, z, xi, yi, zi)
+%       [...]
+%       nx = SIZE(x)
+%       IF (xi .LE. x(1)) THEN ! <=
+%          CALL interpolant(y, z(1, :), yi, zi)
+%          RETURN
+%       ELSE IF (xi .GE. x(nx)) THEN  ! >=
+%          CALL interpolant(y, z(nx, :), yi, zi)
+%          RETURN
+%       END IF
+%       i = iminloc(dabs(x - xi))
+%       IF (x(i) .GT. xi) i = i - 1 ! >
+%       CALL interpolant(y, z(i, :), yi, z_aux(1))   ! z1=f(x1,yi)
+%       CALL interpolant(y, z(i + 1, :), yi, z_aux(2)) ! z2=f(x2,yi)
+%       CALL interpolant(x(i:i + 1), z_aux, xi, zi)   ! zi=f(xi,yi)
+%       [...]
+%    END SUBROUTINE interpolant2d
+% \end{lstlisting}
 
-\begin{lstlisting}[language=fortran]
-   SUBROUTINE interpolant2d(x, y, z, xi, yi, zi)
-      !
-      ! Bilinear interpolation, requires a rectangular mesh
-      !
-      IMPLICIT NONE
-      REAL*8, DIMENSION(:), INTENT(in) :: x, y
-      REAL*8, DIMENSION(:, :), INTENT(in) :: z
-      REAL*8, INTENT(in) :: xi, yi
-      REAL*8, INTENT(out) :: zi
-      INTEGER :: nx, i
-      REAL*8, DIMENSION(2) :: z_aux
-
-      nx = SIZE(x)
-      IF (xi .LE. x(1)) THEN ! <=
-         CALL interpolant(y, z(1, :), yi, zi)
-         RETURN
-      ELSE IF (xi .GE. x(nx)) THEN  ! >=
-         CALL interpolant(y, z(nx, :), yi, zi)
-         RETURN
-      END IF
-
-      i = iminloc(dabs(x - xi))
-      IF (x(i) .GT. xi) i = i - 1 ! >
-
-      CALL interpolant(y, z(i, :), yi, z_aux(1))   ! z1=f(x1,yi)
-      CALL interpolant(y, z(i + 1, :), yi, z_aux(2)) ! z2=f(x2,yi)
-      CALL interpolant(x(i:i + 1), z_aux, xi, zi)   ! zi=f(xi,yi)
-
-      ! write (*, *) xi, yi, zi
-
-   END SUBROUTINE interpolant2d
-\end{lstlisting}
-
-Si bien hay otros métodos para estimar el valor de Cd para dos valores $(\delta
-P; l_v$, este método es sencillo y da resultados satisfactorios.
+Si bien hay otros métodos para estimar el valor de Cd para dos valores $(\Delta
+P; l_v)$, este método es sencillo y da resultados satisfactorios.
 %
 En la figura \ref{fig:bilineal} se muesta un ejemplo del error obtenido
 con este método para interpolar una función de prueba 
-$\sin(\sqrt(x^2 + y^2))$
-
+$\sin(\sqrt(x^2 + y^2))$.
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{bilineal.png}
+    \includegraphics[width=0.7\textwidth]{bilineal.png}
     \caption{Interpolación bilineal de $\sin(\sqrt(x^2 + y^2))$}
     \label{fig:bilineal}
 \end{figure}
 
-La malla rectangular se realizará a partir de los valores de Cd que se obtengan
-de flujometrías con \emph{OpenFoam} \cite{openfoam}.
+La malla rectangular se realizará a partir de los valores de $C_d$ que se
+obtengan de flujometrías con \emph{OpenFoam} \cite{openfoam}.
 %
-Debido al costo copmutacional que requieren la flujoemtría, solo una cantidad
-necesaria de puntos se obtendrá con este método, las combinaciones de $\delta
-P; l_v$ ensayadas se indican con detalle en apartados posteriores.
+Debido al costo computacional que requieren la flujoemtría, solo una cantidad
+reducida de puntos se obtendrá con este método, las combinaciones de $(\Delta
+P; l_v)$ ensayadas se indican con detalle en apartados posteriores.
 %
-Para generar la malla rectangular se realizó una interpolación con el
-método del punto más cercano y se suavizaron estos resultados promediando
-con un promedio móvil de los $n$ valores más cercanos.
+Esto significa que se tiene como punto de partida una malla no rectangular, por
+lo que se utiliza un método intermedio para obtener una matriz de puntos que
+pueda ser leido por la interpolación bilineal.
+
+Se probaron dos métodos para realizar la interpolación, el método del punto
+más cercano y la interpolación por la suma de la inversa de la distancia o 
+IDW por sus siglas en inglés (\emph{Inverse Distance Weighting}).
+%
+Estos métodos se combinan con suavizados con un promedio móvil de los $n$
+valores más cercanos.
+
+El método del punto más cercano consiste en asignar para cada par $(x, y)$
+el valor conocido más cercano, el algoritmo es como se indica a continuación:
+
+\begin{lstlisting}[language=python, title={(Python) Interpolación por punto más Cercano}, label={algo:mas_cercano}]
+def closest(vec_x, vec_y, vec_z, int_x, int_y):
+    for i in range(len(int_x)):
+        for j in range(len(int_y)):
+            dist = ((vec_x - int_x[i])**2 + (vec_y - int_y[j])**2)**0.5
+            idx_min = np.argmin(dist)
+            interp[i, j] = vec_z[idx_min]
+    return interp
+\end{lstlisting}
+
+\begin{algorithm}
+ \caption{Interpolación por punto más cercano}
+ \label{algo:genetico}
+     \SetAlgoLined
+     vec_X, vec_Y, vec_Z, int_x, int_y \;
+     dist=0\;
+     \For{$i\gets 0$ \KwTo $int_x$ \KwBy $1$}{
+        \For{$j\gets 0$ \KwTo $int_y$ \KwBy $1$}{
+            $dist = \sqrt{(vec_x - int_x)^2 + (vec_y - int_y)^2}$\;
+            idx_{min} = min
+            $interpolacion[i,j] = vec_z[min(dist)]$\;
+        }
+     }
+     devolver
+\end{algorithm}
+
+La interpolación IDW consiste en asignar a cada punto el resultado de un promedio
+de los valores cercanos al punto en cuestión, ponderado por la distancia al valor
+elevado a un exponente arbitrario $p$.
+%
+Cuanto mayor sea el valor de $p$, más sensible es el método a los valores cercanos,
+la formulación de este método se ve en la ecuación \ref{eq:idw}.
+
+\begin{equation}
+    f_p = \frac{\sum_{i=1}^{n} \frac{z_i}{d_i^p}} {\sum_{i=1}^{n} \frac{z_i}{d_i^p}}
+    \label{eq:idw}
+\end{equation}
+
+La función utilizada para calcular esto es esto es:
+
+\begin{lstlisting}[language=python, title={(Python) Interpolación por IDW}, label={algo:idw}]
+def inverse_distance_weighting(vec_x, vec_y, vec_z, int_x, int_y, p):
+    n = len(int_x)
+    m = len(int_y)
+    res = np.zeros((n, m))
+    for i in range(n):
+        for j in range(m):
+            dist = ((vec_x - int_x[i])**2 + (vec_y - int_y[j])**2)**0.5
+            dist = dist**p
+            idx_zero_dist = np.argwhere(dist == 0)
+            if len(idx_zero_dist > 0):
+                res[i, j] = vec_z[idx_zero_dist]
+            else:
+                num = np.sum(vec_z/dist)
+                den = np.sum(1/dist)
+                res[i, j] = num / den
+    return res
+\end{lstlisting}
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{interpolacion.png}
-    \caption{Combustión a volumen constante}
-    \label{fig:vol_constante}
+
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{mapa_cd/mc_mapa_adm.png}
+        \caption{Punto Más Cercano sin suavizar}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{mapa_cd/mc_s2_mapa_adm.png}
+        \caption{Más Cercano ($n=2$)}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{mapa_cd/idw_mapa_adm.png}
+        \caption{IDW ($p=1$)}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{mapa_cd/idw2_mapa_adm.png}
+        \caption{IDW ($p=2$)}
+    \end{subfigure}
+    \caption{Comparación de interpolaciones}
+    \label{fig:mapas_interpolados}
 \end{figure}
 
 

@@ -1,49 +1,11 @@
 \chapter{Algoritmo Genético}
 
 \section{Introducción}
-%
-Se seleccionó un algoritmo genético para realizar la optimización de la
-geometría del MRCVC por la simplicidad y facilidad de implementación.
-%
-Si bien estos métodos no garantizan que se alcance un resultado óptimo, en la
-práctica\cite{goldberg}\cite{shi} se ha observado que alcanzan soluciones muy
-cercanas a las óptimas tras pocas iteraciones del método.
-%
-Una de las ventajas de este método es que no requiere información del gradiente
-de la función que se está evaluando, lo cual es útil cuando no se puede
-asegurar la existencia de la derivada de la función en todo el dominio ó cuando
-se tiene una función con más de un máximo o mínimo local.
-%
-Además, el punto de partida de la optimización es una población generada al
-azar, de modo que se tiene un muestreo aleatorio del dominio que se está
-evaluando.
-%
-Esto hace que el método sea poco susceptible a caer en un óptimo local.
-
-Se puede decir que un algoritmo genético es un método de búsqueda aleatoria
-guiada.
-%
-
-Gran parte de este trabajo fue fue utilizar a ICESym como parte de la función
-con la que se evalúan los motores.
-%
-Para lograr esto se modificó parte del código de ICESym, con el objetivo de
-facilitar la lectura de los resultados que arroja el simulador.
-%
-Además, se es necesario poder ejecutar de manera automatica una simulación con
-una configuración particular del motor.
-%
-Otro aspecto del optimizador que se desarrolló es el de poder ejecutar
-múltiples instancias de ICESym en paralelo, para poder aprovechar el hecho de
-que los CPU's modernos tiene más de un núcleo físico, pudiendo ejecutar
-múltiples procesos de manera simultánea y así reducir el tiempo de ejecución de
-las simulaciones. 
-%
 
 \subsection{$r_v = ICESym(motor)$}
 %
 ICESym lee un archivo de configuración en formato \emph{Python} que consta de
-un arrego llamado \emph{diccionario} con las siguientes entradas
+un arrego llamado \emph{diccionario} con las siguientes entradas:
 
 \begin{lstlisting}[language=Python]
 kargs = {
@@ -68,100 +30,20 @@ otros.
 % Si bien es probable que no se alcance el óptimo, el método alcanza una solución
 % satisfactoria en un tiempo relativamente corto.
 
-¿Cómo difieren los AG de los métodos tradicionales de búsqueda?
-%
-\begin{enumerate}
-    %
-  \item Los AG trabajan sobre una representación de las variables estudiadas y
-      no necesariamente sobre las variables de estudio.
-        % Por ejemplo una una representación binaria de conjunto de decimales.
-    %
-    \item Trabajan con un conjunto de datos, no con un solo punto.
-    %
-    \item Utilizan una función objetivo para evaluar cada punto de datos, sin
-        necesidad de conocer la derivada de la función que se está evaluando.
-    %
-    \item Los AG usan reglas probabilísticas, no deterministas.
-    %
-\end{enumerate}
 
 % Los AG requieren que las variables del problema estén expresadas en forma de
 % coordenadas $(x_1, x_2, x_3, ..., x_n)$.
 
-Otros métodos de optimización se mueven de un punto al siguiente en el espacio
-solución, basándose en alguna regla de decisión, esto puede ser riesgo porque
-se puede caer en un óptimo local.
 
-El proceso de optimización se puede resumir en:
 
-Crear una población al azar
-generación actual < total generaciones do
-evaluar la población
-Seleccionar los individuos que formarán la próxima generación
-Cruzar los candidatos seleccioados y crear la nueva población
-Mutar a los individuos de la nueva población
 
 
 \section{Componentes básicos}
 %
-Un AG se puede construir con 3 operadores básicos:
-\begin{enumerate}
-    \item Reproducción
-    \item Cruza
-    \item Mutación
-\end{enumerate}
 
-La reproducción consiste en crear individuos a partir del puntaje que devuelve
-en la función objetivo, la función objetivo es una medida del valor que
-queremos optimizar.
-%
-Este paso significa que aquellos individuos que tengan valores, por ejemplo más
-altos, de función objetivo tendrán más posibilidades de ser "copiados", de esta
-forma se imita a la selección natural.
 
-La cruza consiste en combinar los "vectores" de dos individuos para obtener uno
-nuevo.
-
-La mutación consiste en modificar aleatoriamente uno o más parámetros de cada
-nuevo individuo.
-
-Estos 3 simples mecanismos le dan a los AG su ¿poder?
-
-La mutación juega un rol secundario pero muy importante, es secundario porque
-se pueden alcanzar soluciones satisfactorias sin incluir este mecanismo, sin
-embargo se utiliza con probabilidades pequeñas para evitar la pérdida temprana
-de información relevante.
-%
-Si la probabilidad de mutación es muy alta, el AG se convierte en una simple
-búsqueda aleatoria.
-
-\section{\emph{Schema} y paralelismo implícito}
-
-\emph{Schema} o esquema es una plantilla, un subconjunto de los parámetros que
-definen al individuo en un AG que contienen información relevante al problema
-en estudio.
-%
-Estas plantillas surgen de similitudes en posiciones y valores que dan buena
-aptitud a un individuo.
-%
-Un AG procesa $n$ individuos y $n^k$ \emph{schematas} por iteración
-\cite{goldberg}, cuanto mayor sea el tamaño del \emph{schema}, mayor la
-probabilidad de ser truncado durante la cruza o mutación, esto produce que los
-patrones de menor tamaño tengan mayor probabilidad de supervivencia de una
-generación a otra.
-%
-Este proceso en el que bloques de información de menor tamaño al total de
-parámetros que se está evaluado sobreviven de una generación a otra sin
-necesidad de ingresar alguna modificación algoritmo es conocido como paralelismo
-implícito.
 
 \section{Implementación}
-%
-Para la primer iteración se programaron los algoritmos y funciones necesarias
-para llevar a cabo la optimización desde cero.
-%
-Posteriormente se tomo la la librería DEAP \cite{DEAP_JMLR2012} y se
-modificaron los operadores a medida, para poder utilizarlos con ICESym.
 
 \subsection{Población}
 %
@@ -309,32 +191,29 @@ penalidades, que resta puntaje si la derivada de la función se modifica de una
 velocidad a otra.
 
 
-Otro tema a tener en cuenta es la convergencia prematura del algoritmo que es
-causado por es la dominancia temprana de unos pocos individuos con puntaje
-superior al resto de la población.
-%
-Para evitar esto se realiza un cambio de escala puntaje de todos los
+Durante las primeras iteraciones del método, las poblaciones iniciales
+contienen una gran cantidad de geometrías inválidas que devuelven valores de
+puntaje 0, esto conduce a que ante la aparición de algún individuo con un
+puntaje relativamente alto este domine la población y termine dominando la
+población y causando una convergencia tempara de la misma.
+
+Cuando el método comienza a converger a una solución, estas funciones acentúan
+ligeramente las diferencias entre individuos para favorecer a las mejores
+soluciones.
+
+Esto se logra utilizando un cambio de escala de los puntajes todos los
 individuos, alguno de los métodos utilizados son: transformación lineal,
 truncado $\sigma$ y transformación exponencial.
 %
-El método seleccionado es la transformación lineal, que funciona bien
-\cite{goldberg} si no se tienen valores de aptitud negativos.
-
+En este trabajo se utilizará el escalado por transformación lineal.
 \begin{equation}
     f' = af + b
 \end{equation}
 
-Los coeficientes $a$ y $b$ se eligen de modo tal de que haya unicidad entre el
-puntaje sin modificar y el transformado, otra función es que se asigne un
-puntaje de 2 a los individuos con mayor puntaje, lo que asegura que para
-puntajes medios tengan posibilidades de generar un individuo como descendencia y
-los mejores individuos tengan múltiples "hijos".
-
 \section{Implementación}
-
-
+%
 \subsection{Representación de los individuos}
-
+%
 Para representar a cada individuo se utilizan 8 características geométricas:
 
 \begin{enumerate}
@@ -349,24 +228,15 @@ Para representar a cada individuo se utilizan 8 características geométricas:
 \end{enumerate}
 
 
-% NOTA: antes de esto tendría que explicar como funciona icesym y como
-interactúa mi programa.  Con esta lista de decimales luego se generan los
-archivos de alzada que representan la apertura de la válvula, la misma es una
-alzada ficticia que se utiliza para calcular el área de referencia de puerto.
+% % NOTA: antes de esto tendría que explicar como funciona icesym y como
+% % interactúa mi programa.
+% Con esta lista de decimales luego se generan los
+% archivos de alzada que representan la apertura de la válvula, la misma es una
+% alzada ficticia que se utiliza para calcular el área de referencia de puerto.
 
-\begin{equation}
-  A_{C} = \pi \cdot D_{v}\cdot l_{v}
-\end{equation}
-
-El área de referencia utilizada por ICESym es el área de cortina, esquematizada
-en la figura \ref{fig:area_cortina}.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.5\textwidth]{valve_curtain.jpg}
-  \caption{Área de cortina}
-  \label{fig:area_cortina}
-\end{figure}
+% \begin{equation}
+%   A_{C} = \pi \cdot D_{v}\cdot l_{v}
+% \end{equation}
 
 Con la población definida se procede a los evaluar cada motor con la función
 objetivo, la cual se definió de manera tal de favorecer curvas de rendimiento
