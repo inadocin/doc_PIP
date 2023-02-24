@@ -46,8 +46,8 @@ en donde se esquematiza la variación del volumen con respecto al ciclo.
 
 
 Para un motor de $n$ paletas de radio de punta nulo, la geometría como función
-del ángulo del cigüeñal queda totalmente definida por el radio de trayectoria
-de paletas $R$, semiancho de paletas $r$ y altura de cámara $h$.
+del ángulo del cigüeñal queda totalmente definida por el radio de trayectoria de
+paletas $R$, semiancho de paletas $r$ y altura de cámara $h$.
 
 \begin{figure}
     \centering
@@ -68,8 +68,8 @@ de paletas $R$, semiancho de paletas $r$ y altura de cámara $h$.
 La geometría utilizada para este trabajo se resumen en la tabla
 \ref{tab:geom_mrcvc} y se ilustra en la figura \ref{fig:geom_mrcvc}.
 %
-Esta geometría es la continuación de la utilziada en trabajos anteriores, con
-la cual se realizó parte del prediseño del sistema de intercambio de gases.
+Esta geometría es la continuación de la utilziada en trabajos anteriores, con la
+cual se realizó parte del prediseño del sistema de intercambio de gases.
 
 \begin{table}
     \centering
@@ -88,18 +88,11 @@ la cual se realizó parte del prediseño del sistema de intercambio de gases.
     \label{tab:geom_mrcvc}
 \end{table}
 
-% \begin{figure}
-%     \centering
-%         \includegraphics[width=1\textwidth]{puertos_iniciales.png}
-%     \caption{Geometría Inicial de los puertos de admisión y escape}
-%     \label{fig:puertos_iniciales}
-% \end{figure}
-
-Los ángulos que determinan el reglaje de los puertos de admisión y escpe
-son los de inicio y de cierre del puerto.
+Los ángulos que determinan el reglaje de los puertos de admisión y escpe son los
+de inicio y de cierre del puerto.
 %
-Como ejemplo, la posición del puerto de escape queda determiada por los 
-valores EIA y EFA como se ve en la figura \ref{fig:angulos_escape}.
+Como ejemplo, la posición del puerto de escape queda determiada por los  valores
+EIA y EFA como se ve en la figura \ref{fig:angulos_escape}.
 
 \begin{figure}
     \centering
@@ -108,10 +101,8 @@ valores EIA y EFA como se ve en la figura \ref{fig:angulos_escape}.
     \label{fig:angulos_escape}
 \end{figure}
 
-Como se puede ver en la figura \ref{fig:primeros_puertos}, se buscó suavizar
-los vértices en donde la pared del puerto intersecta la cámara de combustión.
-%
-
+Como se puede ver en la figura \ref{fig:primeros_puertos}, se buscó suavizar los
+vértices en donde la pared del puerto intersecta la cámara de combustión.
 
 \subsection{Ciclo operativo}
 %
@@ -121,15 +112,6 @@ también el modelo de solape de cámaras desarrollado para el uso con el MRCVC.
 Para una misma relación de compresión, una combustión a volumen constante
 alcanza valores de presión y temperatura mayores en comparación a otros ciclos.
 %
-% Este presenta un mayor rendimiento térmico
-
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=1\textwidth]{comparacion_ciclos.png}
-%     \caption{Comparación de ciclos ideales (cambiar por una imagen propia}
-%     \label{fig:comparacion_ciclos}
-% \end{figure}
-
 En la figura \ref{fig:comparacion_rendimientos} se ve como para una $r_c$ dada,
 el ciclo a volumen constante tiene el mayor rendimiento.
 
@@ -139,20 +121,6 @@ el ciclo a volumen constante tiene el mayor rendimiento.
     \caption{Comparación de rendimientos (cambiar por una imagen propia}
     \label{fig:comparacion_rendimientos}
 \end{figure}
-
-
-% La combustión se realiza casi en su totalidad a volumen constante
-%
-% El gas de admisión es una mezcla estequeométrica de aire y vapor de combustible
-% perfectamentes mezclados.
-%
-% En caso de que exista flujo revertido, este no se mezcla con el gas fresco,
-% sino que se vuelve a admitir.
-%
-% No se tienen en cuenta las péridas de masa por los huelgos entre partes
-% móviles(\emph{crevice flow})
-%
-% La combustión se simula con el modelo de liberación de calor de Weibe
 
 El indicador que se tomará como referencia para evaluar y comparar diferentes
 geometrías es el rendimiento volumétrico ($\eta_v$), este parámetro se define
@@ -183,13 +151,27 @@ para la combustión.
 % NOTA: no se que quise poner aca, voy a tener que leerlo con mas de talle de
 % nuevo
 
+La combustión es estequeométrica con $a_{weibe}=5$ y $m_{weibe}=2$, el combustible utilizado
+es \emph{isooctano} con las siguientes características:
+\begin{itemize}
+    \item $y = 2.25$
+    \item $H_{vap} = 2.25 MJ/kg$
+    \item $Q_{fuel} = 44 MJ/kg_f$
+\end{itemize}
+
+La temperatura de pared se asume en 450K.
+
+
 \section{Sistemas de intercambio de gases}
 %
 \subsection{Área de referencia}
 %
 El área de referencia utilizada por ICESym es el área de cortina.
 
-$$ A_R = A_C = \pi D_v L_v $$
+\begin{equation}
+  \label{eq:Ar}
+  A_R = A_C = \pi D_v L_v
+\end{equation}
 
 \begin{figure}
   \centering
@@ -200,11 +182,20 @@ $$ A_R = A_C = \pi D_v L_v $$
 
 Dónde $D_v$ es el diámetro de la válvula y $L_v$ es la alzada de la misma.
 
-El área de referencia utilizada en este trabajo es el área del puerto expuesta
-a la cámara.
+El área de referencia utilizada en este trabajo es el área del puerto expuesta a
+la cámara, que se calcula como el producto entre la longitud o cuerda del puerto
+descubierta en el plano del estator $l_v$ y la altura de la ranura del puerto
+$h_p=29.4mm$.
 %
-Se calcula como el producto entre la longitud del puerto descubierta en el
-plano del estator $l_v$ y la altura de la ranura del puerto $h_p$.
+Con esto el área de válvula utilizada en ICESym es:
+\begin{equation}
+  \label{eq:fv}
+  F_v = Cd_{int}*0.0294*L_v
+\end{equation}
+
+En dónde $Cd_{int}$ es el coeficiente de descarga interpolado del mapa, para un apertura
+y diferencial de presión dado.
+
 % NOTA: aca hay que meter un croquis
 
 % \subsection{Solape de cámaras}
@@ -343,6 +334,32 @@ datos conocidos.
 %       [...]
 %    END SUBROUTINE interpolant2d
 % \end{lstlisting}
+\begin{algorithm}
+ \caption{Interpolación bi-lineal}
+ \label{algo:bilineal}
+    \SetAlgoLined
+    \SetKwFunction{Size}{Size}
+    \SetKwFunction{Interpolant}{Interpolant}
+
+    \KwIn{\\
+        $\vec{x}, \vec{y}$: valores de $x, y$ en los que se conoce el valor en $z$.\\
+        $\vec{z}$: valores conocidos de $z$.\\
+        $x_i, y_i$: puntos donde se quiere interpolar.\\
+      }
+    \KwResult{Devuelve el valor interpolado de $z_i$.}
+    $n_x \Leftarrow Size(x)$\;
+    \eIf{
+      $x_i \geq x_{n_x}$
+    }{
+      $z_i \Leftarrow Interpolant(y, z[1,:], y_i)$\;
+      \Return\;
+    }{
+      $z_i \Leftarrow Interpolant(y, z[n_x,:], y_i)$\;
+      \Return\;
+    }
+    $i \Leftarrow iminloc(dabas(x-x_i))$\;
+
+\end{algorithm}
 
 Si bien hay otros métodos para estimar el valor de Cd para dos valores $(\Delta
 P; l_v)$, este método es sencillo y da resultados satisfactorios.
@@ -379,30 +396,30 @@ valores más cercanos.
 El método del punto más cercano consiste en asignar para cada par $(x, y)$
 el valor conocido más cercano, el algoritmo es como se indica a continuación:
 
-\begin{lstlisting}[language=python, title={(Python) Interpolación por punto más Cercano}, label={algo:mas_cercano}]
-def closest(vec_x, vec_y, vec_z, int_x, int_y):
-    for i in range(len(int_x)):
-        for j in range(len(int_y)):
-            dist = ((vec_x - int_x[i])**2 + (vec_y - int_y[j])**2)**0.5
-            idx_min = np.argmin(dist)
-            interp[i, j] = vec_z[idx_min]
-    return interp
-\end{lstlisting}
-
 \begin{algorithm}
  \caption{Interpolación por punto más cercano}
- \label{algo:genetico}
-     \SetAlgoLined
-     vec_X, vec_Y, vec_Z, int_x, int_y \;
-     dist=0\;
-     \For{$i\gets 0$ \KwTo $int_x$ \KwBy $1$}{
-        \For{$j\gets 0$ \KwTo $int_y$ \KwBy $1$}{
-            $dist = \sqrt{(vec_x - int_x)^2 + (vec_y - int_y)^2}$\;
-            idx_{min} = min
-            $interpolacion[i,j] = vec_z[min(dist)]$\;
+ \label{algo:mas_cercano}
+    \SetAlgoLined
+
+    \KwIn{\\
+        $V_x, V_y$: valores de $x, y$ en los que se conoce el valor en $z$.\\
+        $V_z$: valores conocidos de $z$.\\
+        $I_x$: $n$ puntos de $x$ donde se quiere interpolar\\
+        $I_Y$: $m$ puntos de $y$ donde se quiere interpolar\\
+        }
+
+    \KwResult{Devuelve una matriz $I_{[n,m]}$ con los valores interpolados,
+      donde cada punto $I(x,y)$ se le asigna al valor de $V_Z$ más cercano
+      conocido. Da como resultado superficies escalonadas.}
+
+    \BlankLine
+     $I=zeros_{[n,m]}$\;
+     \For{$i \gets 0$ \KwTo $n$}{
+        \For{$j \gets 0$ \KwTo $m$}{
+            $d = \sqrt{(V_x - I_{xi})^2 + (V_y - I_{yj})^2}$\;
+            $I[i,j] = v_z[min(d)]$\;
         }
      }
-     devolver
 \end{algorithm}
 
 La interpolación IDW consiste en asignar a cada punto el resultado de un promedio
@@ -413,34 +430,45 @@ Cuanto mayor sea el valor de $p$, más sensible es el método a los valores cerc
 la formulación de este método se ve en la ecuación \ref{eq:idw}.
 
 \begin{equation}
-    f_p = \frac{\sum_{i=1}^{n} \frac{z_i}{d_i^p}} {\sum_{i=1}^{n} \frac{z_i}{d_i^p}}
+    f_p = \frac{\sum_{i=1}^{n} \frac{z_i}{d_i^p}} {\sum_{i=1}^{n} \frac{1}{d_i^p}}
     \label{eq:idw}
 \end{equation}
 
 La función utilizada para calcular esto es esto es:
 
-\begin{lstlisting}[language=python, title={(Python) Interpolación por IDW}, label={algo:idw}]
-def inverse_distance_weighting(vec_x, vec_y, vec_z, int_x, int_y, p):
-    n = len(int_x)
-    m = len(int_y)
-    res = np.zeros((n, m))
-    for i in range(n):
-        for j in range(m):
-            dist = ((vec_x - int_x[i])**2 + (vec_y - int_y[j])**2)**0.5
-            dist = dist**p
-            idx_zero_dist = np.argwhere(dist == 0)
-            if len(idx_zero_dist > 0):
-                res[i, j] = vec_z[idx_zero_dist]
-            else:
-                num = np.sum(vec_z/dist)
-                den = np.sum(1/dist)
-                res[i, j] = num / den
-    return res
-\end{lstlisting}
+\begin{algorithm}
+    \caption{Interpolación IDW}
+    \label{algo:IDW}
+    \SetAlgoLined
+
+    \KwIn{\\
+        $V_x, V_y$: valores de $x, y$ en los que se conoce el valor en $z$.\\
+        $V_z$: valores conocidos de $z$.\\
+        $I_x$: $n$ puntos de $x$ donde se quiere interpolar\\
+        $I_Y$: $m$ puntos de $y$ donde se quiere interpolar\\
+        $p$: potencia a la que se eleva cada peso\\
+        }
+
+    \KwResult{Interpolación ponderada por inverso de la distancia. Dependiendo
+      del valor de p, se obtienen valores más o menos suavizados.}
+
+    \BlankLine
+    $I=zeros_{[n,m]}$\;
+    \For{$i \gets 0$ \KwTo $n$}{
+        \For{$j$ \gets 0 \KwTo $m$}{
+          $d = {\left[(V_x - I_{xi})^2 + (V_y - I_{yj})^2\right]}^{\frac{p}{2}}$\;
+          \eIf{$\exists i : d[i] = 0$}{
+            $I[i, j] = V_z[i]$\;
+          }{
+            $I[i,j] = \frac{\sum{V_{zi}/d_i}}{\sum \frac{1}{d}}$\;
+          }
+        }
+     }
+\end{algorithm}
+
 
 \begin{figure}
     \centering
-
     \begin{subfigure}{0.4\textwidth}
         \centering
         \includegraphics[width=\textwidth]{mapa_cd/mc_mapa_adm.png}
@@ -450,50 +478,20 @@ def inverse_distance_weighting(vec_x, vec_y, vec_z, int_x, int_y, p):
     \begin{subfigure}{0.4\textwidth}
         \centering
         \includegraphics[width=\textwidth]{mapa_cd/mc_s2_mapa_adm.png}
-        \caption{Más Cercano ($n=2$)}
+        \caption{Más Cercano ($S=2$)}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.4\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{mapa_cd/idw_mapa_adm.png}
-        \caption{IDW ($p=1$)}
+        \includegraphics[width=\textwidth]{mapa_cd/idw8_mapa_adm.png}
+        \caption{IDW ($p=8$)}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.4\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{mapa_cd/idw2_mapa_adm.png}
-        \caption{IDW ($p=2$)}
+        \includegraphics[width=\textwidth]{mapa_cd/idw16_mapa_adm.png}
+        \caption{IDW ($p=16$)}
     \end{subfigure}
     \caption{Comparación de interpolaciones}
     \label{fig:mapas_interpolados}
 \end{figure}
-
-
-\section{Notas}
-Algunas notas sobre el mrcvc o la simulacion de icesym que todavia no tienen
-lugar.
-
-\begin{enumerate}
-    \item La temperatura de pared se asume en 450 K
-    \item El área de referencia es el área de cortina
-    \item No cambie la cantidad de puntos en que se discretiza cada tubo
-    \item Agregue una interpolación 2D para el cálculo del Cd
-    \item La combustión es estequeométrica con $a_weibe=5$ y $m_weibe=2$
-    \item El modelo de combustión es 1
-    \item scavange = 0
-    \item El combustible utilizado es \emph{isooctano} y tiene estas
-        caracteristicas 
-        \begin{itemize}
-            \item $y = 2.25$
-            \item $H_{vap} = 2.25 MJ/kg$
-            \item $Q_{fuel} = 44 MJ/kg_f$
-        \end{itemize}
-\end{enumerate}
-
-\section{Dudas}
-Con respecto al diccionario de configuración de ICESym:
-
-\begin{enumerate}
-    \item ¿Que es histo?
-    \item ¿Que es position?
-\end{enumerate}

@@ -738,3 +738,36 @@ Y con el orden de convergencia se pueden calcular los valores de GCI.
 Con estos resultados se verifica que se esté en rango de convergencia
 asintótica, como se indica en la Tabla \ref{tab:rac_caso_5}, los flujos
 másicos de ambas cámaras se encuentran en rango de convergencia asintótica.
+
+
+\section{Mapa de $C_D$}
+%
+El mapa de $C_D$ obetnido a partir de las flujoemtrías se lista en la tabla
+\ref{tab:mapaAdm} y \ref{tab:mapaEsc} para los mapas de admisión y escape
+respectivamente.
+
+
+\begin{table}
+  \parbox{.45\linewidth}{
+  \centering
+  \begin{tabular}{rccc}\toprule
+    Item & $L_v[m]$ & $\Delta P[Pa]$ & $C_D$ \\ \midrule
+    \lua{tex.print(mapaCd(myData.admision))}
+    \bottomrule
+    \end{tabular}
+  \caption{Mapa $C_D$ del puerto de Admisión}
+  \label{tab:mapaAdm}
+  }
+\hfill
+\parbox{.45\linewidth}{
+  \centering
+  \begin{tabular}{rccc}\toprule
+    Item & $L_v[m]$ & $\Delta P[Pa]$ & $C_D$ \\ \midrule
+    \lua{tex.print(mapaCd(myData.escape))}
+    \bottomrule
+    \end{tabular}
+  \caption{Mapa $C_D$ del puerto de Escape}
+  \label{tab:mapaEsc}
+}
+\end{table}
+

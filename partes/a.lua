@@ -1,15 +1,4 @@
-myData = {}
-
-myData.n = 3  -- numero de paletas
-myData.R = 116.1  -- mm
-myData.r = 44.1 -- radio del circ. en el que esta circunscipto la paleta
-myData.rc = 9 -- relacion de compresion
-myData.hc = 44.1 -- altura de camara
-myData.hp = 29.4 -- altura de ranura del puerto_
-myData.V0 = 500
-myData.Ri = math.sqrt(myData.R^2 - myData.r^2)
-myData.Re = math.sqrt(myData.R^2 + 3*myData.r^2)
-
+local myData = {}
 myData.admision = {
     {0.03869, 784.62, 0.34614},
     {0.08194, -467.72, 0.31572},
@@ -77,9 +66,13 @@ function trunc(num, fl)
 end
 
 function mapaCd(data)
-  s = ""
+  local s = ""
   for i, v in ipairs(data) do
-    s = s .. string.format("%.0f & %.5f & %.2f & %.5f \\\\", i, v[1], v[2], v[3])
+    print(s)
+    s = s .. string.format("%.5f & %.2f & %.5f \\\\", v[1], v[2], v[3])
+    print(s)
   end
   return s
 end
+
+print(mapaCd(myData.escape))

@@ -1,16 +1,6 @@
-myData = {}
+local mapa= {}
 
-myData.n = 3  -- numero de paletas
-myData.R = 116.1  -- mm
-myData.r = 44.1 -- radio del circ. en el que esta circunscipto la paleta
-myData.rc = 9 -- relacion de compresion
-myData.hc = 44.1 -- altura de camara
-myData.hp = 29.4 -- altura de ranura del puerto_
-myData.V0 = 500
-myData.Ri = math.sqrt(myData.R^2 - myData.r^2)
-myData.Re = math.sqrt(myData.R^2 + 3*myData.r^2)
-
-myData.admision = {
+mapa.admision = {
     {0.03869, 784.62, 0.34614},
     {0.08194, -467.72, 0.31572},
     {0.03869, -7687.53, 0.28521},
@@ -34,7 +24,7 @@ myData.admision = {
     {0.01443, 18077.97, 0.15563},
 }
 
-myData.escape = {
+mapa.escape = {
     {0.01683, -100331.39, 0.11239},
     {0.10677, 5723.72, 0.2248},
     {0.01683, -263797.72, 0.12654},
@@ -70,16 +60,3 @@ myData.escape = {
     {0.1236, -3270.57, 0.41425},
     {0.1236, 18.07, 0.20251},
 }
-
-function trunc(num, fl)
-  if not fl then fl = 1 end
-  return string.format("%." .. fl .. "f", num)
-end
-
-function mapaCd(data)
-  s = ""
-  for i, v in ipairs(data) do
-    s = s .. string.format("%.0f & %.5f & %.2f & %.5f \\\\", i, v[1], v[2], v[3])
-  end
-  return s
-end

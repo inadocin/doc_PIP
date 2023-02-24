@@ -1,12 +1,12 @@
 \chapter{Optimización}
 
 \section{Introducción}
-La optimización consta de 3 etapas, la primera fue modelar el motor con
-los coeficientes de descarga constantes extraidos de trabajos anteriores
-para tener una primer aproximación de la geometría de los puertos.
+La optimización consta de 3 etapas, la primera fue modelar el motor con los
+coeficientes de descarga constantes extraidos de trabajos anteriores para tener
+una primer aproximación de la geometría de los puertos.
 %
-A partir de estos resultados se obtuvo una geometría preliminar
-con nuevos díametros, longitudes y ángulos.
+A partir de estos resultados se obtuvo una geometría preliminar con nuevos
+díametros, longitudes y ángulos.
 %
 La segunda etapa consiste en volcar los datos obtenidos en un programa de CAD,
 para realizar una estimación de la forma de los puertos.
@@ -32,6 +32,7 @@ La tercer etapa consta de volver a correr la optimización, con la nueva
 geometría y con el mapa de descarga de los puertos como dato.
 
 \section{Herramientas}
+%
 En las diferentes etapas de optimización se utilizaron herraminetas (software)
 existente y nuevo, admás de realizar pequeñas modificaciones a ICESym para
 facilitar la comunicación del optimizador.
@@ -418,7 +419,7 @@ suficientemente preciso para esta primer aproximación.
         grid=major,
         ]
 
-		\addplot table [x=RPM,y=RendVol]{data/primer_rend_vol.dat} ;
+        \addplot table [x=RPM,y=RendVol]{data/primer_rend_vol.dat} ;
 
       \end{axis}
     \end{tikzpicture}
@@ -437,7 +438,7 @@ El rendimiento volumétrico obtenido tiene un máximo en 7000 rpm de 0.9
 \begin{table}
     \centering
     \begin{tabular}{lcc} \toprule
-      Parámetro                      & Valor   & Unidad \\ \midrule;
+      Parámetro                      & Valor   & Unidad \\ \midrule
       Diámetro de puerto de Admisión & 97.2    & mm     \\
       Diámetro de puerto de Escape   & 81.1    & mm     \\
       Largo de conducto de Admisión  & 0.519   & m      \\
@@ -461,7 +462,19 @@ de combustión para lograr una entrada/salida más suave.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.7\textwidth]{primer_iteracion.png}
-  \caption{Primer Iteración - Modelo CAD}
-  \label{fig:primer_it}
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{motor_cad1.png}
+        \caption{Vista en perspectiva}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{motor_cad2.png}
+        \caption{Vista en planta}
+    \end{subfigure}
+  \caption{CAD Primer Iteración}
+  \label{fig:motor_cad}
 \end{figure}
+
+% falta poner algunas imagenes de los puertos y si hay medidas, mejor
