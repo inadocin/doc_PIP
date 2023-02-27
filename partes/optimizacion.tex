@@ -448,7 +448,7 @@ El rendimiento volumétrico obtenido tiene un máximo en 7000 rpm de 0.9
       Ángulo de apertura de Escape   & 85.1438 & Grados \\
       Ángulo de cierre de Escape     & 11.1285 & Grados \\ \bottomrule
     \end{tabular}
-    \caption{Primer Iteración - Geometría resultante}
+    \caption{Geometría resultante.}
     \label{tab:primer_it}
 \end{table}
 
@@ -459,22 +459,50 @@ puertos, por lo que para generar el modelo de CAD se tomaron algunas
 Se mantuvo el eje de los puertos perpendicular a la carcasa del motor, además se
 suavizó la arista de intersección entre el conducto de los puertos y la cámara
 de combustión para lograr una entrada/salida más suave.
+%
+La geometría resultante se muestra en las figuras \ref{fig:motor_cad1} y
+\ref{fig:motor_cad2}.
+
+En la \ref{fig:motor_cad1} se ve el volumen total modelado, que representa la
+mitad superior del motor.
+%
+En esta figura falta representar los volumenes correspondientes al rotor y
+paletas, que se restan al volumen principal para generar las distintas
+posiciones del rotor.
+
 
 \begin{figure}
   \centering
     \begin{subfigure}{0.4\textwidth}
         \centering
         \includegraphics[width=\textwidth]{motor_cad1.png}
-        \caption{Vista en perspectiva}
     \end{subfigure}
-    \hfill
     \begin{subfigure}{0.4\textwidth}
         \centering
         \includegraphics[width=\textwidth]{motor_cad2.png}
-        \caption{Vista en planta}
     \end{subfigure}
   \caption{CAD Primer Iteración}
-  \label{fig:motor_cad}
+  \label{fig:motor_cad1}
 \end{figure}
 
-% falta poner algunas imagenes de los puertos y si hay medidas, mejor
+En la figura \ref{fig:motor_cad2}(a) y (b) se muestran las superficies
+correspondientes a los puertos de admisión y escape respectivamente, la ranura
+del lado del motor es de altura constante e igual a $h_{puerto} = \frac{2}{3}
+h_{camara} = \lua{tex.print(myData.hp)}$ mm hasta alcanzar los extremos de la
+misma en donde se reduce parcialmente.
+
+\begin{figure}
+  \centering
+    \begin{subfigure}{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{vistas_admision.png}
+        \caption{Puerto de Admsisión.}
+    \end{subfigure}
+    \begin{subfigure}{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{vistas_escape.png}
+        \caption{Puerto de Escape.}
+    \end{subfigure}
+  \caption{CAD Primer iteración (vistas fuera de escala).}
+  \label{fig:motor_cad2}
+\end{figure}

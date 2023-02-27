@@ -7,32 +7,26 @@
 %
 Para obtener una mejor caracterización del funcionamiento de los puertos de
 admisión y escape es necesario tener mayor conocimiento del coeficiente de
-descarga para para una deferentes posiciones del rotor y velocidades de giro
-del motor.
+descarga para diferentes condiciones operativas de los mismos.
 %
-Con este objetivo se realizaron una serie de flujometrías para obtener un mapa
-de Cd en función de una diferencia de presión y alzada válvula \footnote{ICESym
-utiliza alzada, por lo que se traduce área de pasaje de puerto en alzada de
-válvula equivalente.}, de modo que $Cd = f(\Delta P,lv)$.
+Se realizaron una serie de flujometrías para obtener un mapa de $C_D$ que sea
+función de la diferencia de presión que \emph{ve} el puerto y la apertura del
+mismo \footnote{ICESym utiliza alzada, por lo que se traduce área de pasaje de
+puerto en alzada de válvula equivalente.}, de modo obtener $C_D = f(\Delta P,L_v)$.
 %
-Este mapa de $C_D$ se usa en ICESym para obtener una simulación más precisa del
-motor.
+Este mapa se usa en ICESym para obtener una simulación más precisa del motor.
 
-Se realizarán las flujometrías con el \emph{software} libre \emph{OpenFoam},
-con los módulos \emph{pimleFoam} cuando el flujo se pueda asumir como
-incompresible ($Ma < 0.3$) y \emph{rhoPimpleFoam} para flujo compresible.
+Las flujometrías se realizaron con el \emph{software} libre \emph{OpenFoam}, con
+los módulos \emph{pimleFoam} para flujo incompresible y y \emph{rhoPimpleFoam}
+para flujo compresible.
 
-Para modelar la turbulencia se utilizó un modelo de dos ecuaciones, esto porque
-son modelos completos, es decir proveen una ecuación para calcular $\kappa$ y
-la escala de longitud turbulenta $l$, parten de la aproximación de Boussinesq y
-la ecuación de energía cinética turbulenta.
-
-En todos los casos se utilizó el modelo de \emph{k-epsilon}, es uno de los
-modelos más utilizados por su robustez y buenos resultados para números de
-Reynodls bajos y diferencias de presión relativamente bajas\cite{wilcox}
+Para modelar la turbulencia se utilizó un modelo de dos ecuaciones
+\emph{$\kappa-\epsilon$}\cite{wilcox}, este es uno de los modelos más utilizados
+y, por ser de dos ecuaciones es un modelo completo es decir, provee una ecuación
+para $\kappa$ y otra para la escala de longitud turbulenta $l_m$.
 %
 El modelo requiere que se aproximen los valores iniciales de $\kappa$ y
-$\epsilon$, que a su vez requieren de una estimación de la longitud de mezcla o
+$\epsilon$, que a su vez requieren de la estimación de la longitud de mezcla o
 escala de la viscosidad $l_m$.
 %
 Los valores iniciales se calculan a partir de:
@@ -43,7 +37,7 @@ Los valores iniciales se calculan a partir de:
     %
     I        &= 0.05 \\
     %
-    L_m      &= 0.07 \cdot D_m \\
+    l_m      &= 0.07 \cdot D_m \\
     %
     \kappa   &= 1.5 \cdot \left( u_{ref} \cdot I \right) ^ 2 \\
     %
@@ -53,30 +47,68 @@ Los valores iniciales se calculan a partir de:
 
 Dónde:
 %
-\begin{description}
-    \item[$C_{\mu}$] es un coeficiente propio del modelo.
+\begin{itemize}
+    \item $C_{\mu}$, es un coeficiente propio del modelo.
         %
-    \item[I] es la intensidad de turbulencia estimada, en este trabajo se utilizó 0.05.
+    \item I, es la intensidad de turbulencia estimada, en este trabajo se utilizó 0.05.
         %
-    \item[$l_m$] es la longitud de mezcla o escala de viscosidad,
+    \item $l_m$, es la longitud de mezcla o escala de viscosidad,
      para flujos internos se suele usar el diámetro hidráulico de la cañería.
         %
-    \item[$\kappa$] es la energía cinética turbulenta.
+    \item $\kappa$, es la energía cinética turbulenta.
         %
-    \item[$\epsilon$] es la disipación de energía cinética turbulenta.
+    \item $\epsilon$, es la disipación de energía cinética turbulenta.
         %
-\end{description}
+\end{itemize}
 
 La aproximación de $l_m = D_h$ viene dada porque la longitud de mezcla, que
-determina el tamaño que pueden tener los \emph{eddys} turbulentos, para las
-flujometrías de los puertos se utilizo inicialmente el diámetro de la entrada
-al puerto, en el extremo que limita con los conductos de admisión o escape.
+determina el tamaño que pueden tener los \emph{eddys} turbulentos, puede tomar
+valores de orden similar al (nota esto falta)
 %
-Sin embargo el área de pasaje es menor a la de la boca de los puertos por lo
-que se decidió utilizar un valor de $l_m$ más cercano a la altura de la cámara.
+Se utilizo inicialmente el diámetro de la entrada al puerto, en el extremo que
+limita con los conductos de admisión o escape, sin embargo el área de pasaje es
+menor a la de la boca de los puertos por lo que se decidió utilizar la altura de
+cámara, $l_m = h_c$.
 
-%% Esto teniendo en cuneta que para realizar las flujometrías se utiliza el %% algoritmo PIMPLE, el cual se puede utilizar en casos con estimaciones
+%% Esto teniendo en cuneta que para realizar las flujometrías se utiliza el
+%% %% algoritmo PIMPLE, el cual se puede utilizar en casos con estimaciones
 %% iniciales a las variables viscosas o mal inicializados
+
+
+\section{Geometria}
+Previo a definir otros detalles de las flujometías, es necesario definir alguna
+nomenclatura para la geometría, nombre asignado a superficies como paredes,
+entrada, salida y cámara de combustión.
+%
+Para las flujometrías en las que no hay solape de cámaras, se definen las
+propiedades de una entrada y una cámara de combustión, indicadas como
+\emph{port} y \emph{chamber} respectivamente como se ve en la figura
+\ref{fig:ref_geom1}.
+%
+(Figura aca)
+
+El puerto y la cámara de combustión (o cámaras en caso de que haya solape), se
+definen como \emph{patch}, una frontera permeable.
+%
+El resto de las superficies se definen como paredes \emph{wall}.
+
+
+\section{Condiciones Iniciales}
+%
+Las condiciones inicilaes se obtienen de la corrida del simulador obtenida de
+la optimización inicial, con coeficientes de descarga constantes.
+%
+En la tabla \ref{tab:ci} se listan los datos necesarios para las flujometrías
+con flujo simulado como incompresibles y compresibles, estos valores se obtienen
+a partir de los datos de salida de ICESym para obtener el estado del gas
+en la cámara de combustión y límite del puerto correspondiente
+
+(tabla con condiciones inciales)
+
+No se considera la transferencia de calor en las paredes.
+
+Debido a la cantidad de flujometrías a realizar, se utilizó un script para leer los
+datos de salida de ICESym y
 
 \section{Coeficiente de descarga ($C_D$)}
 
