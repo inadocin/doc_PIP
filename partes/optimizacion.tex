@@ -132,9 +132,9 @@ puede caer en un óptimo local.
 
 \subsection{Componentes de un AG}
 %
-El funcionamiento básico de estos algoritmos se sintetiza en el pseudocódigo
-\ref{algo:genetico}, basicamente hay tres operadores que son suficientes para
-realizar este tipo de optimización: SELECCIÓN CRUZA Y MUTACIÓN.
+El funcionamiento básico de estos algoritmos se sintetiza en el
+pseudocódigo~\ref{algo:genetico}, basicamente hay tres operadores que son
+suficientes para realizar este tipo de optimización: SELECCIÓN CRUZA Y MUTACIÓN.
 
 %% \begin{enumerate}
 %%     \item Selección
@@ -147,10 +147,10 @@ en la función objetivo, la función objetivo es una medida del valor que
 queremos optimizar.
 %
 Este paso significa que aquellos individuos que tengan valores, por ejemplo más
-altos, de función objetivo tendrán más posibilidades de ser "copiados", de esta
+altos, de función objetivo tendrán más posibilidades de ser ``copiados'', de esta
 forma se imita a la selección natural.
 
-La cruza consiste en combinar los "vectores" de dos individuos para obtener uno
+La cruza consiste en combinar los ``vectores'' de dos individuos para obtener uno
 nuevo.
 
 La mutación consiste en modificar aleatoriamente uno o más parámetros de cada
@@ -168,8 +168,7 @@ búsqueda aleatoria.
 
 
 \begin{algorithm}
- \caption{Algoritmo de optimización}
- \label{algo:genetico}
+ \caption{Algoritmo de optimización}\label{algo:genetico}
      \SetAlgoLined
      iter = 0;
      Inicializar población.\;
@@ -192,9 +191,10 @@ en estudio.
 Estas plantillas surgen de similitudes en posiciones y valores que dan buena
 aptitud a un individuo.
 %
-Un AG procesa $n$ individuos y $n^k$ \emph{schematas} por iteración
-\cite{goldberg}, cuanto mayor sea el tamaño del \emph{schema}, mayor la
-probabilidad de ser truncado durante la cruza o mutación, esto produce que los
+Un AG procesa $n$ individuos y $n^k$ \emph{schematas} por
+iteración~\cite{goldberg}, cuanto mayor sea el tamaño del \emph{schema}, mayor
+la probabilidad de ser truncado durante la cruza o mutación, esto produce que
+los
 patrones de menor tamaño tengan mayor probabilidad de supervivencia de una
 generación a otra.
 %
@@ -223,7 +223,7 @@ simulación.
 Para la primer iteración se programaron los algoritmos y funciones necesarias
 para llevar a cabo la optimización desde cero.
 %
-Posteriormente se tomo la la librería DEAP \cite{DEAP_JMLR2012} y se
+Posteriormente se tomo la la librería DEAP~\cite{DEAP_JMLR2012} y se
 modificaron los operadores a medida, para poder utilizarlos con ICESym.
 
 \subsubsection{Población}
@@ -371,7 +371,7 @@ para realizar el diseño básico de los sistemas de admisión y escape.
 
 La población inicial es dopada con un individuo cuyos parámetros corresponden a
 la geometría obtenida del diseño básico\cite{lopez13}, por este motivo en la
-figura \ref{fig:primer_it} se observa que inicialente se tiene un individuo con
+figura~\ref{fig:primer_it} se observa que inicialente se tiene un individuo con
 puntaje alto y una media alta, la cual cae en iteraciones posteriores por la
 aleatoriedad del método.
 
@@ -430,8 +430,8 @@ suficientemente preciso para esta primer aproximación.
 \end{center}
 
 De los candidatos evaluados en esta primer iteración, se obtuvo un individuo
-con las características indicadas en la tabla \ref{tab:primer_it}, la geometría
-resultante se ilustra en la figura \ref{fig:primer_it}.
+con las características indicadas en la tabla~\ref{tab:primer_it}, la geometría
+resultante se ilustra en la figura~\ref{fig:primer_it}.
 %
 El rendimiento volumétrico obtenido tiene un máximo en 7000 rpm de 0.9
 
@@ -448,8 +448,7 @@ El rendimiento volumétrico obtenido tiene un máximo en 7000 rpm de 0.9
       Ángulo de apertura de Escape   & 85.1438 & Grados \\
       Ángulo de cierre de Escape     & 11.1285 & Grados \\ \bottomrule
     \end{tabular}
-    \caption{Geometría resultante.}
-    \label{tab:primer_it}
+    \caption{Geometría resultante.}\label{tab:primer_it}
 \end{table}
 
 El modelo 1D de los conductos de ICESym solamente ve diámetro y longitud  de los
@@ -460,10 +459,10 @@ Se mantuvo el eje de los puertos perpendicular a la carcasa del motor, además s
 suavizó la arista de intersección entre el conducto de los puertos y la cámara
 de combustión para lograr una entrada/salida más suave.
 %
-La geometría resultante se muestra en las figuras \ref{fig:motor_cad1} y
-\ref{fig:motor_cad2}.
+La geometría resultante se muestra en las figuras~\ref{fig:motor_cad1}
+y~\ref{fig:motor_cad2}.
 
-En la \ref{fig:motor_cad1} se ve el volumen total modelado, que representa la
+En la~\ref{fig:motor_cad1} se ve el volumen total modelado, que representa la
 mitad superior del motor.
 %
 En esta figura falta representar los volumenes correspondientes al rotor y
@@ -481,11 +480,10 @@ posiciones del rotor.
         \centering
         \includegraphics[width=\textwidth]{motor_cad2.png}
     \end{subfigure}
-  \caption{CAD Primer Iteración}
-  \label{fig:motor_cad1}
+  \caption{CAD Primer Iteración}\label{fig:motor_cad1}
 \end{figure}
 
-En la figura \ref{fig:motor_cad2}(a) y (b) se muestran las superficies
+En la figura~\ref{fig:motor_cad2} (a) y (b) se muestran las superficies
 correspondientes a los puertos de admisión y escape respectivamente, la ranura
 del lado del motor es de altura constante e igual a $h_{puerto} = \frac{2}{3}
 h_{camara} = \lua{tex.print(myData.hp)}$ mm hasta alcanzar los extremos de la
@@ -503,6 +501,5 @@ misma en donde se reduce parcialmente.
         \includegraphics[width=\textwidth]{vistas_escape.png}
         \caption{Puerto de Escape.}
     \end{subfigure}
-  \caption{CAD Primer iteración (vistas fuera de escala).}
-  \label{fig:motor_cad2}
+  \caption{CAD Primer iteración (vistas fuera de escala).}\label{fig:motor_cad2}
 \end{figure}

@@ -9,39 +9,94 @@ Para obtener una mejor caracterización del funcionamiento de los puertos de
 admisión y escape es necesario tener mayor conocimiento del coeficiente de
 descarga para diferentes condiciones operativas de los mismos.
 %
-Se realizaron una serie de flujometrías para obtener un mapa de $C_D$ que sea
+Se realizaron una serie de flujometrías para obtener un mapa de $C_{D}$ que sea
 función de la diferencia de presión que \emph{ve} el puerto y la apertura del
-mismo \footnote{ICESym utiliza alzada, por lo que se traduce área de pasaje de
-puerto en alzada de válvula equivalente.}, de modo obtener $C_D = f(\Delta P,L_v)$.
+mismo\footnote{ICESym utiliza alzada, por lo que se traduce área de pasaje de
+puerto en alzada de válvula equivalente.}, de modo obtener
+$C_{D} = f(\Delta P,L_v)$.
 %
-Este mapa se usa en ICESym para obtener una simulación más precisa del motor.
+El simulador ICESym requiere de información sobre el coeficiente de descarga
+($C_{D}$) para calcular el área efectiva de pasaje de flujo de las válvulas o
+puertos en el caso del MRCVC, introduciendo el mapa de coeficientes se tiene una
+mejor aproximación al funcionamiento del sistema de intercambio de gases.
 
-Las flujometrías se realizaron con el \emph{software} libre \emph{OpenFoam}, con
-los módulos \emph{pimleFoam} para flujo incompresible y y \emph{rhoPimpleFoam}
-para flujo compresible.
+Las flujometrías se realizaron con el \emph{software} \emph{OpenFoam}, este es
+un programa de Fluidodinámica Computacional, o CFD por sus siglas en inglés, de
+código libre y abierto escrito en ``C++''.
+%
+El código del programa es accesible por los usuarios, esto fue útil para
+entender cómo funcionan y qué parámetros requieren algunas de las condiciones de
+contorno y post-procesadores utilizados en este trabajo.
 
-Para modelar la turbulencia se utilizó un modelo de dos ecuaciones
-\emph{$\kappa-\epsilon$}\cite{wilcox}, este es uno de los modelos más utilizados
-y, por ser de dos ecuaciones es un modelo completo es decir, provee una ecuación
-para $\kappa$ y otra para la escala de longitud turbulenta $l_m$.
+Para realizar las simulaciones se utilizaron los \emph{solvers} \emph{pimleFoam}
+para flujo incompresible y \emph{rhoPimpleFoam} para flujo compresible.
 %
-El modelo requiere que se aproximen los valores iniciales de $\kappa$ y
-$\epsilon$, que a su vez requieren de la estimación de la longitud de mezcla o
-escala de la viscosidad $l_m$.
+Para la turbulencia se utilizó un modelo de dos ecuaciones
+\emph{$\kappa-\epsilon$}\cite{wilcox}, este es uno de los más utilizados y, por
+ser de dos ecuaciones es un modelo completo es decir, provee una ecuación para
+$\kappa$ y otra para la escala de longitud turbulenta $l_m$.
 %
+Requiere que se aproximen los valores iniciales de $\kappa$ y $\epsilon$, que a
+su vez requieren de la estimación de la longitud de mezcla o escala de la
+iscosidad $l_m$.
+
+
+El esquema de trabajo para realizar las simulaciones consistió en:
+
+\begin{enumerate}
+  \item Pre-procesado
+        \begin{enumerate}
+          \item Definir el dominio del problema, es decir, la geometría a analizar.
+          \item Generar una malla con un tamaño de elemento adecuado, la solucion a problemas de CFD depende fuertemente de la cantidad y tamaño de celdas utilizadas.
+          \item Seleccionar los modelos adecuados.
+          \item Definir las propiedades del fluido.
+          \item Definir las condiciones de borde.
+        \end{enumerate}
+  \item Solver
+        \item Seleccionar el solver a utilizar.
+        \item Ejecutar la simulación.
+  \item Post-procesado
+        \item Visualizar los resultados de las distintas variables de la simulación.
+        \item Extraer la información necesaria.
+\end{enumerate}
+
+\section{Pre procesado}
+%
+Se definió el dominio de la simulación a partir de la geometría obtenida de la
+optimización con el algoritmo genético del motor, utilizando coeficientes de
+descarga constantes para el flujo a través de los puertos.
+%
+La geometría se volcó en un modelo de CAD paramétrico obtenido tras realizar
+sumas, restas, intersecciones y/o uniones de volumenes que representan
+diferentres componentes del motor, como por ejemplo rotor, paleta, cuerpo
+estatórico, etc.
+%
+En la figura~\ref{fig:admision_50} se muestra este proceso para el puerto de
+admisión a $\theta=50^{\circ}$, en donde se suma el volumen del puerto con el
+volumen encerrado con el cuerpo estatórico, a esto se le restan los volúmenes
+correspondientes con el rotor y las paletas.
+
+Esta geometría fue generada por el progarma FreeCAD~\cite{freecad}, exportada a
+un archivo
+``.BREP''\footnote{\href{https://dev.opencascade.org/doc/overview/html/specification\_\_brep\_format.html}{Formato BREP, opencascade.org}}
+para luego ser importada
+
+\emph{weatertight} que para ser procesada \emph{snappyHexMesh} OpenFOAM en una
+malla
+
 Los valores iniciales se calculan a partir de:
 
 \begin{align}
     %
-    C_{\mu}  &= 0.09 \\
+  C_{\mu} &= 0.09 \\
     %
-    I        &= 0.05 \\
+  I &= 0.05 \\
     %
-    l_m      &= 0.07 \cdot D_m \\
+  l_{m} &= 0.07 \cdot D_{m} \\
+  %
+  \kappa &= 1.5 \cdot {\left( u_{ref} \cdot I \right)}^{2}\\
     %
-    \kappa   &= 1.5 \cdot \left( u_{ref} \cdot I \right) ^ 2 \\
-    %
-    \epsilon &= \frac{C_\mu ^{3/4} \cdot \kappa ^{3/2}} {l_m}
+  \epsilon &= \frac{{C_{\mu}}^{3/4} \cdot {\kappa}^{3/2}} {l_{m}}
     %
 \end{align}
 
@@ -82,8 +137,7 @@ entrada, salida y cámara de combustión.
 %
 Para las flujometrías en las que no hay solape de cámaras, se definen las
 propiedades de una entrada y una cámara de combustión, indicadas como
-\emph{port} y \emph{chamber} respectivamente como se ve en la figura
-\ref{fig:ref_geom1}.
+\emph{port} y \emph{chamber} respectivamente como se ve en la figura~\ref{fig:ref_geom1}.
 %
 (Figura aca)
 
@@ -95,20 +149,40 @@ El resto de las superficies se definen como paredes \emph{wall}.
 
 \section{Condiciones Iniciales}
 %
-Las condiciones inicilaes se obtienen de la corrida del simulador obtenida de
-la optimización inicial, con coeficientes de descarga constantes.
+Las condiciones iniciales se obtienen de la corrida del simulador obtenida de la
+optimización inicial, con coeficientes de descarga constantes.
 %
-En la tabla \ref{tab:ci} se listan los datos necesarios para las flujometrías
+En la tabla~\ref{tab:ci} se muestran dos  los datos necesarios para las flujometrías
 con flujo simulado como incompresibles y compresibles, estos valores se obtienen
 a partir de los datos de salida de ICESym para obtener el estado del gas
 en la cámara de combustión y límite del puerto correspondiente
 
-(tabla con condiciones inciales)
+\begin{table}
+\centering
+    \begin{tabular}{ccc} \toprule
+      Variable & Incompresible & Compresible \\ \midrule
+      $\epsilon$ & & \\
+      $\kappa$ & & \\
+      $\gamma$ & & \\
+      $\mu$ & & \\
+      $\nu$  & & \\
+      $M_{w}$ & & \\
+      $P_{r}$ & & \\
+      $\rho$ & & \\
+      $P_{puerto}$ & & \\
+      $P_{cámara}$ & & \\
+      $V_{puerto}$ & & \\
+      $T_{puerto}$ & & \\
+      $T_{cámara}$ & & \\
+
+    \end{tabular}
+    \caption{Condiciones Inciales}\label{tab:cc}
+\end{table}
 
 No se considera la transferencia de calor en las paredes.
 
-Debido a la cantidad de flujometrías a realizar, se utilizó un script para leer los
-datos de salida de ICESym y
+Debido a la cantidad de flujometrías a realizar, se utilizó un script para leer
+los datos de salida de ICESym y
 
 \section{Coeficiente de descarga ($C_D$)}
 
@@ -120,17 +194,17 @@ bloqueado, la ecuación de $\dot{m}$ es:
     \label{eq:m_not_choked}
     \dot{m} = \frac{C_D A_R p_0}{\sqrt{R T_0}}
             {\left(\frac{p_T}{p_0} \right)}^{1/\gamma}
-            {\left( \frac{2\gamma}{\gamma-1} \left[1- {(\frac{p_T}{p_0})}^{{\gamma-1}/\gamma} \right] \right)} ^{1/2}
+            {\left( \frac{2\gamma}{\gamma-1} \left[1- {(\frac{p_T}{p_0})}^{{\gamma-1}/\gamma} \right] \right)}^{1/2}
 \end{equation}
 
 En caso del que el flujo esté bloqueado, es decir
-$p_T/p_0 \le [2/\gamma+1)]^{\gamma/(\gamma - 1)}$
+$p_T/p_0 \le {[2/\gamma+1]}^{\gamma/(\gamma - 1)}$
 , la ecuación correspondiente es:
 
 \begin{equation}
-    \dot{m}=  \frac {C_D A_R p_0} {(R T_0)^{1/2}}
+  \dot{m}=  \frac {C_D A_R p_0} {{(R T_0)}^{1/2}}
             \gamma^{1/2}
-            \left( \frac{2\gamma}{\gamma+1} \right)^{(\gamma+1)/(2(\gamma-1))}
+            {\left( \frac{2\gamma}{\gamma+1} \right)}^{(\gamma+1)/(2(\gamma-1))}
 \end{equation}
 
 Para determinar $C_D$ se debe conocer:
@@ -150,14 +224,13 @@ a la cámara que se esté analizando, caluclada como $A_{R} = h_{p} \cdot l_{{v}
 Debido a que el MRCVC no tiene válvulas, en trabajos anteriores se confeccionó
 un script para calcular la distancia $l_v$ en función del ánuglo del ciclo.
 %
-En la figura \ref{fig:area_referencia} se ilustran las áreas de referencia para
+En la figura~\ref{fig:area_referencia} se ilustran las áreas de referencia para
 una posición del rotor en la que hay solape de cámaras con $\theta = 55^\circ$.
 
 \begin{figure}
     \centering
     \includegraphics[]{area_referencia.png}
-    \caption{Área de referencia}
-    \label{fig:area_referencia}
+    \caption{Área de referencia}\label{fig:area_referencia}
 \end{figure}
 
 Los valores de densidad, velocidad, presión y temperatura se obtienen de los
@@ -178,6 +251,7 @@ La velocidad se incicializa con un campo nulo de velocidades, que en la
 configuración de OpenFOAM se designa como \emph{internalField uniform (0 0 0)}.
 
 En resumen, los valores iniciales de los campos de presión, temperatura y velocidad
+son los indicados en la tabla~\ref{tab:cc}.
 
 \begin{table}
 \centering
@@ -185,10 +259,10 @@ En resumen, los valores iniciales de los campos de presión, temperatura y veloc
         Var & Campo         & Parche                      & Pared \\
         T   & uniforme T0   & inletOutlet                 & uniforme T9\\ \midrule
         P   & uniform Pavg  & uniformTotalPressure        & Pi \\
-        U   & uniform (0 0 0) & pressureInletOutletVelocity & valor fijo(0 0 0)\\
+        U   & uniform (0 0 0) & pressureInletOutletVelocity & valor fijo (0 0 0)\\
         rho & uniform rhoAvg \\ \bottomrule
     \end{tabular}
-    \caption{Condiciones iniciales} \label{tab:cc}
+    \caption{Condiciones de Borde}\label{tab:cc}
 \end{table}
 
 En todos los casos se tomará como velocidad de referencia a la media entre la
@@ -200,7 +274,7 @@ Si hay o no solape de cámaras va a depender tanto de la geometría del puerto
 como de la posición del ciclo en la que se encuentre, para determinar las
 condiciones iniciales se debe tener en cuenta el solape.
 %
-En la figura \ref{fig:geom} se muestra un corte del puerto con un plano cuya
+En la figura~\ref{fig:geom} se muestra un corte del puerto con un plano cuya
 normal está en $\vec{z}$, se denominará a la cámara que esté a la izquierda
 como cámara 0 y a la que esté a la derecha cámara 1
 %
@@ -222,13 +296,12 @@ residuales.
 
 Finalmente el caudal másico yse obtiene con OpenFOAM, en donde se simula el
 tiempo suficiente para que los caudales másicos por entradas o salidas se
-estabilice, como se ve en la figura \ref{fig:caudalMasico}.
+estabilice, como se ve en la figura~\ref{fig:caudalMasico}.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.6\textwidth]{surfaceFieldValue_405.0.png}
-    \caption{Flujometrías para el puerto de Admisión}
-    \label{fig:caudalMasico}
+    \caption{Flujometrías para el puerto de Admisión}\label{fig:caudalMasico}
 \end{figure}
 En todos los casos se tomará como velocidad de referencia a la media entre la
 velocidad en la punta del tubo de las cámaras que se estén solapando.
@@ -239,7 +312,7 @@ Si hay o no solape de cámaras va a depender tanto de la geometría del puerto
 como de la posición del ciclo en la que se encuentre, para determinar las
 condiciones iniciales se debe tener en cuenta el solape.
 %
-En la figura \ref{fig:geom} se muestra un corte del puerto con un plano cuya
+En la figura~\ref{fig:geom} se muestra un corte del puerto con un plano cuya
 normal está en $\vec{z}$, se denominará a la cámara que esté a la izquierda
 como cámara 0 y a la que esté a la derecha cámara 1
 %
@@ -257,7 +330,7 @@ temperatura.
 \subsection{Mapa de $C_D$}
 %
 Para obtener el mapa se tomaran valores de flujo másico en las combinaciones de
-$(\Delta P, l_v)$ que están indicadas en la tabla \ref{tab:casos}.
+$(\Delta P, l_v)$ que están indicadas en la tabla~\ref{tab:casos}.
 %
 % En la figura \ref{fig:flujometrias} se ve que se eligieron más cantidad de
 % muestreos en las zonas donde hay mayores cambios de presión.
@@ -269,8 +342,7 @@ $(\Delta P, l_v)$ que están indicadas en la tabla \ref{tab:casos}.
 \begin{figure}
     \centering
     \includegraphics[width=1\textwidth]{flujometrias_admision.png}
-    \caption{Flujometrías para el puerto de Admisión}
-    \label{fig:flujometrias}
+    \caption{Flujometrías para el puerto de Admisión}\label{fig:flujometrias}
 \end{figure}
 
 \begin{table}
@@ -284,19 +356,17 @@ $(\Delta P, l_v)$ que están indicadas en la tabla \ref{tab:casos}.
         4    & 60, 180  & 3000, 5000, 6000, 7000 \\
         5    & 95       & 1000, 7000\\ \bottomrule
     \end{tabular}
-    \caption{Flujometrías a realizar}
-    \label{tab:casos}
+    \caption{Flujometrías a realizar}\label{tab:casos}
 \end{table}
 
-Como se ve en la Figura \ref{fig:flujometrias}, los puntos a evaluar son los
-listados en la Tabla \ref{tab:casos}.
+Como se ve en la Figura~\ref{fig:flujometrias}, los puntos a evaluar son los
+listados en la Tabla~\ref{tab:casos}.
 
 
 
 \begin{figure}[h]
     \includegraphics[width=0.8\textwidth]{caso_1-cc.png}
-    \caption{Condiciones de borde}
-    \label{fig:geom}
+    \caption{Condiciones de borde}\label{fig:geom}
 \end{figure}
 
 Dentro del volumen de control, el campo de presiones se inicializa con el valor
@@ -558,7 +628,7 @@ en la figura xxx.
 \begin{table}
     \centering
     \begin{tabular}{rll}\toprule
-        Caso & Velocidad [RPM] & $Ma_{max}$ \\ \midrule
+        Caso & Velocidad [RPM] & $Ma_{\max}$ \\ \midrule
         0 & 1000 & 0.29 \\
         0 & 2000 & 0.65 \\
         0 & 3000 & 0.49 \\
@@ -578,24 +648,22 @@ en la figura xxx.
         5 & 1000 & 0.01 \\
         5 & 7000 & 0.45 \\ \bottomrule
     \end{tabular}
-    \caption{Números de Mach}
-    \label{tab:mach}
+    \caption{Números de Mach}\label{tab:mach}
 \end{table}
 
-\section{Caso 0 - 1000rpm}
+\section{Caso 0 --- 1000rpm}
 
 El caso simulado tiene solape de cámaras, una a $-10^{\circ}$ y otra a
 $110^{\circ}$, con el motor girando a 1000 RPM.
 %
-El flujo se modela como incompresible\footnote{Ver Tabla \ref{tab:mach}}, la
+El flujo se modela como incompresible\footnote{Ver Tabla~\ref{tab:mach}}, la
 geometría del caso y la ubicación de los parches correspondientes a la cámara
-0, 1 y a la "boca" del puerto.
+0, 1 y a la ``boca'' del puerto.
 
 \begin{figure}
     \centering
     \includegraphics{caso0.png}
-    \caption{Geometría a modelar}
-    \label{fig:caso0}
+    \caption{Geometría a modelar}\label{fig:caso0}
 \end{figure}
 
 \begin{table}
@@ -615,12 +683,11 @@ geometría del caso y la ubicación de los parches correspondientes a la cámara
         $\overline{\rho} [kg/m^3]$ & 0.643938 \\
         $\overline{T} [K]$ & 589.89 \\ \bottomrule
     \end{tabular}
-    \caption{Valores iniciales}
-    \label{tab:caso0_ci}
+    \caption{Valores iniciales}\label{tab:caso0_ci}
 \end{table}
 
 
-En la tabla \ref{tab:res_caso0}se muestran los resultados de 3 pasos de
+En la tabla~\ref{tab:res_caso0}se muestran los resultados de 3 pasos de
 refinamiento. TENGO QUE REHACER TODOS EN RÉGIMEN COMPRESIBLE
 
 \begin{table}
@@ -631,8 +698,7 @@ refinamiento. TENGO QUE REHACER TODOS EN RÉGIMEN COMPRESIBLE
         10     & 2.0        & 52210              & 0.33 & -0.006455     & -0.011692 \\
         20     & 4.0        & 20795              & 0.29 & -0.006668     & -0.011652 \\ \bottomrule
     \end{tabular}
-    \caption{Flujos volumétricos para ambas cámaras}
-    \label{tab:res_caso0}
+    \caption{Flujos volumétricos para ambas cámaras}\label{tab:res_caso0}
 \end{table}
 
 Con estos datos se puede calcular el orden de convergencia y el resultado
@@ -645,8 +711,7 @@ extrapolado a $h=0$.
         p         &  0.565833 & -3.967099 \\
         $f_{h=0}$ & -0.006013 & -0.011649 \\ \bottomrule
     \end{tabular}
-    \caption{Orden de convergencia y resultado exacto}
-    \label{tab:res1_caso0}
+    \caption{Orden de convergencia y resultado exacto}\label{tab:res1_caso0}
 \end{table}
 
 Y con el orden de convergencia se pueden calcular los valores de GCI.
@@ -658,12 +723,11 @@ Y con el orden de convergencia se pueden calcular los valores de GCI.
         1 $\rightarrow$ 2 & 2   & -5.923628   & 6.895404 \\
         2 $\rightarrow$ 3 & 2   & -8.573288   & 0.464910 \\ \bottomrule
     \end{tabular}
-    \caption{GCI}
-    \label{tab:gci_caso_0}
+    \caption{GCI}\label{tab:gci_caso_0}
 \end{table}
 
 Con estos resultados se verifica que se esté en rango de convergencia
-asintótica, como se indica en la Tabla \ref{tab:rac_caso_0}, los flujos
+asintótica, como se indica en la Tabla~\ref{tab:rac_caso_0}, los flujos
 másicos de ambas cámaras se encuentran en rango de convergencia asintótica.
 
 \begin{table}
@@ -672,29 +736,23 @@ másicos de ambas cámaras se encuentran en rango de convergencia asintótica.
         Rango               & $rac_0$  & $rac_1$ \\ \midrule
         12 $\rightarrow$ 23 & 1.022758 & 0.948364 \\ \bottomrule
     \end{tabular}
-    \caption{Verificación de convergencia}
-    \label{tab:rac_caso_0}
+    \caption{Verificación de convergencia}\label{tab:rac_caso_0}
 \end{table}
 
 
-\section{Caso 0 - 7000 rpm}
-
-\section{Caso 4 - 7000 rpm}
-
-\section{Caso 5 - 1000rpm}
+\section{Caso 5 --- 1000rpm}
 
 El caso simulado tiene una sola cámara a $100^{\circ}$ del ciclo, con el motor
 girando a 1000 RPM.
 %
-El flujo se modela como incompresible\footnote{Ver Tabla \ref{tab:mach}}, la
+El flujo se modela como incompresible\footnote{Ver Tabla~\ref{tab:mach}}, la
 geometría del caso y la ubicación de los parches correspondientes a la cámara
-0, 1 y a la "boca" del puerto.
+0, 1 y a la ``boca'' del puerto.
 
 \begin{figure}
     \centering
     \includegraphics{caso5.png}
-    \caption{Geometría a modelar}
-    \label{fig:caso5}
+    \caption{Geometría a modelar}\label{fig:caso5}
 \end{figure}
 
 \begin{table}
@@ -711,11 +769,10 @@ geometría del caso y la ubicación de los parches correspondientes a la cámara
         $\overline{\rho} [kg/m^3]$ & 0.797554 \\
         $\overline{T} [K]$ & 453.18 \\ \bottomrule
     \end{tabular}
-    \caption{Valores iniciales}
-    \label{tab:caso5_ci}
+    \caption{Valores iniciales}\label{tab:caso5_ci}
 \end{table}
 
-En la tabla \ref{tab:res_caso5} se muestran los resultados de 3 pasos de
+En la tabla~\ref{tab:res_caso5} se muestran los resultados de 3 pasos de
 refinamiento.
 
 \begin{table}[h]
@@ -726,8 +783,7 @@ refinamiento.
         10     & 2.0        & 52210              & 0.33 & -0.006455 \\
         20     & 4.0        & 20795              & 0.29 & -0.006668 \\ \bottomrule
     \end{tabular}
-    \caption{Flujos volumétricos para ambas cámaras}
-    \label{tab:res_caso5}
+    \caption{Flujos volumétricos para ambas cámaras}\label{tab:res_caso5}
 \end{table}
 
 Con estos datos se puede calcular el orden de convergencia y el resultado
@@ -740,8 +796,7 @@ extrapolado a $h=0$.
         p         &  0.565833 \\
         $f_{h=0}$ & -0.006013 \\ \bottomrule
     \end{tabular}
-    \caption{Orden de convergencia y resultado exacto}
-    \label{tab:res1_caso5}
+    \caption{Orden de convergencia y resultado exacto}\label{tab:res1_caso5}
 \end{table}
 
 Y con el orden de convergencia se pueden calcular los valores de GCI.
@@ -753,8 +808,7 @@ Y con el orden de convergencia se pueden calcular los valores de GCI.
         1 $\rightarrow$ 2 & 2   & -5.923628   \\
         2 $\rightarrow$ 3 & 2   & -8.573288   \\ \bottomrule
     \end{tabular}
-    \caption{GCI}
-    \label{tab:gci_caso_5}
+    \caption{GCI}\label{tab:gci_caso_5}
 \end{table}
 
 \begin{table}
@@ -763,19 +817,18 @@ Y con el orden de convergencia se pueden calcular los valores de GCI.
         Rango               & $rac_0$  \\ \midrule
         12 $\rightarrow$ 23 & 1.022758 \\ \bottomrule
     \end{tabular}
-    \caption{Verificación de convergencia}
-    \label{tab:rac_caso_5}
+    \caption{Verificación de convergencia}\label{tab:rac_caso_5}
 \end{table}
 
 Con estos resultados se verifica que se esté en rango de convergencia
-asintótica, como se indica en la Tabla \ref{tab:rac_caso_5}, los flujos
+asintótica, como se indica en la Tabla~\ref{tab:rac_caso_5}, los flujos
 másicos de ambas cámaras se encuentran en rango de convergencia asintótica.
 
 
 \section{Mapa de $C_D$}
 %
-El mapa de $C_D$ obetnido a partir de las flujoemtrías se lista en la tabla
-\ref{tab:mapaAdm} y \ref{tab:mapaEsc} para los mapas de admisión y escape
+El mapa de $C_D$ obetnido a partir de las flujoemtrías se lista en la
+tabla~\ref{tab:mapaAdm} y~\ref{tab:mapaEsc} para los mapas de admisión y escape
 respectivamente.
 
 
@@ -787,8 +840,7 @@ respectivamente.
     \lua{tex.print(mapaCd(myData.admision))}
     \bottomrule
     \end{tabular}
-  \caption{Mapa $C_D$ del puerto de Admisión}
-  \label{tab:mapaAdm}
+  \caption{Mapa $C_D$ del puerto de Admisión}\label{tab:mapaAdm}
   }
 \hfill
 \parbox{.45\linewidth}{
@@ -798,8 +850,7 @@ respectivamente.
     \lua{tex.print(mapaCd(myData.escape))}
     \bottomrule
     \end{tabular}
-  \caption{Mapa $C_D$ del puerto de Escape}
-  \label{tab:mapaEsc}
+  \caption{Mapa $C_D$ del puerto de Escape}\label{tab:mapaEsc}
 }
 \end{table}
 

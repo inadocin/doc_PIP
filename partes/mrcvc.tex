@@ -19,8 +19,8 @@ ICESym utiliza modelos unidimensionales para simular el flujo en los conductos
 de admisión/escape y modelos cero dimensionales o termodinámicos para la cámara
 de combustión, la transferencia de calor y el modelado de la fricción.
 %
-Además, incluye un modelo para el solape entre cámaras \cite{lopez16} entre
-otras modificaciones particulares al MRCVC.
+Además, incluye un modelo para el solape entre cámaras~\cite{lopez16} entre
+otras modificaciones particulares al MRCVC.\@
 
 Con el objetivo de poder simular con más detalle el ciclo del motor, se ha
 modificado el código de ICESym para permitir el uso de modelos de coeficiente
@@ -34,14 +34,13 @@ que son relevantes a este trabajo.
 \subsection{Geometría}
 %
 La geometría del MRCVC permite que gran parte de la combustión se de a volumen
-constante\cite{mrcvc_geom}, como se puede ver en la figura \ref{fig:vol_constante},
+constante\cite{mrcvc_geom}, como se puede ver en la figura~\ref{fig:vol_constante},
 en donde se esquematiza la variación del volumen con respecto al ciclo.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{comparacion_ciclos.png}
-    \caption{Comparación de ciclos ideales (cambiar por una imagen propia)}
-    \label{fig:comparacion_ciclos}
+    \caption{Comparación de ciclos ideales (cambiar por una imagen propia)}\label{fig:comparacion_ciclos}
 \end{figure}
 
 
@@ -61,12 +60,11 @@ paletas $R$, semiancho de paletas $r$ y altura de cámara $h$.
         \addplot table [x=Angle,y=Volume] {data/vol.dat};
         \end{axis}
     \end{tikzpicture}
-    \caption{Combustión a volumen constante}
-    \label{fig:vol_constante}
+    \caption{Combustión a volumen constante}\label{fig:vol_constante}
 \end{figure}
 
-La geometría utilizada para este trabajo se resumen en la tabla
-\ref{tab:geom_mrcvc} y se ilustra en la figura \ref{fig:geom_mrcvc}.
+La geometría utilizada para este trabajo se resumen en la
+tabla~\ref{tab:geom_mrcvc} y se ilustra en la figura~\ref{fig:geom_mrcvc}.
 %
 Esta geometría es la continuación de la utilziada en trabajos anteriores, con la
 cual se realizó parte del prediseño del sistema de intercambio de gases.
@@ -79,47 +77,44 @@ cual se realizó parte del prediseño del sistema de intercambio de gases.
         R         & \lua{tex.print(myData.R)}        & mm \\
         r         & \lua{tex.print(myData.r)}        & mm \\
         $h_c$     & \lua{tex.print(myData.hc)}       & mm \\
-        rc        & \lua{tex.print(myData.rc)}       & - \\
+        rc        & \lua{tex.print(myData.rc)}       & --- \\
         V0        & \lua{tex.print(myData.V0)}       & $cm^3$ \\
         $R_i$     & \lua{tex.print(trunc(myData.Ri))} & mm \\
         $R_e$     & \lua{tex.print(trunc(myData.Re))} & mm \\
     \end{tabular}
-    \caption{Geometría del MRCVC}
-    \label{tab:geom_mrcvc}
+    \caption{Geometría del MRCVC}\label{tab:geom_mrcvc}
 \end{table}
 
 Los ángulos que determinan el reglaje de los puertos de admisión y escpe son los
 de inicio y de cierre del puerto.
 %
 Como ejemplo, la posición del puerto de escape queda determiada por los  valores
-EIA y EFA como se ve en la figura \ref{fig:angulos_escape}.
+EIA y EFA como se ve en la figura~\ref{fig:angulos_escape}.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth]{angulos_escape.png}
-    \caption{Puerto de escape}
-    \label{fig:angulos_escape}
+    \caption{Puerto de escape}\label{fig:angulos_escape}
 \end{figure}
 
-Como se puede ver en la figura \ref{fig:primeros_puertos}, se buscó suavizar los
+Como se puede ver en la figura~\ref{fig:primeros_puertos}, se buscó suavizar los
 vértices en donde la pared del puerto intersecta la cámara de combustión.
 
 \subsection{Ciclo operativo}
 %
 La variación de la geometría y el funcionamiento en detalle de ICESym, así como
-también el modelo de solape de cámaras desarrollado para el uso con el MRCVC.
+también el modelo de solape de cámaras desarrollado para el uso con el MRCVC.\@
 %
 Para una misma relación de compresión, una combustión a volumen constante
 alcanza valores de presión y temperatura mayores en comparación a otros ciclos.
 %
-En la figura \ref{fig:comparacion_rendimientos} se ve como para una $r_c$ dada,
+En la figura~\ref{fig:comparacion_rendimientos} se ve como para una $r_c$ dada,
 el ciclo a volumen constante tiene el mayor rendimiento.
 
 \begin{figure}
     \centering
     \includegraphics[width=1\textwidth]{rendimiento_conv_comb.png}
-    \caption{Comparación de rendimientos (cambiar por una imagen propia}
-    \label{fig:comparacion_rendimientos}
+    \caption{Comparación de rendimientos (cambiar por una imagen propia)}\label{fig:comparacion_rendimientos}
 \end{figure}
 
 El indicador que se tomará como referencia para evaluar y comparar diferentes
@@ -176,8 +171,7 @@ El área de referencia utilizada por ICESym es el área de cortina.
 \begin{figure}
   \centering
   \includegraphics[width=0.5\textwidth]{valve_curtain.jpg}
-  \caption{Área de cortina}
-  \label{fig:area_cortina}
+  \caption{Área de cortina}\label{fig:area_cortina}
 \end{figure}
 
 Dónde $D_v$ es el diámetro de la válvula y $L_v$ es la alzada de la misma.
@@ -215,7 +209,7 @@ FreeCAD\cite{freecad} para generar un archivo en formato \emph{.BREP} para cada
 posición analizada.
 %
 Estos archivos son importados al software salome\cite{salome}, ese permite
-generar una malla cerrada que se puede utilizar para OpenFOAM. 
+generar una malla cerrada que se puede utilizar para OpenFOAM.\@
 %
 Antes de generar la malla se apliacn los nombres de los parches, en los que
 luego se toman de referencia para aplicar las reglas para realizar el
@@ -223,7 +217,7 @@ refinamiento con snappyHexMesh, aplicar condiciones de contorno, iniciales y
 demás.
 %
 Se genera la malla con el mallador NETGEN 1D-2D-3D y se exporta parche por
-parche en formato \emph{ASCII .stl}.
+parche en formato \emph{ASCII.stl}.
 
 %
 El archivo \emph{stl} se utiliza en OpenFOAM para generar la malla con
@@ -258,7 +252,7 @@ realizaron algunas simplificaciones, las cuales se listan a continuación.
 \section{Metodología}
 %
 Se simulará un MRCVC de 3 paletas usando el simulador de motores de combustión
-interna ICESym \cite{icesym} con el propósito de obtener curvas de rendimiento
+interna ICESym~\cite{icesym} con el propósito de obtener curvas de rendimiento
 volumétrico.
 %
 Estas serán el principal criterio para evaluar el diseño de los sistemas de
@@ -311,7 +305,7 @@ Con esto se construye una mapa del coeficiente de descarga de la forma $C_d =
 f(lv, dp)$, que se utiliza en \emph{def\_valve.f90} para calcular el área
 efectiva de la válvula.
 
-La interpolación bilineal se realiza sobre una malla rectangular , con esto se
+La interpolación bilineal se realiza sobre una malla rectangular, con esto se
 realiza simplemente una interpolación lineal entre dos valores en planos con
 datos conocidos.
 
@@ -335,8 +329,7 @@ datos conocidos.
 %    END SUBROUTINE interpolant2d
 % \end{lstlisting}
 \begin{algorithm}
- \caption{Interpolación bi-lineal}
- \label{algo:bilineal}
+ \caption{Interpolación bi-lineal}\label{algo:bilineal}
     \SetAlgoLined
     \SetKwFunction{Size}{Size}
     \SetKwFunction{Interpolant}{Interpolant}
@@ -364,19 +357,18 @@ datos conocidos.
 Si bien hay otros métodos para estimar el valor de Cd para dos valores $(\Delta
 P; l_v)$, este método es sencillo y da resultados satisfactorios.
 %
-En la figura \ref{fig:bilineal} se muesta un ejemplo del error obtenido
+En la figura~\ref{fig:bilineal} se muesta un ejemplo del error obtenido
 con este método para interpolar una función de prueba 
 $\sin(\sqrt(x^2 + y^2))$.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{bilineal.png}
-    \caption{Interpolación bilineal de $\sin(\sqrt(x^2 + y^2))$}
-    \label{fig:bilineal}
+    \caption{Interpolación bilineal de $\sin(\sqrt(x^2 + y^2))$}\label{fig:bilineal}
 \end{figure}
 
 La malla rectangular se realizará a partir de los valores de $C_d$ que se
-obtengan de flujometrías con \emph{OpenFoam} \cite{openfoam}.
+obtengan de flujometrías con \emph{OpenFoam}~\cite{openfoam}.
 %
 Debido al costo computacional que requieren la flujoemtría, solo una cantidad
 reducida de puntos se obtendrá con este método, las combinaciones de $(\Delta
@@ -397,8 +389,7 @@ El método del punto más cercano consiste en asignar para cada par $(x, y)$
 el valor conocido más cercano, el algoritmo es como se indica a continuación:
 
 \begin{algorithm}
- \caption{Interpolación por punto más cercano}
- \label{algo:mas_cercano}
+ \caption{Interpolación por punto más cercano}\label{algo:mas_cercano}
     \SetAlgoLined
 
     \KwIn{\\
@@ -414,10 +405,10 @@ el valor conocido más cercano, el algoritmo es como se indica a continuación:
 
     \BlankLine
      $I=zeros_{[n,m]}$\;
-     \For{$i \gets 0$ \KwTo $n$}{
-        \For{$j \gets 0$ \KwTo $m$}{
-            $d = \sqrt{(V_x - I_{xi})^2 + (V_y - I_{yj})^2}$\;
-            $I[i,j] = v_z[min(d)]$\;
+     \For{$i \gets 0$\KwTo$n$}{
+        \For{$j \gets 0$\KwTo$m$}{
+          $d = \sqrt{{(V_x - I_{xi})}^2 + {(V_y - I_{yj})}^2}$\;
+            $I[i,j] = v_z[\min(d)]$\;
         }
      }
 \end{algorithm}
@@ -427,7 +418,7 @@ de los valores cercanos al punto en cuestión, ponderado por la distancia al val
 elevado a un exponente arbitrario $p$.
 %
 Cuanto mayor sea el valor de $p$, más sensible es el método a los valores cercanos,
-la formulación de este método se ve en la ecuación \ref{eq:idw}.
+la formulación de este método se ve en la ecuación~\ref{eq:idw}.
 
 \begin{equation}
     f_p = \frac{\sum_{i=1}^{n} \frac{z_i}{d_i^p}} {\sum_{i=1}^{n} \frac{1}{d_i^p}}
@@ -437,8 +428,7 @@ la formulación de este método se ve en la ecuación \ref{eq:idw}.
 La función utilizada para calcular esto es esto es:
 
 \begin{algorithm}
-    \caption{Interpolación IDW}
-    \label{algo:IDW}
+    \caption{Interpolación IDW}\label{algo:IDW}
     \SetAlgoLined
 
     \KwIn{\\
@@ -454,9 +444,9 @@ La función utilizada para calcular esto es esto es:
 
     \BlankLine
     $I=zeros_{[n,m]}$\;
-    \For{$i \gets 0$ \KwTo $n$}{
-        \For{$j$ \gets 0 \KwTo $m$}{
-          $d = {\left[(V_x - I_{xi})^2 + (V_y - I_{yj})^2\right]}^{\frac{p}{2}}$\;
+    \For{$i \gets 0$\KwTo$n$}{
+        \For{$j$\gets 0 \KwTo$m$}{
+          $d = {\left[{(V_x - I_{xi})}^2 +{(V_y - I_{yj})}^2\right]}^{\frac{p}{2}}$\;
           \eIf{$\exists i : d[i] = 0$}{
             $I[i, j] = V_z[i]$\;
           }{
@@ -492,6 +482,5 @@ La función utilizada para calcular esto es esto es:
         \includegraphics[width=\textwidth]{mapa_cd/idw16_mapa_adm.png}
         \caption{IDW ($p=16$)}
     \end{subfigure}
-    \caption{Comparación de interpolaciones}
-    \label{fig:mapas_interpolados}
+    \caption{Comparación de interpolaciones}\label{fig:mapas_interpolados}
 \end{figure}

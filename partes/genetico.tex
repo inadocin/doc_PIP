@@ -98,8 +98,7 @@ al número que se envía a ICESym.
             4   & 0010010111111010100101111111010011010001 \\
             5   & 0100101110101111110110011001101011011100 \\ \bottomrule
         \end{tabular}
-    \caption{Binario a de entrada}
-    \label{tab:mapeo_pre}
+    \caption{Binario a de entrada}\label{tab:mapeo_pre}
 \end{table}
 
 \begin{table}
@@ -112,8 +111,7 @@ al número que se envía a ICESym.
             4   & 0.039  & 0.0819 & 0.0842 & 0.0261 & 43.5484 & 84.1935 & 17.4194 & 49.3548 \\
             5   & 0.0503 & 0.0616 & 0.0668 & 0.0842 & 55.1613 & 17.4194 & 63.871  & 81.2903 \\ \bottomrule
         \end{tabular}
-    \caption{Vectores resultantes de la transformación}
-    \label{tab:mapeo_post}
+    \caption{Vectores resultantes de la transformación}\label{tab:mapeo_post}
 \end{table}
 
 El orden de los mismos se mantiene constante, por lo que cada sección del número
@@ -184,7 +182,7 @@ Este comportamiento aserrado es poco deseable, por lo que se modificó la
 función para conseguir una curva de rendimiento volumétrico suave.
 %
 Además se implementó una suma ponderada, para obtener un rendimiento
-volumétrico máximo en un valor arbitrario de 5000 RPM.
+volumétrico máximo en un valor arbitrario de 5000 RPM.\@
 
 Para prevenir el comportamiento aserrado se introdujo un sistema de
 penalidades, que resta puntaje si la derivada de la función se modifica de una
@@ -240,19 +238,18 @@ Para representar a cada individuo se utilizan 8 características geométricas:
 
 Con la población definida se procede a los evaluar cada motor con la función
 objetivo, la cual se definió de manera tal de favorecer curvas de rendimiento
-volumétrico suaves y valores altos a mayores RPM.
+volumétrico suaves y valores altos a mayores RPM.\@
 
 La suavidad de la curva de rendimiento volumétrico se calcula midiendo los
 cambios de pendiente de la derivada la cual se aproxima con la fórmula de
-diferencia progresiva \ref{eq:derivada}.
+diferencia progresiva~\ref{eq:derivada}.
 %
 Solamente interesa el signo, por lo que el valor de $h$ en el denominador no
-interesa y se hace 1, con esto la función objetivo queda como el algoritmo
-\ref{alg:funcObj}.
+interesa y se hace 1, con esto la función objetivo queda como el
+algoritmo~\ref{alg:funcObj}.
 
-\begin{equation}
+\begin{equation}\label{eq:derivada}
   f' = \frac{f(i+1) - u(i)}{h}
-  \label{eq:derivada}
 \end{equation}
 
 \begin{lstlisting}[language=Python]
@@ -287,7 +284,8 @@ def evaluate_engine(individual, binnary_len, eng_obj, cores):
 \end{lstlisting}
 
 El conjunto de pesos utilizados para ponderar los rendimientos es el indicado
-en la tabla \ref{tab:pesos}
+en la tabla~\ref{tab:pesos}
+
 
 \begin{table}
   \centering
@@ -295,8 +293,7 @@ en la tabla \ref{tab:pesos}
       RPM & 1000 & 2000 & 3000 & 4000 & 5000 & 6000 & 7000 & 8000 & 9000 \\ \midrule
       $w$ & 1 & 1 & 1 & 6 & 8 & 9 & 8 & 7 & 7 \\ \bottomrule 
   \end{tabular}
-  \caption{Pesos}
-  \label{tab:pesos}
+  \caption{Pesos}\label{tab:pesos}
 \end{table}
 
 
@@ -324,13 +321,12 @@ se corta el vector que forma al individuo en dos puntos, la posición de estos
 puntos se selecciona al azar, manteniendo el largo original de los vectores.
 %
 Luego los individuos ``cruzados'' se combinan de forma complementaria, como en
-la figura \ref{fig:cr2puntos}
+la figura~\ref{fig:cr2puntos}
 
 \begin{figure}
   \centering
   \includegraphics[width=0.5\textwidth]{cruza2puntos.png}
-  \caption{Cruza de dos puntos}
-  \label{fig:cr2puntos}
+  \caption{Cruza de dos puntos}\label{fig:cr2puntos}
 \end{figure}
 
 
