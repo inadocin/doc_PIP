@@ -1,4 +1,4 @@
-\chapter{MRCVC e ICESym}
+\chapter{MRCVC e ICESym}\label{ch:mrcvc}
 
 El Simulador de Motores de Combustión Interna (ICESym) permite la simulacion de
 motores tanto alternativos como rotativos en general y el MRCVC en particular,
@@ -9,29 +9,8 @@ En este capítulo se describe brevemente el ciclo operativo de MRCVC, los
 aspectos generales de ICESym que hacen a la simulación del mismo, cómo se
 utilizó el simulador y las modificaciones que se realizaron para este trabajo.
 
-\section{Simulación computacional del ciclo termodinámico del MRCVC}
 
-El MRCVC es un motor rotativo de combustión interna encendido por chispa, en el
-que gran parte de la misma ocurre a volumen constante.
-%
-ICESym utiliza modelos unidimensionales para simular el flujo en los conductos
-de admisión/escape y modelos cero dimensionales o termodinámicos para la cámara
-de combustión, la transferencia de calor y el modelado de la fricción.
-%
-Además, incluye un modelo para el solape entre cámaras~\cite{lopez16} entre
-otras modificaciones particulares al MRCVC.\@
-
-% NOTA: esta repetido
-% Con el objetivo de poder simular con más detalle el ciclo del motor, se ha
-% modificado el código de ICESym para permitir el uso de modelos de coeficiente
-% de descarga dependientes de dos variables: presión y alzada de válvula, de modo
-% que $Cd = f(L_v, \Delta P)$.
-%
-% En trabajos anteriores se tienen estudios más detallados del MRCVC, por lo que
-% aquí se presenta de manera breve los aspectos geométricos y mecánicos del motor
-% que son relevantes a este trabajo.
-
-\subsection{Geometría}
+\section{Geometría}
 %
 La geometría del MRCVC permite que gran parte de la combustión se de a volumen
 constante\cite{mrcvc_geom}, como se puede ver en la figura~\ref{fig:vol_constante},
@@ -103,7 +82,7 @@ EIA y EFA como se ve en la figura~\ref{fig:angulos_escape}.
 % Como se puede ver en la figura~\ref{fig:primeros_puertos}, se buscó suavizar los
 % vértices en donde la pared del puerto intersecta la cámara de combustión.
 
-\subsection{Ciclo operativo}
+\section{Ciclo operativo}
 %
 La variación de la geometría y el funcionamiento en detalle de ICESym, así como
 también el modelo de solape de cámaras desarrollado para el uso con el MRCVC.\@
@@ -161,23 +140,20 @@ La temperatura de pared se asume en 450K.
 
 
 \section{Sistemas de intercambio de gases}
-El sistema de intercamibo de gases del MRCVC es similar al de otros se compone
-de un conduncto de admisión y puerto de admisión, conducto y puerto de escape.
 %
-Los conductos se asumen como elementos rectos de un largo finito, diámetro
-constante cuya fuente y sumidero es la atmósfera.
+El sistema de intercamibo de gases del MRCVC se compone de un conduncto y puerto
+admisión, conducto y puerto de escape.
 %
-El eje de los conductos coincide con el eje del puerto, estos últimos hacen una
+Estos conductos se asumen como elementos rectos de un largo finito y diámetro
+constante, cuya fuente y sumidero es la atmósfera a 101330.0 Pa.
+%
+El eje de los tubos coincide con el eje del puerto, estos últimos hacen una
 transición desde el diámetro del conducto hasta la altura de la ranura del
 puerto en la cámara de combustión, en la
 figura~\ref{fig:sistema_intercambio_gases} se esquematiza la geometría
 mencionada.
 %
-La longitud de ambos puertos se deja en $0.1$ metros
-%
-Para este trabajo no se tienen en cuenta otros elementos típicos de un sistema
-de intercamibo de gases, como por ejemplo la mariposa, carburador, filtros de
-aire, convertidores catalíticos y demás.
+La longitud de ambos puertos se deja en $0.1$ metros.
 
 En trabajos anteriores~\cite{lopez13} se demostró que se tiene una mejor
 \emph{performance} del motor si se ubican los puertos en el cuerpo central del
@@ -186,6 +162,9 @@ paramétrico de las variables que determinan la forma, posición y reglaje de lo
 puertos, ya que es la ubicación angular de los puertos la que determina la
 duración de los procesos de admisión y escape.
 
+Para este trabajo no se tienen en cuenta otros elementos típicos de un sistema
+de intercamibo de gases, como por ejemplo la mariposa, carburador, filtros de
+aire, convertidores catalíticos y demás.
 
 \subsection{Área de referencia}
 %
@@ -512,3 +491,25 @@ La función utilizada para calcular esto es esto es:
     \end{subfigure}
     \caption{Comparación de interpolaciones}\label{fig:mapas_interpolados}
 \end{figure}
+
+\section{Simulación computacional del ciclo termodinámico del MRCVC}
+
+El MRCVC es un motor rotativo de combustión interna encendido por chispa, en el
+que gran parte de la misma ocurre a volumen constante.
+%
+ICESym utiliza modelos unidimensionales para simular el flujo en los conductos
+de admisión/escape y modelos cero dimensionales o termodinámicos para la cámara
+de combustión, la transferencia de calor y el modelado de la fricción.
+%
+Además, incluye un modelo para el solape entre cámaras~\cite{lopez16} entre
+otras modificaciones particulares al MRCVC.\@
+
+% NOTA: esta repetido
+% Con el objetivo de poder simular con más detalle el ciclo del motor, se ha
+% modificado el código de ICESym para permitir el uso de modelos de coeficiente
+% de descarga dependientes de dos variables: presión y alzada de válvula, de modo
+% que $Cd = f(L_v, \Delta P)$.
+%
+% En trabajos anteriores se tienen estudios más detallados del MRCVC, por lo que
+% aquí se presenta de manera breve los aspectos geométricos y mecánicos del motor
+% que son relevantes a este trabajo.
