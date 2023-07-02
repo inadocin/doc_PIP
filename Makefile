@@ -1,14 +1,14 @@
-MAIN=main
-# TEX=pdflatex
-TEX=latexmk -pdflatex=lualatex -pdf
-BIBTEX=biber
-NOMENCL=makeindex
-BUILDTEX=$(TEX) $(MAIN).tex
+main=main
+tex=latexmk -pdflatex=lualatex -pdf
+bibtex=biber
+nomencl=makeindex $(main).nlo -s nomencl.ist -o $(main).nls
+buildtex=$(tex) $(main).tex
 
 all: clean
-	$(BUILDTEX)
-	$(BIBTEX) $(MAIN)
-	$(BUILDTEX)
+	$(buildtex)
+	$(nomencl)
+	$(bibtex) $(main)
+	$(buildtex)
 
 
 clean-all:
@@ -17,9 +17,9 @@ clean-all:
 	find . -type f -name *.bak -exec rm -f {} +
 
 clean:
-	rm -f *.gz *.fls *fdb_latexmk *.acn *.aux *.bbl *.bcf *.blg *.glo *.ist *.lof *.log *.lot *.run.xml *.toc *.out
+	rm -f *.gz *.fls *fdb_latexmk *.acn *.aux *.bbl *.bcf *.blg *.glo *.ist *.lof *.log *.lot *.run.xml *.toc *.out *.olg *.nlo *.nls *.ilg
 	find . -type f -name *.aux -exec rm -f {} +
 	find . -type f -name *.bak -exec rm -f {} +
 
 open:
-	zathura $(MAIN).pdf &
+	zathura $(main).pdf &

@@ -1,93 +1,53 @@
-% ------------------------------------------------------------------------------
-% Paquetes y configuracion
-% -----------------------------------------------------------------------------
-\documentclass[11pt,twoside]{report}
-\usepackage{fontspec}  % variante de fontenc compatilbe con lualatex
-\usepackage{polyglossia}  % variante de babel compatible con lualatex
-\usepackage{luacode}  % para ejecutar funciones de lua, funciona solo con lualatex como compilador
-\usepackage{pgfplots}  % para crear graficos desde aca
-\pgfplotsset{compat=1.18}  % para crear graficos desde aca
-\usepackage[a4paper,width=170mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry} % para cambiar los margenes
-\usepackage[backend=biber]{biblatex}  % 
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{booktabs}
-\usepackage{csquotes}
-\usepackage{graphicx}
-\usepackage[spanish,onelanguage,ruled,vlined,linesnumbered]{algorithm2e}
-\usepackage[bookmarks,naturalnames]{hyperref}
-\usepackage{listings}
-\usepackage{xcolor}
-\usepackage{subcaption}
+\documentclass[oneside,a4paper,spanish,links,12pt]{book}
 
-\setdefaultlanguage{spanish}
-\addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
-\addto\captionsspanish{\renewcommand{\listtablename}{Índice de Tablas}}
+\input{otros/paquetes}
+\input{otros/configuracion}
 
-\graphicspath{ {figuras/} }
-\addbibresource{bib.bib}
-
-\pagenumbering{roman}
-
-% --- Listings --- 
-% Sacado de https://www.overleaf.com/learn/latex/Code_listing
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
-
-\lstdefinestyle{mystyle}{
-    backgroundcolor=\color{backcolour},   
-    commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta},
-    numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
-    basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    numbers=left,                    
-    numbersep=5pt,                  
-    showspaces=false,                
-    showstringspaces=false,
-    showtabs=false,                  
-    tabsize=2
-}
-\lstset{style=mystyle}
-
-\newcommand\lua[1]{\luaexec{#1}}
-
-% -----------------------------------------------------------------------------
-% Documento
-% -----------------------------------------------------------------------------
 \begin{document}
 
 \begin{luacode}
-dofile("./data/data.lua")
+dofile("data/data.lua")
 \end{luacode}
 
-% -- Iniciales
-\include{partes/caratula}
-\setcounter{page}{1}
-\include{partes/agradecimientos}
-\tableofcontents
-\listoffigures
-\listofalgorithms
-\listoftables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Caratula, resumen, indice, etc
+\pagenumbering{roman}
+\include{otros/caratula}
+\include{otros/resumen}
+\tableofcontents \pagebreak
+\listoffigures \pagebreak
+\listoftables \pagebreak
+\include{otros/nomenclatura} \makenomenclature \pagebreak
+% \input{otros/nomenclatura} \printnomenclature \pagebreak
 
-% -- Cuerpo del texto
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \pagenumbering{arabic}
-\include{partes/introduccion}   % 1
-% \include{partes/antecedentes}   % 2
-\include{partes/mrcvc}          % 3
-\include{partes/genetico}       % 4
-\include{partes/optimizacion}   % 5
-\include{partes/flujometrias}   % 6
-\include{partes/resultados}     % 7
-\include{partes/conclusiones}   % 8
+% \addtocontents{toc}{\protect\setcounter{tocdepth}{2}}\pagebreak
 
-% -- Finales
-\printbibliography
-% \include{partes/apendices}
+\chapter{INTRODUCCIÓN} \label{capitulo:INTRODUCCION}
+\input{capitulo1/introduccion} \label{capitulo:1_INTRODUCCION} \pagebreak
+
+\chapter{MARCO TEÓRICO} \label{capitulo:MARCO_TEORICO}
+\input{capitulo2/cap2_motores_combustion_interna} \label{capitulo:2_MCI} \pagebreak
+\input{capitulo2/cap2_mrcvc.tex} \label{capitulo:2_MRCVC} \pagebreak
+
+\chapter{HERRAMIENTAS COMPUTACIONALES} \label{capitulo:HERRAMIENTAS_COMPUTACIONALES}
+\input{capitulo3/cap3_icesym.tex} \label{capitulo:3_ICESYm} \pagebreak
+\input{capitulo3/cap3_optimizador.tex} \label{capitulo:3_Optimizador} \pagebreak
+\input{capitulo3/cap3_flujometrias.tex} \label{capitulo:3_CFD} \pagebreak
+
+\chapter{DESARROLLO} \label{capitulo:DESARROLLO}
+\input{capitulo4/primer_iteracion} \label{capitulo:4_primer_iteracion} \pagebreak
+\input{capitulo4/flujometrias} \label{capitulo:4_flujometrias} \pagebreak
+\input{capitulo4/segunda_iteracion} \label{capitulo:4_segunda_iteracion} \pagebreak
+
+\chapter{CONCLUSIONES} \label{capitulo:5_conclusiones}
+\input{capitulo5/conclusiones} \label{capitulo:5_conclusiones} \pagebreak
+
+\chapter{REFERENCIAS}
+\printbibliography[heading=none] \pagebreak
+
+% \chapter{ANEXO I}
+% \input{anexos/anexo_I} \pagebreak
+
 \end{document}
