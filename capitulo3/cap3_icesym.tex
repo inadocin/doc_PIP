@@ -235,29 +235,21 @@ La función utilizada para calcular esto es esto es:
 
 \subsection{Área de referencia}
 %
-El área de referencia utilizada por ICESym es el área de cortina.
-
-\begin{equation}
-  \label{eq:Ar}
-  A_R = A_C = \pi D_v l_v
-\end{equation}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.5\textwidth]{valve_curtain.jpg}
-  \caption{Área de cortina}\label{fig:area_cortina}
-\end{figure}
-
-Dónde $D_v$ es el diámetro de la válvula y $l_v$ es la alzada de la misma.
-
-Para el MRCVC se utiliza el área del puerto expuesta a la cámara, que se
-calcula como el producto entre la longitud o cuerda del puerto expuesta a la
-cámara en el plano del estator $l_v$ y la altura de la ranura del puerto
-$h_p=\lua{tex.print(myData.hp)}$.
+El área de referencia utilizada por ICESym ese el área de
+cortina~\ref{eq:area_cortina} y se expresa en el código del programa como el
+área efectiva $F_{V}=A_{R}\cdot C_{D}$.
 %
-Este valor se afecta por el coeficiente de descarga $C_{D,int}$, puede
-ser un valor fijo o el resultado de interpolar de un mapa de $C_D$ para
-un valor de cuerda y $\Delta_P$ dado, esto en $m^2$ queda como:
+Para el MRCVC el área de referencia es el área frontal del puerto expuesta a la
+cámara, calculada como la altura de la ranura $h_{p}$ multiplicada por la
+longitud entre el borde del puerto y la paleta que delimita la cámara $l_{v}$,
+$A_{R} = h_{p} \cdot l_{{v}}$.
+%
+En la figura~\ref{fig:area_referencia} se ilustran las áreas de referencia para
+una posición del rotor en la que hay solape de cámaras con $\theta = 55^\circ$.
+%
+Este valor se afecta por el coeficiente de descarga $C_{D,int}$, puede ser un
+valor fijo o el resultado de interpolar de un mapa de $C_D$ para un valor de
+cuerda y $\Delta_P$ dado, esto en $m^2$ queda como:
 
 \begin{equation}\label{eq:fv}
     %
@@ -265,16 +257,18 @@ un valor de cuerda y $\Delta_P$ dado, esto en $m^2$ queda como:
     %
 \end{equation}
 
-% NOTA: aca hay que meter un croquis
+\begin{figure}
+    \centering
+    \includegraphics[]{area_referencia.png}
+    \caption{Área de referencia}\label{fig:area_referencia}
+\end{figure}
 
-% \subsection{Solape de cámaras}
-%
 Tanto al inicio como al cierre del puerto ocurre solape de cámaras, por lo que
 en estos intervalos angulares hay un valor de $C_D$ para cada cámara.
 %
 Este se calcula con el flujo másico que atraviesa los parches correspondientes
 a cada cámara y el área de puerto expuesta por cada cámara.
-% NOTA:A ver nota 8
+% TODO: ver nota 8
 
 \subsection{Interfaz con optimizador}
 %

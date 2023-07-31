@@ -4,12 +4,11 @@ bibtex=biber
 nomencl=makeindex $(main).nlo -s nomencl.ist -o $(main).nls
 buildtex=$(tex) $(main).tex
 
-all: clean
+all:
 	$(buildtex)
 	$(nomencl)
 	$(bibtex) $(main)
 	$(buildtex)
-
 
 clean-all:
 	rm -f *.gz *.pdf *.fls *fdb_latexmk *.acn *.aux *.bbl *.bcf *.blg *.glo *.ist *.lof *.log *.lot *.run.xml *.toc *.out *.latexmain

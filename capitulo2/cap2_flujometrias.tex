@@ -1,184 +1,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Flujoemtrias y cfd
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Flujometrías y CFD}
+\section{OpenFOAM}
 %
-Para obtener una mejor caracterización del funcionamiento de los puertos de
-admisión y escape es necesario tener mayor conocimiento del coeficiente de
-descarga para diferentes condiciones operativas de los mismos.
-%
-Esto se logró realizando una serie de flujometrías para obtener valores de
-$C_{D}$ que sean función de la diferencia de presión que \emph{ve} el puerto y
-la apertura del mismo\footnote{ICESym utiliza alzada, por lo que se traduce
-área de pasaje de puerto en alzada de válvula equivalente.}, de modo obtener
-$C_{D} = f(\Delta P,l_v)$.
-%
-El simulador ICESym requiere de información sobre el coeficiente de descarga
-($C_{D}$) para calcular el área efectiva de pasaje de flujo de las válvulas o
-puertos en el caso del MRCVC, introduciendo el mapa de coeficientes se tiene
-una mejor aproximación al funcionamiento del sistema de intercambio de gases
-porque se tiene un modelado de la eficiencia del sistema para distintos
-regímenes del motor.
-
 Las flujometrías se realizaron con \emph{OpenFOAM}, un software de de
 Fluidodinámica Computacional, o CFD por sus siglas en inglés, de código libre y
 abierto escrito en ``C++''.
 %
-% El código del programa es accesible por los usuarios, esta es una característica
-% entender cómo funcionan y qué parámetros requieren algunas de las condiciones
-% de contorno y post-procesadores utilizados en este trabajo.
-
-Para realizar las simulaciones se utilizaron los \emph{solvers}
-\emph{pimpleFoam} para flujo incompresible y \emph{rhoPimpleFoam} para flujo
-compresible.
+% La herramienta seleccionada para realizar las flujometrías es OpenFOAM, por ser
+% una herramienta libre y de código abierto.
 %
-Para la turbulencia se utilizó un modelo de dos ecuaciones
-\emph{$\kappa-\epsilon$}\parencite{wilcox}, este es uno de los más utilizados
-y, por ser de dos ecuaciones es un modelo completo es decir, provee una
-ecuación para $\kappa$ y otra para la escala de longitud turbulenta $l_m$.
+Junto con este programa se utilizaron otras herramientas libres para generar la
+geometría a modelar, y post-procesar los resultados
 %
-% Este modelo requiere que se aproximen los valores iniciales de $\kappa$ y
-% $\epsilon$, que a su vez requieren de la estimación de la longitud de mezcla o
-% escala de la viscosidad $l_m$.
-
-\subsection{Modelos de turbulencia}
-% pag 99 (83)
-
-El flujo a través del puerto es de carácter transitorio, turbulento.
-%
-Para modelar los efectos de la turbulencia se utiliza el modelo de dos
-ecuaciones \emph{$\kappa-\epsilon$}, el cual brinda una ecuación para la
-\emph{energía cinética turbulenta} $\kappa$ y otra para la \emph{velocidad de
-disipación de la energía cinética turbulenta} $\epsilon$.
-%
-% El punto de partida de este (y otros) modelos de dos ecuaciones es la
-% aproximación de Boussinesq
-
-Este es uno de los modelos de dos ecuaciones más populares,
-
-Al igual que otros modelos de dos ecuaciones, se deben definir coeficientes de
-cierre y valores inicales, que se calculan a partir de:
-
-\begin{align}
-    %
-  C_{\mu} &= 0.09 \\
-    %
-  I &= 0.05 \\
-    %
-  l_{m} &= 0.07 \cdot D_{m} \\
-  %
-  \kappa &= 1.5 \cdot {\left( u_{ref} \cdot I \right)}^{2}\\
-    %
-  \epsilon &= \frac{{C_{\mu}}^{3/4} \cdot {\kappa}^{3/2}} {l_{m}}
-    %
-\end{align}
-
-Dónde:
-%
-\begin{itemize}
-
-    \item $C_{\mu}$, es un coeficiente propio del modelo.
-        %
-    \item I, es la intensidad de turbulencia estimada, en este trabajo se utilizó 0.05.
-        %
-    \item $l_m$, es la longitud de mezcla o escala de viscosidad,
-     para flujos internos se suele usar el diámetro hidráulico de la cañería.
-        %
-    \item $\kappa$, es la energía cinética turbulenta.
-        %
-    \item $\epsilon$, es la disipación de energía cinética turbulenta.
-        %
-\end{itemize}
-
-% https://www.openfoam.com/documentation/guides/latest/doc/guide-turbulence-ras-k-epsilon.html
-La longitud de mezcla $l_m$ determina el tamaño que pueden tener los \emph{eddys}
-turbulentos, su valor inicial se aproximó como la altura de cámara $l_m = h_c$.
-
-
-\subsection{Condiciones Iniciales}
-%
-Las condiciones iniciales se determinan para cada punto de interés a partir de
-los datos obtenidos del simulador ICESym.
-%
-Las variables básicas que se utilizan para calcular los parámetros propios del
-modelo son presión, temperatura, densidad y velocidad; a partir de estos se
-calculan el resto de los valores necesarios.
-%
-
-El modelo $\kappa-\epsilon$ estándar es:
-
-% eddy viscosity
-\begin{equation}
-  \mu_{T}=\rho C_{\mu}k^{2}/\epsilon
-\end{equation}
-
-% Turbulence Kinetic Energy
-\begin{equation}
-  \rho\frac{\delta k}{\delta t}
-  \rho U_{j}\frac{\delta k}{\delta x_{j}}
-  =
-  \tau_{ij} \frac{\delta U_{i}}{\delta x_{j}}
-  -
-  \rho\epsilon
-  +
-  \frac{\delta}{\delta x_{j}}\left[
-    (\mu + \mu_{T}/\sigma_{k})\frac{\delta k}{\delta x_{j}}
-  \right]
-\end{equation}
-
-% Dissipation Rate
-\begin{equation}
-  \rho\frac{\delta \epsilon}{\delta t}
-  \rho U_{j}\frac{\delta \epsilon}{\delta x_{j}}
-  =
-  C_{\epsilon 1}\frac{\epsilon}{k} \tau_{ij}\frac{\delta U_{i}}{\delta x_{j}}
-  -
-  C_{\epsilon 2 \rho}
-  \frac{\epsilon^{2}}{k}
-  +
-  \frac{\delta}{\delta x_{j}}\left[
-    (\mu + \mu_{T}/\sigma_{T})\frac{\delta \epsilon}{\delta x_{j}}
-  \right]
-\end{equation}
-
-% Clossure Coefficient
-
-En la tabla~\ref{tab:condiciones_iniciales} se muestran los datos necesarios
-para las flujometrías, separados en flujo incompresibles (pimpleFoam) y
-compresibles (rhoPimpleFoam).
-
-\begin{table}
-\centering
-    \begin{tabular}{rccc} \toprule
-      Variable      & Descripción   & Incompresible & Compresible \\ \midrule
-      $\epsilon$    &               &               & \\
-      $\kappa$      &               &               & \\
-      $\gamma$      &               &               & \\
-      $\mu$         &               &               & \\
-      $\nu$         &               &               & \\
-      $M_{w}$       &               &               & \\
-      $P_{r}$       &               &               & \\
-      $\rho$        &               &               & \\
-      $P_{puerto}$  &               &               & \\
-      $P_{cámara}$  &               &               & \\
-      $V_{puerto}$  &               &               & \\
-      $T_{puerto}$  &               &               & \\
-      $T_{cámara}$  &               &               & \\ \bottomrule
-    \end{tabular}
-    \caption{Condiciones Iniciales}\label{tab:condiciones_iniciales}
-\end{table}
-
-No se considera la transferencia de calor en las paredes.
-
-Debido a la cantidad de flujometrías a realizar, se utilizó un script para leer
-los datos de salida de ICESym y calcular los valores requeridos en función del
-tipo de simulador a utilizar.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \subsection{Metodología}
 %
-El esquema de trabajo para realizar las simulaciones consistió en:
+El esquema de trabajo para realizar las simulaciones consistió básicamente en:
 
 \begin{enumerate}
         %
@@ -207,6 +44,7 @@ El esquema de trabajo para realizar las simulaciones consistió en:
             %
             \item Ejecutar la simulación.
             %
+            %
     \end{enumerate}
         %
 \item Post-procesado
@@ -227,17 +65,47 @@ El esquema de trabajo para realizar las simulaciones consistió en:
 \subsubsection{Pre procesado}
 %
 El preprocesado consiste en definir geometría y condiciones iniciales, esto se
-obtiene de las simulaciones con ICESym, en la que se identificaron los puntos
-de interés luego de representar la diferencia de presión en función de la
-alzada para todo el régimen de operación del motor, (1000 a 9000 RPM).
+obtiene de las simulaciones de optimización con ICESym.
+%
+Con los resultados del simulador se grafica la diferencia de presión entre
+el puerto de admisión o escape y la cámara de combustión en función de
+la apertura del puerto para velocidades de 1000 RPM a 9000 RPM.
+%
+Un ejemplo de esto se puede ver en la figura~\ref{fig:puntos_interes}, como
+es de esperarse se tienen mayores diferenciales de presión a manores aperturas
+del puerto porque para estas alzadas se está en la apertura o cierre del mismo.
+
+A diferencia del puerto de admisión, en el puerto de escape se ve una banda
+bastante definida de operación que se hace más ``llena'' a medida que se abre el
+puerto.
+%
+Durante la apertura del puerto se ven las mayores diferencias de presión en las
+que hay dos bandas bien definidas, se toman algunos puntos arriba en la zona con
+mayor $\Delta P$ y una cantidad menor para velocidades con $\Delta P = 0$.
+%
+A medida que el puerto se abre la diferencia de presión con el gas en la cámara
+de combustión se equaliza y esta banda se afina, requiriendo menos puntos para
+caracterizar el funcionamiento de los mismos.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{flujometrias/puntos_de_interes.png}
+    \caption{Presión en función de la apertura el puerto,
+$\Delta P = f(l_{v})$}\label{fig:puntos_interes}
+\end{figure}
+
 % Se definió el dominio de la simulación a partir de la geometría obtenida de
 % la optimización con el algoritmo genético del motor utilizando coeficientes
 % de descarga constantes para el flujo a través de los puertos.
 %
+El valor de alzada está directamente relacionado con el la posición angular del
+cigüeñal, por lo que una vez seleccionados los puntos de interés se puede
+extraer la geometría deseada de un modelo de CAD paramétrico del motor.
 %
-La geometría para las posiciones de interés se volcó en un modelo de CAD
-paramétrico que se obtuvo realizando sumas, restas, uniones e intersecciones de
-volúmenes que representan diferentes componentes del motor.
+Este modelo tiene solamente la mitad del que contiene los puertos de admisión y
+escape, se obtuvo realizando uniones e intersecciones de volúmenes que
+representan diferentes componentes del motor, como son el estator, rotor,
+paletas, etc.
 %
 En la figura~\ref{fig:admision_50} se muestra parte del proceso para obtener el
 puerto de admisión a $\theta=50^{\circ}$, en donde se suma el volumen del mismo
@@ -247,7 +115,8 @@ paralelogramo para quitar una región que no se simuló.
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{./CAD/freecad_pasos.png}
-    \caption{FreeCAD, Operaciones Booleanas}\label{fig:admision_50}
+    \caption{Puerto de admisión $\theta=50^{\circ}$Modelado con
+FreeCAD}\label{fig:admision_50}
 \end{figure}
 
 Esta geometría fue generada por el programa FreeCAD~\parencite{freecad},
@@ -255,27 +124,25 @@ exportada a un archivo
 ``.BREP''\footnote{\href{https://dev.opencascade.org/doc/overview/html/specification\_\_brep\_format.html}{Formato
 BREP, opencascade.org}} para luego ser importada en Salome\parencite{salome},
 %
-Este programa se utilizó para generar una malla cerrada o  \emph{weatertight}
-necesaria para ser procesada por los complementos de OpenFOAM utilizados para
-generar la malla que se vuelve el dominio de la simulación, \emph{blockMesh} y
-\emph{snappyHexMesh}.
+Salome se utiliza para generar una malla cerrada, hermética, la cual es
+necesaria para que pueda ser procesada por los complementos de OpenFOAM
+utilizados para generar la malla de la simulación.
 %
-Es importante que la malla sea de hermética y que los nodos en la frontera
-entre superficies coincidan, como se ve en la figura
-\ref{fig:salome_malla_hermetica}, en la que se ven dos superficies "walls" y
-"outlet".
+Es importante que la hermeticidad de la malla, esto significa que los nodos en
+la frontera entre superficies coincidan, como se ve en la
+figura~\ref{fig:salome_malla_hermetica}, en la que se ven dos superficies
+"walls" y "outlet" y los nodos compartidos entre ambas superficies.
 %
-Esto es necesario porque snappyHexMesh parte de una malla como la generada por
-blockMesh y la intersección de la misma con la superficie de un archivo (en
-este caso) ".stl".
+% Esto es así porque SnappyHexMesh parte de una malla como la generada por
+% BlockMesh y la intersección de la misma con la superficie de un archivo".stl"
+% (entre otros formatos).
 %
-Se debe indicar un punto dentro o fuera de esta superficie \emph{stl},
-dependiendo del lado/cara por la que va a simularse el flujo, esto dependerá si
-se va a simular un flujo externo o interno.
+% Se debe indicar un punto dentro o fuera de esta superficie \emph{stl},
+% dependiendo del lado/cara por la que va a simularse el flujo, esto varía si un
+% flujo externo o interno a la geometría.
 %
-En el caso de estudio todos los flujos son internos por lo que se define una
-caja que encierra la totalidad del volumen de la malla \emph{stl} creada por
-salome.
+% En este trabajo todos los flujos son internos por lo que se define una caja que
+% encierra la totalidad del volumen de la malla \emph{stl} creada por Salome.
 
 \begin{figure}
     \centering
@@ -284,35 +151,39 @@ salome.
 \end{figure}
 
 El proceso en Salome consta de importar la geometría generada por FreeCAD y
-separar la misma en superficies, a las cuales se le da un nombre que se
-utilizará para definir dicha cara o parche.
-%
-Estos nombres son necesarios para definir condiciones de contorno en OpenFOAM.
+separar la misma en superficies utilizadas para definir condiciones de contorno
+en OpenFOAM, las superficies diferenciadas son: puerto, cámara/s, pared.
 
-Luego de separadas las caras en paredes, entradas y salidas, se procede a
-generar la malla en formato stl con el complemento Malla del software.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{./flujometrias/openfoam_parches.png}
+    \caption{Nombres de Nombres de Parches}\label{fig:openfoam_parches}
+\end{figure}
+
+Luego de separadas estas superficies se procede a generar la malla en formato
+ASCII STL con el complemento de mallado de Salome.
 %
-Se utilizó el generador de mallas NETGEN 1D-2D para crear la superficie stl, en
-general se configuró el mallador de modo de tener un stl de buena calidad con
+Se utilizó el generador de mallas NETGEN 1D-2D para crear la superficie, en
+general se configuró el software de modo de tener un stl de buena calidad con
 elementos de menor tamaño en zonas de mayor curvatura.
 %
-En la figura \ref{fig:salome_fina_gruesa} se ve la diferencia en cantidad de
+En la figura~\ref{fig:salome_fina_gruesa} se ve la diferencia en cantidad de
 nodos de dos mallas, una malla fina a la izquierda y una malla gruesa a la
 derecha las configuración de cada malla se muestra en la tabla \ref{tab:salome_fina_gruesa}.
 %
-Esto sin requerir de una gran cantidad de elementos para no ralentizar el
-procesado con snappyHexMesh,
+% Esto sin requerir de una gran cantidad de elementos para no ralentizar el
+% procesado con SnappyHexMesh.
 
 \begin{figure}[t!]
     \centering
     \begin{subfigure}[t]{0.5\textwidth}
         \centering
-        \includegraphics{./flujometrias/salome3_fina.png}
+        \includegraphics{/flujometrias/salome3_fina.png}
         \caption{Malla fina sin optimizar}
     \end{subfigure}%
     \begin{subfigure}[t]{0.5\textwidth}
         \centering
-        \includegraphics{./flujometrias/salome3_gruesa.png}
+        \includegraphics{/flujometrias/salome3_gruesa.png}
         \caption{Malla gruesa optimizada}
     \end{subfigure}
     \caption{Diferentes mallas para flujometrías}\label{fig:salome_fina_gruesa}
@@ -329,23 +200,49 @@ procesado con snappyHexMesh,
         Cantidad de nodos        & 99311         & 49112 \\
         Cantidad de elementos    & 204695        & 103163 \\ \bottomrule
     \end{tabular}
-    \caption{Configuración de mallas mostradas en la figura \ref{fig:salome_fina_gruesa}}
+    \caption{Configuración de mallas mostradas en la figura~\ref{fig:salome_fina_gruesa}}
     \label{tab:salome_fina_gruesa}
 \end{table}
 
 Una vez obtenido el archivo STL con la calidad deseada, se procede a la
-generación de la malla dentro de OpenFOAM con blockMesh y snappyHexMesh.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsubsection{Geometría}
+generación de la malla dentro de OpenFOAM con BlockMesh y snappyHexMesh.
 %
-Previo a definir otros detalles de las flujometrías, es necesario definir
-alguna nomenclatura para la geometría, nombre asignado a superficies como
-paredes, entrada, salida y cámara de combustión.
+En primer lugar crea una malla con blockMesh que  debe contener la totalidad del
+volumen del puerto a simular, como se ve en la
+figura~\ref{fig:paraview_blockMesh_stl}.
+
+En este paso inicial se define también el tamaño de base de la malla y el nivel
+general de refinamiento, a partir de estos cubos se produce el refinamiento por
+``castelación'' que consiste en dividir las celdas en cubos más pequeños y luego
+aplicar el ``snapping'' para adaptarse a la superficie del volúmen que se está
+modelando, ver figura~\ref{fig:openfoam_shm_pasos}
 %
-El resto de las superficies se definen como paredes \emph{wall}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{flujometrias/paraview_blockMesh_stl.png}
+    \caption{Malla de blockMesh y stl de Salome}\label{fig:paraview_blockMesh_stl}
+\end{figure}
+
+\begin{figure}[t!]
+    \centering
+    \begin{subfigure}[t]{0.5\textwidth}
+        \centering
+        \includegraphics{flujometrias/shm_fondo.png}
+        \caption{Malla de fondo y geometría}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.5\textwidth}
+        \centering
+        \includegraphics{flujometrias/shm_castelacion.png}
+        \caption{Castelación}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.5\textwidth}
+        \centering
+        \includegraphics{flujometrias/shm_snapping.png}
+        \caption{Snapping}
+    \end{subfigure}
+    \caption{Pasos de SnappyHexMesh\parencite{shm_steps}}\label{fig:openfoam_shm_pasos}
+\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -357,8 +254,8 @@ El resto de las superficies se definen como paredes \emph{wall}.
 % %
 % (Figura aca)
 
-El puerto y la cámara de combustión (o cámaras en caso de que haya solape), se
-definen como \emph{patch}, una frontera permeable.
+% El puerto y la cámara de combustión (o cámaras en caso de que haya solape), se
+% definen como \emph{patch}, una frontera permeable.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Coeficiente de descarga ($C_D$)}
