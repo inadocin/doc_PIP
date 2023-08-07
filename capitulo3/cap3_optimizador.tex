@@ -1,203 +1,486 @@
 \section{Optimizador y Algoritmo Genético}
 %
-Se selección un algoritmo genético como método de optimización de ICESym por
-ser un método sencillo de programar además, son de utilidad cuando se tienen uno
-o más máximos óptimos locales o cuando no se tiene certeza sobra la suavidad de
-la función a evaluar.
+% Se seleccionó un algoritmo genético (AG) como método de optimización por ser un
+% método sencillo de programar además, este tipo de algorimto es de utilidad
+% cuando se tiene una solución con uno o más máximos óptimos locales ó cuando no
+% se tiene certeza sobra la suavidad de la función a evaluar.
+%
 
+Se seleccionó un algoritmo genético para realizar la optimización de la
+geometría del MRCVC por la simplicidad y facilidad de implementación del mismo.
+%
+Si bien este tipo de métodos no garantizan que se alcance un resultado óptimo,
+en la práctica se ha observado que alcanzan soluciones muy cercanas a las
+óptimas tras pocas iteraciones del método~\parencite{goldberg}\parencite{shi}.
 
+Una de las ventajas de este método es que no requiere información del gradiente
+de la función que se está evaluando, lo cual es útil cuando no se puede asegurar
+la existencia de la derivada de la función en todo el dominio ó cuando se tiene
+una función con más de un máximo o mínimo local.
+%
+Además, el punto de partida de la optimización es una población generada al
+azar, de modo que se tiene un muestreo aleatorio del dominio que se está
+evaluando.
+%
+Esto hace que el método sea poco susceptible a caer en un óptimo local.
 
-\subsection{Componentes básicos}
+Se puede decir que un algoritmo genético es un método de búsqueda aleatoria
+guiada.
 %
-Falta
+¿Cómo difieren los AG de los métodos tradicionales de búsqueda?
 %
-%
-Falta
-%
-\subsubsection{Población}
-%
-Los parámetros que representan a cada individuo son los que definen la geometría
-del sistema de intercambio de gases, estos son:
-
 \begin{enumerate}
-    \item [DTA] Diámetro de tubo de admisión.
-    \item [DTE] Diámetro de tubo de escape.
-    \item [LIT] Largo de tubo de admisión.
-    \item [LET] Largo de tubo de escape.
-    \item [IIA] Ángulo geométrico de apertura de puerto de admisión.
-    \item [IFA] Ángulo geométrico de cierre de puerto de admisión.
-    \item [IIE] Ángulo geométrico de apertura de puerto de escape.
-    \item [IFE] Ángulo geométrico de cierre de puerto de escape.
+  \item Los AG pueden operar sobre una representación de las variables estudiadas y
+no necesariamente sobre las variables de estudio.
+  \item Cada iteración utiliza un conjunto de datos con cierto grado de
+aleatoreidad..
+  \item Utilizan una función objetivo para evaluar cada punto sin necesidad de
+conocer la derivada de la función que se está evaluando.
+  \item Los AG usan reglas probabilísticas, no deterministas.
 \end{enumerate}
 
-Los diámetros pueden tomar valores de hasta 100mm, el largo de los tubos puede
-variar entre 500 y 1000 mm.
-%
-Con respecto al par de ángulos que marcan la apertura y cierre del escape,
-el único requisito es que la apertura se de antes que el escape.
+Otros métodos de optimización se mueven de un punto al siguiente en el espacio
+solución, basándose en alguna regla de decisión lo que puede dar como resultado
+un máximo (o mínimo) local.
 
-\begin{lstlisting}[language=Python]
-def check_angles(eng):
-    """ Validates intake/exhaust angle pair"""
-    iia = eng[-4]
-    ifa = eng[-3]
-    eia = eng[-2]
-    efa = eng[-1]
-    valid = True
-    if iia >= ifa:
-        valid = False
-    if eia <= efa:
-        valid = False
-    return valid
-\end{lstlisting}
-
-Cada una de las variables se representa como un número binario de 5 dígitos,
-los cuales se concatenan para formar un conjunto de 40 dígitos.
+\subsection{Componentes básicos de un AG}
 %
-Estos 8 números binarios se convierten mediante una transformación lineal
-al número que se envía a ICESym.
+Los mecanismos básicos que hacen a un algoritmo genético son: 1) REPRODUCCIÓN,
+2) CRUZA y 3) MUTACIÓN, el funcionamiento básico se sintetiza en el
+pseudocódigo~\ref{algo:genetico}.
+
+La REPRODUCCIÓN consiste en crear individuos a partir del puntaje que devuelve
+una función objetivo, la función objetivo es una medida del valor que se quiere
+optimizar y es la que guía el proceso de optimización.
+%
+Este paso significa que aquellos individuos a los cuales se les asignó un
+puntaje más elevado tienen más probabilidades de ser ``copiados'', este proceso
+imita en cierta forma la selección natural o evolución Darwiniana y de aquí
+viene el nombre de algoritmo genético o evolutivo.
+
+La CRUZA consiste en combinar los ``vectores'' de dos individuos para obtener
+uno nuevo.
+
+La MUTACIÓN consiste en modificar aleatoriamente uno o más parámetros de cada
+nuevo individuo.
+
+La mutación juega un rol secundario pero muy importante, es secundario porque se
+pueden alcanzar soluciones satisfactorias sin incluir este mecanismo sin
+embargo, se utiliza con probabilidades pequeñas para evitar la pérdida temprana
+de información relevante.
+%
+Si la probabilidad de mutación es muy alta, el AG se convierte en un algoritmo
+de búsqueda aleatoria.
+
+
+\begin{algorithm} \caption{Algoritmo de optimización}\label{algo:genetico}
+  generación = 0;
+  Inicializar población.\;
+  \While{No se cumpla condición de pardda}{
+    REPRODUCCIÓN se crean y seleccionan los individuos más aptos.\;
+    CRUZA los candidatos seleccionados (creación de la anueva población)\;
+    MUTACIÓN algunos individuos de la nueva población\;
+    generación = generación + 1\;
+    \If{Verifica condición de parada}{
+      Parar\;
+    }
+  }
+  {Guardar resultados\;}
+\end{algorithm}
+
+%
+% \subsection{Implementación}
+%
+Gran parte de este trabajo fue utilizar a ICESym como parte de la función
+objetivo aprovechando la cualidad de ``caja negra'' que se le puede dar al
+simulador.
+%
+Para lograr esto se modificó parte del código de ICESym con el objetivo de
+facilitar la configuración, ejecución y lectura de los resultados que arroja el
+simulador y así poder ejecutar de manera automatica una simulación con una
+configuración particular del motor.
+%
+Otro aspecto del optimizador que se desarrolló es el de poder ejecutar múltiples
+instancias de ICESym en paralelo para reducir el tiempo de ejecución cada
+simulación, pudiendo evaluar varios motores (o individuos) al mismo tiempo.
+
+
+Para la primer iteración se programaron desde cero los algoritmos y funciones
+necesarias para llevar a cabo la optimización,  posteriormente se tomo la la
+librería DEAP~\parencite{DEAP_JMLR2012} y se modificaron los operadores a medida,
+para poder utilizarlos con ICESym.
+
+En los apartados siguientes se describen la implementación de cada uno de los
+operadores en el optimizador.
+
+\subsection{Población}
+%
+Se decidió representar cada motor como un vector con las dimensiones y reglaje
+que definen la geometría del sistema de intercambio de gases, los cuales se
+listan en la tabla~\ref{tab:parametros_ag}.
+%
+Se limitó los valores que puede tomar cada parámetro para que la geometría
+resultante se asemeje a la geometría del motor utilizado en trabajos anteriores.
+
 
 \begin{table}
-    \centering
-        \begin{tabular}{rc} \toprule
-            No. & String                                   \\ \midrule
-            1   & 0011001110110010001100110010011010100110 \\
-            2   & 1101011100001100010110011000001110110100 \\
-            3   & 1101110101001010110000011000010110101010 \\
-            4   & 0010010111111010100101111111010011010001 \\
-            5   & 0100101110101111110110011001101011011100 \\ \bottomrule
-        \end{tabular}
-    \caption{Binario a de entrada}\label{tab:mapeo_pre}
+  \centering
+  \begin{tabular}{rll} \toprule
+    Parámetro & Descripción & Límites \\ \midrule
+    DTA & Diámetro de tubo de admisión & [60, 100] mm \\
+    DTE & Diámetro de tubo de escape & [60, 100] mm\\
+    LIT & Largo de tubo de admisión & [300, 2000] mm\\
+    LET & Largo de tubo de escape & [300, 2000] mm\\
+    IIA & Ángulo de apertura de puerto de admisión & [0,90]º \\
+    IFA & Ángulo geométrico de cierre de puerto de admisión & [IIA, 90]º \\
+    IIE & Ángulo geométrico de apertura de puerto de escape & [0, 90]º \\
+    IFE & Ángulo geométrico de cierre de puerto de escape & [IIA, 90]º \\ \bottomrule
+  \end{tabular}
+  \caption{Binario a de entrada}\label{tab:mapeo_pre}
 \end{table}
 
-\begin{table}
-    \centering
-        \begin{tabular}{rcccccccc} \toprule
-            No. & dta    & dte    & lit    & let    & iia     & ifa     & eia     & efa     \\ \midrule
-            1   & 0.0435 & 0.0616 & 0.0726 & 0.0087 & 17.4194 & 26.129  & 60.9677 & 17.4194 \\
-            2   & 0.0887 & 0.0932 & 0.0174 & 0.0145 & 55.1613 & 0.0     & 84.1935 & 58.0645 \\
-            3   & 0.091  & 0.0774 & 0.0145 & 0.0348 & 8.7097  & 2.9032  & 37.7419 & 29.0323 \\
-            4   & 0.039  & 0.0819 & 0.0842 & 0.0261 & 43.5484 & 84.1935 & 17.4194 & 49.3548 \\
-            5   & 0.0503 & 0.0616 & 0.0668 & 0.0842 & 55.1613 & 17.4194 & 63.871  & 81.2903 \\ \bottomrule
-        \end{tabular}
-    \caption{Vectores resultantes de la transformación}\label{tab:mapeo_post}
-\end{table}
+
+Se decidió representar los vectores que hacen a cada motor como un número
+binario de 40 dígitos, ocupando 5 dígitos para representar cada uno de los 8
+parámetros que hacen a cada motor.
+%
+Esta forma de representar la población facilita la implementación de los
+operadores de selección, cruza y mutación, pudiendo aprovechar implementaciones
+de operadores existentes en librerías como DEAP.
+%
+Este número luego se convierte a un entero y se mapea a la lista mediante una
+transformación lineal de la forma $y=ax+b$ el cual se utiliza para generar el
+la lista de valores que van a ICESym, ver figura~\ref{fig:pop_bit}.
+%
+Los coeficientes $a$ y $b$ son particulares a cada parámetro, porque se
+determinan de acuerdo a los valores que
 
 El orden de los mismos se mantiene constante, por lo que cada sección del número
-representa una característica en particular del motor, de modo que:
-
-\begin{equation}
-    INDIVIDUO = (DTA, DTE, LIT, LET, IIA, IFA, EIA, EFA) \nonumber
-\end{equation}
-
-Este número luego se convierte a decimales y se mapea a la lista que se utiliza
-para generar el archivo de configuración para ICESym.
+representa una característica en particular del motor.
 %
 
-\begin{lstlisting}[language=Python]
-def map_to_engine(num, bin_len):
-    t = utils.separate_list(num, bin_len)
-    dta = (d_coeff[0]*utils.bin2dec(t[0]) + d_coeff[1]) * 0.001
-    dte = (d_coeff[0]*utils.bin2dec(t[1]) + d_coeff[1]) * 0.001
-    lit = (l_coeff[0]*utils.bin2dec(t[2]) + l_coeff[1]) * 0.001
-    let = (l_coeff[0]*utils.bin2dec(t[3]) + l_coeff[1]) * 0.001
+\begin{figure}[ht]
+  \centering
+  \includegraphics[]{genetico/representacion_bits.png}
+  \caption{Individuo como binario}\label{fig:pop_bit}
+\end{figure}
 
-    iia = a_coeff[0]*utils.bin2dec(t[4]) + a_coeff[1]
-    ifa = a_coeff[0]*utils.bin2dec(t[5]) + a_coeff[1]
-    eia = a_coeff[0]*utils.bin2dec(t[6]) + a_coeff[1]
-    efa = a_coeff[0]*utils.bin2dec(t[7]) + a_coeff[1]
-    ind = (dta, dte, lit, let, iia, ifa, eia, efa)
-    return ind
-\end{lstlisting}
 
-El tamaño de la población se elige arbitrariamente en $N=100$ individuos, 
+% \begin{lstlisting}[language=Python,float,label=lst:bin2num,caption=Binario a entero]
+% def bin2num(binary):
+%     num = 0
+%     for p, d in enumerate(binary[::-1]):
+%         num += int(d) * 2**p
+%     return num
+% \end{lstlisting}
 
-\subsubsection{Reproducción}
+% \begin{lstlisting}[language=Python,float,label=lst:separar_lista,caption=Función para separar la cadena de dígitos]
+% def separate_list(b_list, b_len):
+%     """
+%     b_list: list of data
+%     b_len: package size
+%     """
+%     tmp = []
+%     for i in range(len(b_list) // b_len):
+
+%         i1 = b_len * (i + 1)
+%         tmp.append(b_list[i0:i1])
+%     return tmp
+% \end{lstlisting}
+
+% \begin{lstlisting}[language=Python,float,label=lst:map_eng,caption=Función para mapear a ICESym]
+% def map_to_engine(num, bin_len, d_coeff, l_coeff, a_coeff):
+%     t = separate_list(num, bin_len)
+%     dta = (d_coeff[0] * bin2num(t[0]) + d_coeff[1]) * 0.001
+%     dte = (d_coeff[0] * bin2num(t[1]) + d_coeff[1]) * 0.001
+%     lit = (l_coeff[0] * bin2num(t[2]) + l_coeff[1]) * 0.001
+%     let = (l_coeff[0] * bin2num(t[3]) + l_coeff[1]) * 0.001
+%     # angulos
+%     iia = a_coeff[0] * bin2num(t[4]) + a_coeff[1]
+%     ifa = a_coeff[0] * bin2num(t[5]) + a_coeff[1]
+%     eia = a_coeff[0] * bin2num(t[6]) + a_coeff[1]
+%     efa = a_coeff[0] * bin2num(t[7]) + a_coeff[1]
+%     ind = (dta, dte, lit, let, iia, ifa, eia, efa)
+%     return ind
+% \end{lstlisting}
+
+\subsection{Reproducción}
 
 Para crear la nueva población se debe elegir a los nuevos candidatos basándose
-en los puntajes de la población actual, por medio de un método de selección de
-tipo torneo, (TODO, iba por aca)
+en los puntajes de la población actual, hay varios métodos diferentes de
+selección, como son de ruleta, aleatoria, por puntaje y de tipo torneo.
 %
+El método seleccionado es el torneo, el cual consiste en comparar los puntajes
+de $n$ individuos seleccionados al azar y el que tenga el mejor puntaje es el
+seleccioando o ganador.
+%
+La cantidad de individuos comparados $n$ es el tamaño de muestreo o de torneo,
+cuanto más grande sea este número más posibilidades tiene de ganar los
+individuos con mayor puntaje y la cantidad de rondas del torneo determina la
+cantidad de individuos seleccionados para participar en la próxima iteración o
+generación de candidatos.
 
 
-\subsubsection{Cruza}
+\subsection{Cruza}
 %
 El operador de cruza se encarga de combinar los genes de dos individuos para
-producir un individuo nuevo.
+producir un individuo nuevo, la función es la de intercambiar los parámetros que
+hacen a uno y otro para dar lugar a una nueva posible solución
+%
+Para individuos representados por un vector se suelen usar operadores de tipo
+curza de uno o mùltiples puntos como tambièn cruza uniforme.
+%
+El método seleccionado es \emph{cruza de dos puntos}, en este método
+se corta el vector que forma al individuo en dos puntos, la posición de estos
+puntos se selecciona al azar, manteniendo el largo original de los vectores.
+%
+Luego los individuos ``cruzados'' se combinan de forma complementaria, como en
+la figura~\ref{fig:cr2puntos}, en el algoritmo~\ref{algo:cr2puntos} se esquematiza
+el proceso.
+% TODO: pongo pseudocódigo? o dejo el còdigo
 
-El operador seleccionado es el de cruza de dos puntos, en el que se seleccionan
-al azar dos índices
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{cruza2puntos.png}
+  \caption{Cruza de dos puntos}\label{fig:cr2puntos}
+\end{figure}
 
 
-\subsubsection{Mutación}
+\begin{algorithm}[]
+  \KwIn{\\
+    $ind_{1}, ind_{2}$: dos individuos de entrada [101\ldots011], [110\ldots100]\\
+    EA(a, b): devuelve un Entero al Azar entre los enteros a y b.\\
+    L(a): devuelve la cantidad de elementos en a.}
+  \KwOut{\\
+    $ind_{1}, ind_{2}$: individuos de entrada modificados}
+  \SetKwFunction{EA}{EA}
+  \SetKwFunction{L}{L}
+  % \SetKwFunction{min}{min}
+  \BlankLine
+  s = min(\L{$ind_{1}$}, \L {$ind_{2}$})\;
+  $CX_{1} = \EA{1, s}$\;
+  $CX_{2} = \EA{1, s-1}$\;
+  \eIf{$CX_{1} \geq CX_{2}$}{
+    $CX_{2} = CX_{2}+1$\;
+  }{
+    $aux=CX_{1}$\;
+  }
+  \caption{Cruza de dos puntos}\label{algo:cr2puntos}
+\end{algorithm}
+
+\subsection{Mutación}
 %
 La mutación juega un rol secundario pero importante, una pequeña probabilidad
 de que alguno de los genes se modifique en un valor aleatorio contribuye a que
 el algoritmo genético no se estanque en soluciones máximos o mínimos locales.
 
-\subsubsection{Función objetivo}\label{sec:funcion_objetivo}
+Algunos de los métodos de mutación utilizados son: 1) FLIP BIT, 2) INTERCAMBIO,
+3) INVERSION, 4) REORDENADO ALEATORIO.
+
+% FLIP BIT se utiliza para números binarios y el método consiste en intercambiar
+% ceros y unos con una probabilidad al azar en ubicaciones al azar, por ejemplo
+% $10101 \rightarrow 11101$.
+
+para este método se cambian al azar el orden de los números que hacen al
+individuo, modificando la lista, por ejemplo: $12345 \rightarrow 12543$.
+
+\subsection{Función objetivo}\label{sec:funcion_objetivo}
 %
 La función objetivo es la encargada de dar puntaje a los individuos, en la
-analogía con la selección natura, esta función es el ambiente, el que determina
-que tan bien se desempeña un motor con respecto a otro en lo que respecta a
-rendimiento volumétrico.
+analogía con la selección natural esta función es el ambiente, la que determina
+que tan bien se desempeña un motor con respecto a otro en lo que respecta
+\emph{performance} del sistema de intercambio de gases.
 %
 Inicialmente se propuso que la función objetivo sea la suma de los rendimientos
 volumétricos a todas las velocidades simuladas, este tipo de funciones da como
 resultado una curva de rendimiento volumétrico aserrada como se muestra en la
-figura (falta).
+figura~\ref{fig:curva_aserrada}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{genetico/curvas_aserradas.png}
+  \caption{Curvas de rendimiento volumétrico aserradas}\label{fig:curva_aserrada}
+\end{figure}
+
 
 Este comportamiento aserrado es poco deseable, por lo que se modificó la
 función para conseguir una curva de rendimiento volumétrico suave.
 %
 Además se implementó una suma ponderada, para obtener un rendimiento
 volumétrico máximo en un valor arbitrario de 5000 RPM.\@
-
-Para prevenir el comportamiento aserrado se introdujo un sistema de
-penalidades, que resta puntaje si la derivada de la función se modifica de una
-velocidad a otra.
-
-
-Durante las primeras iteraciones del método, las poblaciones iniciales
-contienen una gran cantidad de geometrías inválidas que devuelven valores de
-puntaje 0, esto conduce a que ante la aparición de algún individuo con un
-puntaje relativamente alto este domine la población y termine dominando la
-población y causando una convergencia temprana de la misma.
-
-Cuando el método comienza a converger a una solución, estas funciones acentúan
-ligeramente las diferencias entre individuos para favorecer a las mejores
-soluciones.
-
-Esto se logra utilizando un cambio de escala de los puntajes todos los
-individuos, alguno de los métodos utilizados son: transformación lineal,
-truncado $\sigma$ y transformación exponencial.
 %
-En este trabajo se utilizará el escalado por transformación lineal.
-\begin{equation}
-    f' = af + b
-\end{equation}
+Para prevenir el comportamiento aserrado se introdujo un sistema de penalidades,
+que resta puntaje si la derivada de la función se modifica de una velocidad a
+otra.
 
-\subsection{Implementación}
+Finalmente se optó por una sencilla suma del rendimiento volumétrico y la
+fracción de gases residuales para 6000 RPM, esto provó ser la función objetivo
+que mejores resultados dió, el código utilizado se lista a continuación.
 
-\subsection{ICESym como evaluación de individuos}
-%
-ICESym lee un archivo de configuración en formato \emph{Python} que consta de
-un arreglo llamado \emph{diccionario} con las siguientes entradas:
+\begin{lstlisting}[float,label=lst:label,caption=falta]
+def local_evaluate_engine(individual):
+    """Takes a global instance of motor.MRCVC and calculates it's score based on
+    volumetric efficiency curve.
+    """
+    eng = utils.map_to_engine(individual, BINNARY_LEN,
+                              d_coeff, l_coeff, a_coeff)
+    if not m.check_angles(eng):
+        return False
+    config = m.list_to_config(eng)
+    counter = 0
+    run_flag = False
+    kargs, cyl_data, extras_data = m.run_and_read(
+        ENGINE_OBJ, config, multi=CORES)
+    vol_eff = m.calc_volumetric_efficiency(kargs, extras_data)
+    xr = m.calc_residual_gas_fraction(kargs, extras_data)
 
-\begin{lstlisting}[language=Python]
-kargs = {
-    "Simulator": Simulator,
-    "Cylinders": Cylinders,
-    "Junctions": Junctions,
-    "Tubes": Tubes,
-    "Tanks": Tanks,
-    "Atmospheres": Atmospheres,
-}
+    m.clean_files(ENGINE_OBJ)
+    if 0 in vol_eff:
+        return False
+    else:
+        # aux = [r+1/x for r, x in zip(vol_eff, xr)]
+        aux = [1/i for i in xr]
+        return aux
 \end{lstlisting}
 
-En donde se guarda la información básica de la geometría del motor, modelos
-termodinámicos utilizados, cantidad de RPM's a simular y modelo de $C_D$ entre
-otros.
+\begin{algorithm}
+  \KwIn{ind: vector con parámetros del motor a evaluar}
+  \KwOut{}
+  \SetKwFunction{me}{me}
+  \SetKwFunction{lc}{lc}
+  \BlankLine
+
+  motor = \me{$ind, bin, d_{coeff}, l_{coeff}, a_{coeff}$}\;
+  config = \lc{motor}\;
+  k = 0\;
+  RUN = FALSO\;
+  Ejecutar y leer el simulador\;
+  $\eta_{v}$ = Calcular el rendimeinto volumétrico\;
+  $x_{r}$ = Calcular la fracción de gases residuales\;
+  N = \L{$\eta_{v}$}
+  Borrar arhcivos de simulación\;
+  \eIf{hay un cero en $\eta_{v}$
+  }{Terminar programa\;
+  }{\For{i = 0 \KwTo N}{aux = aux + $\eta_{v,i}+\frac{1}{x_{r,i}}$\;
+    }
+  }
+\end{algorithm}
+
+
+\begin{lstlisting}[float,label=lst:label,caption=falta]
+def calc_fitness2(individual):
+    aux = local_evaluate_engine(individual)
+    indx = 8
+    if isinstance(aux, list) and (aux is not None):
+        score = sum(aux) + aux[indx-1]**2
+    else:
+        score = 1
+    return (score,)
+\end{lstlisting}
+
+Durante las primeras iteraciones del método, las poblaciones iniciales contienen
+una gran cantidad de geometrías inválidas que devuelven valores de puntaje 0, en
+caso de que alguna de las soluciones tenga un puntaje relativamente alto, existe
+la posibilidad de caer en una dominancia temprana de la población causando una
+convergencia temprana.
+%
+Para evitar esto se usa unca un cambio de escala de los puntajes de todos los
+individuos, algunos de los métodos utilizados son: transformación lineal,
+truncado $\sigma$ y transformación exponencial.
+%
+En este trabajo se utilizará el escalado por transformación lineal, como se
+indica en los algoritmos que siguen abajo.
+
+% (TODO 3/8: falta cambiar el código por algorimtos o pseudocódigo).
+
+\begin{lstlisting}[float,language=Python,label=lst:label,caption=falta]
+def pre_scale(fitness, fmult=2):
+    """
+    Pre-scale with a linear funciton for fitness values as in
+    Goldberg, see fig 3.21.
+
+    Input:
+        fitness: fitness array
+        fmult: fitnes scaling parameter, works well between (1.2, 2)
+    Output:
+        a and b values for the scaling function f(x) = a*x + b
+    """
+    u_max, u_min, u_avg = get_stats(fitness)
+    aux = (fmult * u_avg - u_max) / (fmult - 1)
+    if u_min > aux:
+        # Non neegative test
+        delta = u_max - u_avg
+        a = (fmult - 1.0) * u_avg / delta
+        b = u_avg * (u_max - fmult * u_avg) / delta
+    else:
+        # Max scaling
+        delta = u_avg - u_min
+        try:
+            a = u_avg / delta
+            b = -u_min * u_avg / delta
+        except ZeroDivisionError:
+            a = 1
+            b = 0
+    return a, b
+\end{lstlisting}
+
+\begin{lstlisting}[float,language=Python,label=lst:label,caption=falta]
+def scale(fitness, a, b):
+    """ Scale fitness value."""
+    scaled = a * fitness[0] + b
+    return (scaled,)
+\end{lstlisting}
+
+
+% \begin{algorithm}\caption{}\label{}
+%   \SetAlgoLined
+%   \SetKwFunctions{Aptitud}{Aptitud}
+%   \KwIn{f, a, b}
+%   \KwResult{s}
+%   s \Leftarrow a \cdot f + b
+% \end{algorithm}
+
+
+
+\begin{lstlisting}[float,language=Python,label=lst:label,caption=falta]
+def scale_pop(fitness):
+    """Scale population fitness."""
+    a, b = pre_scale(fitness, 2)
+    new_fitness = []
+    for fit in fitness:
+        new_fitness.append(scale(fit, a, b))
+    return new_fitness
+\end{lstlisting}
+
+% \begin{algorithm}\caption{}\label{}
+%   \SetAlgoLined
+%   \SetKwFunctions{ps}{ps}
+%   \KwIn{$\vec{f}$}
+%   \KwResult{s}
+%   a, b \Leftarrow ps{fit, 2}
+%   \For{$f_{i}$ \KwIn $\vec{f}$}{
+%   }
+% \end{algorithm}
+
+% \subsection{ICESym como evaluación de individuos}
+% %
+% ICESym lee un archivo de configuración en formato \emph{Python} que consta de
+% un arreglo llamado \emph{diccionario} con las siguientes entradas:
+
+% \begin{lstlisting}[language=Python]
+% kargs = {
+%     "Simulator": Simulator,
+%     "Cylinders": Cylinders,
+%     "Junctions": Junctions,
+%     "Tubes": Tubes,
+%     "Tanks": Tanks,
+%     "Atmospheres": Atmospheres,
+% }
+% \end{lstlisting}
+
+% En donde se guarda la información básica de la geometría del motor, modelos
+% termodinámicos utilizados, cantidad de RPM's a simular y modelo de $C_D$ entre
+% otros.
 
 % De manera resumda, son básicamente métodos de búsqueda aleatoria que
 % aprovechan la información de iteraciones previas para determinar la composición
@@ -211,20 +494,20 @@ otros.
 % Los AG requieren que las variables del problema estén expresadas en forma de
 % coordenadas $(x_1, x_2, x_3, ..., x_n)$.
 %
-\subsubsection{Representación de los individuos}
-%
-Para representar a cada individuo se utilizan 8 características geométricas:
+% \subsubsection{Representación de los individuos}
+% %
+% Para representar a cada individuo se utilizan 8 características geométricas:
 
-\begin{enumerate}
-    \item [DTA] Diámetro de tubo de admisión.
-    \item [DTE] Diámetro de tubo de escape.
-    \item [LIT] Largo de tubo de admisión.
-    \item [LET] Largo de tubo de escape.
-    \item [IIA] Ángulo geométrico de apertura de puerto de admisión.
-    \item [IFA] Ángulo geométrico de cierre de puerto de admisión.
-    \item [IIE] Ángulo geométrico de apertura de puerto de escape.
-    \item [IFE] Ángulo geométrico de cierre de puerto de escape.
-\end{enumerate}
+% \begin{enumerate}
+%     \item [DTA] Diámetro de tubo de admisión.
+%     \item [DTE] Diámetro de tubo de escape.
+%     \item [LIT] Largo de tubo de admisión.
+%     \item [LET] Largo de tubo de escape.
+%     \item [IIA] Ángulo geométrico de apertura de puerto de admisión.
+%     \item [IFA] Ángulo geométrico de cierre de puerto de admisión.
+%     \item [IIE] Ángulo geométrico de apertura de puerto de escape.
+%     \item [IFE] Ángulo geométrico de cierre de puerto de escape.
+% \end{enumerate}
 
 
 % % NOTA: antes de esto tendría que explicar como funciona icesym y como
@@ -236,6 +519,7 @@ Para representar a cada individuo se utilizan 8 características geométricas:
 % \begin{equation}
 %   A_{C} = \pi \cdot D_{v}\cdot l_{v}
 % \end{equation}
+
 
 Con la población definida se procede a los evaluar cada motor con la función
 objetivo, la cual se definió de manera tal de favorecer curvas de rendimiento
@@ -284,6 +568,14 @@ def evaluate_engine(individual, binnary_len, eng_obj, cores):
     return vol_eff
 \end{lstlisting}
 
+\begin{algorithm}\caption{Función Objetivo}\label{algo:func_obj}
+  \SetAlgoLined
+  \If{Los parámetros están en cierto rango}{
+    configurar(motor)\\
+    $k \gets 0$
+  }
+\end{algorithm}
+
 El conjunto de pesos utilizados para ponderar los rendimientos es el indicado
 en la tabla~\ref{tab:pesos}
 
@@ -317,50 +609,5 @@ el método de mutación a cada individuo, de acuerdo a la probabilidad de
 mutación indicada.
 
 
-El método de cruza seleccionado es \emph{cruza de dos puntos}, en este método
-se corta el vector que forma al individuo en dos puntos, la posición de estos
-puntos se selecciona al azar, manteniendo el largo original de los vectores.
-%
-Luego los individuos ``cruzados'' se combinan de forma complementaria, como en
-la figura~\ref{fig:cr2puntos}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.5\textwidth]{cruza2puntos.png}
-  \caption{Cruza de dos puntos}\label{fig:cr2puntos}
-\end{figure}
 
 
-\begin{lstlisting}[language=Python]
-def cxTwoPoint(ind1, ind2):
-    """Executes a two-point crossover on the input :term:`sequence`
-    individuals. The two individuals are modified in place and both keep
-    their original length.
-
-    :param ind1: The first individual participating in the crossover.
-    :param ind2: The second individual participating in the crossover.
-    :returns: A tuple of two individuals.
-
-    This function uses the :func:`~random.randint` function from the Python
-    base :mod:`random` module.
-    """
-    size = min(len(ind1), len(ind2))
-    cxpoint1 = random.randint(1, size)
-    cxpoint2 = random.randint(1, size - 1)
-    if cxpoint2 >= cxpoint1:
-        cxpoint2 += 1
-    else:  # Swap the two cx points
-        cxpoint1, cxpoint2 = cxpoint2, cxpoint1
-
-    ind1[cxpoint1:cxpoint2], ind2[cxpoint1:cxpoint2]
-        = ind2[cxpoint1:cxpoint2], ind1[cxpoint1:cxpoint2]
-
-    return ind1, ind2
-\end{lstlisting}
-
-
-El método de mutación seleccionado es mutShuffleIndexes (también podría se
-mutFlipBit), en el cual se modifica el orden los números que componen al
-vector, dando lugar a por ejemplo:
-
-(figura con ejemplo)
