@@ -45,27 +45,29 @@ un máximo (o mínimo) local.
 
 \subsection{Componentes básicos de un AG}
 %
-Los mecanismos básicos que hacen a un algoritmo genético son: 1) REPRODUCCIÓN,
+Los mecanismos básicos que hacen a un algoritmo genético son: 1) SELECCIÓN,
 2) CRUZA y 3) MUTACIÓN, el funcionamiento básico se sintetiza en el
 pseudocódigo~\ref{algo:genetico}.
 
-La REPRODUCCIÓN consiste en crear individuos a partir del puntaje que devuelve
-una función objetivo, la función objetivo es una medida del valor que se quiere
-optimizar y es la que guía el proceso de optimización.
+La SELECCIÓN consiste en crear individuos a partir del puntaje que devuelve
+una función objetivo, la cual es la encargada de guiar el proceso de
+optimización dando mayor o menor puntaje a un candidato según el resultado que
+se quiere obtener.
 %
 Este paso significa que aquellos individuos a los cuales se les asignó un
-puntaje más elevado tienen más probabilidades de ser ``copiados'', este proceso
-imita en cierta forma la selección natural o evolución Darwiniana y de aquí
-viene el nombre de algoritmo genético o evolutivo.
+puntaje más elevado tienen más probabilidades de ser copiados o ``transmitir''
+sus parámetros a la iteración siguiente, este proceso imita en cierta forma la
+selección natural o evolución Darwiniana y de aquí viene el nombre de algoritmo
+genético o evolutivo.
 
-La CRUZA consiste en combinar los ``vectores'' de dos individuos para obtener
-uno nuevo.
+El segundo operador es la CRUZA, consiste en combinar los parámetros de dos
+individuos para obtener uno nuevo, esto se asemeja a la reproducción.
 
-La MUTACIÓN consiste en modificar aleatoriamente uno o más parámetros de cada
-nuevo individuo.
-
-La mutación juega un rol secundario pero muy importante, es secundario porque se
-pueden alcanzar soluciones satisfactorias sin incluir este mecanismo sin
+Finalmente la MUTACIÓN es la encargada de modificar aleatoriamente uno o más
+parámetros de cada nuevo individuo.
+%
+Este operador juega un rol secundario pero muy importante, es secundario porque
+se pueden alcanzar soluciones satisfactorias sin incluir este mecanismo sin
 embargo, se utiliza con probabilidades pequeñas para evitar la pérdida temprana
 de información relevante.
 %
@@ -76,8 +78,8 @@ de búsqueda aleatoria.
 \begin{algorithm} \caption{Algoritmo de optimización}\label{algo:genetico}
   generación = 0;
   Inicializar población.\;
-  \While{No se cumpla condición de pardda}{
-    REPRODUCCIÓN se crean y seleccionan los individuos más aptos.\;
+  \While{No se cumpla condición de parada}{
+    SELECCIÓN se crean y seleccionan los individuos más aptos.\;
     CRUZA los candidatos seleccionados (creación de la anueva población)\;
     MUTACIÓN algunos individuos de la nueva población\;
     generación = generación + 1\;
@@ -104,39 +106,38 @@ Otro aspecto del optimizador que se desarrolló es el de poder ejecutar múltipl
 instancias de ICESym en paralelo para reducir el tiempo de ejecución cada
 simulación, pudiendo evaluar varios motores (o individuos) al mismo tiempo.
 
-
 Para la primer iteración se programaron desde cero los algoritmos y funciones
 necesarias para llevar a cabo la optimización,  posteriormente se tomo la la
 librería DEAP~\parencite{DEAP_JMLR2012} y se modificaron los operadores a medida,
 para poder utilizarlos con ICESym.
 
-En los apartados siguientes se describen la implementación de cada uno de los
+En los apartados siguientes se describe la implementación de cada uno de los
 operadores en el optimizador.
 
 \subsection{Población}
 %
 Se decidió representar cada motor como un vector con las dimensiones y reglaje
 que definen la geometría del sistema de intercambio de gases, los cuales se
-listan en la tabla~\ref{tab:parametros_ag}.
+listan en la tabla~\ref{tab:param_motor}.
 %
 Se limitó los valores que puede tomar cada parámetro para que la geometría
 resultante se asemeje a la geometría del motor utilizado en trabajos anteriores.
 
 
-\begin{table}
+\begin{table}[ht]
   \centering
-  \begin{tabular}{rll} \toprule
-    Parámetro & Descripción & Límites \\ \midrule
-    DTA & Diámetro de tubo de admisión & [60, 100] mm \\
-    DTE & Diámetro de tubo de escape & [60, 100] mm\\
-    LIT & Largo de tubo de admisión & [300, 2000] mm\\
-    LET & Largo de tubo de escape & [300, 2000] mm\\
-    IIA & Ángulo de apertura de puerto de admisión & [0,90]º \\
-    IFA & Ángulo geométrico de cierre de puerto de admisión & [IIA, 90]º \\
-    IIE & Ángulo geométrico de apertura de puerto de escape & [0, 90]º \\
-    IFE & Ángulo geométrico de cierre de puerto de escape & [IIA, 90]º \\ \bottomrule
+  \begin{tabular}{rllll} \toprule
+    Nº & Parámetro & Descripción & Sistema & Límites \\ \midrule
+    1 & DTA & Diámetro de tubo & Admisión & [60, 100] mm \\
+    2 & DTE & Diámetro de tubo & Escape & [60, 100] mm\\
+    3 & LIT & Largo de tubo & Admisión & [300, 2000] mm\\
+    4 & LET & Largo de tubo & Escape & [300, 2000] mm\\
+    5 & IIA & Ángulo de apertura & Admisión & [0,90]º \\
+    6 & IFA & Ángulo geométrico de cierre & Admisión & [IIA, 90]º \\
+    7 & IIE & Ángulo geométrico de apertura & Escape & [0, 90]º \\
+    8 & IFE & Ángulo geométrico de cierre & Escape & [IIA, 90]º \\ \bottomrule
   \end{tabular}
-  \caption{Binario a de entrada}\label{tab:mapeo_pre}
+  \caption{Parámetros que representan al motor}\label{tab:param_motor}
 \end{table}
 
 
@@ -144,17 +145,24 @@ Se decidió representar los vectores que hacen a cada motor como un número
 binario de 40 dígitos, ocupando 5 dígitos para representar cada uno de los 8
 parámetros que hacen a cada motor.
 %
-Esta forma de representar la población facilita la implementación de los
-operadores de selección, cruza y mutación, pudiendo aprovechar implementaciones
-de operadores existentes en librerías como DEAP.
+Esto facilita la implementación de los operadores de selección, cruza y
+mutación, pudiendo aprovechar implementaciones de operadores existentes en
+librerías como DEAP.
 %
-Este número luego se convierte a un entero y se mapea a la lista mediante una
-transformación lineal de la forma $y=ax+b$ el cual se utiliza para generar el
-la lista de valores que van a ICESym, ver figura~\ref{fig:pop_bit}.
+Estos 8 números binarios luego se convierten una lista de enteros que mediante
+un cambio de escala $f(x)$, en la que se ingresa con un entero entre 0 y
+$2^{n}-1$, siendo $n$ la cantidad de dígitos del binario (en este caso 5).
+%
+Los coeficientes $a$ y $b$ son tal que $f(0)=x_{0}$ y $f(2^{n}-1) = x_{1}$,
+donde $x_{0}$ y $x_{1}$ son los extremos del rango para el que se quiere aplicar
+la transformación.
 %
 Los coeficientes $a$ y $b$ son particulares a cada parámetro, porque se
-determinan de acuerdo a los valores que
+determinan de acuerdo a los valores que puede tomar cada uno.
 
+De este modo se obtienen el valor de cada uno de los parámetros que hacen a la
+configuración particular de cada motor en ICESym, ver figura~\ref{fig:pop_bit}.
+%
 El orden de los mismos se mantiene constante, por lo que cada sección del número
 representa una característica en particular del motor.
 %
@@ -165,44 +173,6 @@ representa una característica en particular del motor.
   \caption{Individuo como binario}\label{fig:pop_bit}
 \end{figure}
 
-
-% \begin{lstlisting}[language=Python,float,label=lst:bin2num,caption=Binario a entero]
-% def bin2num(binary):
-%     num = 0
-%     for p, d in enumerate(binary[::-1]):
-%         num += int(d) * 2**p
-%     return num
-% \end{lstlisting}
-
-% \begin{lstlisting}[language=Python,float,label=lst:separar_lista,caption=Función para separar la cadena de dígitos]
-% def separate_list(b_list, b_len):
-%     """
-%     b_list: list of data
-%     b_len: package size
-%     """
-%     tmp = []
-%     for i in range(len(b_list) // b_len):
-
-%         i1 = b_len * (i + 1)
-%         tmp.append(b_list[i0:i1])
-%     return tmp
-% \end{lstlisting}
-
-% \begin{lstlisting}[language=Python,float,label=lst:map_eng,caption=Función para mapear a ICESym]
-% def map_to_engine(num, bin_len, d_coeff, l_coeff, a_coeff):
-%     t = separate_list(num, bin_len)
-%     dta = (d_coeff[0] * bin2num(t[0]) + d_coeff[1]) * 0.001
-%     dte = (d_coeff[0] * bin2num(t[1]) + d_coeff[1]) * 0.001
-%     lit = (l_coeff[0] * bin2num(t[2]) + l_coeff[1]) * 0.001
-%     let = (l_coeff[0] * bin2num(t[3]) + l_coeff[1]) * 0.001
-%     # angulos
-%     iia = a_coeff[0] * bin2num(t[4]) + a_coeff[1]
-%     ifa = a_coeff[0] * bin2num(t[5]) + a_coeff[1]
-%     eia = a_coeff[0] * bin2num(t[6]) + a_coeff[1]
-%     efa = a_coeff[0] * bin2num(t[7]) + a_coeff[1]
-%     ind = (dta, dte, lit, let, iia, ifa, eia, efa)
-%     return ind
-% \end{lstlisting}
 
 \subsection{Reproducción}
 
@@ -264,7 +234,14 @@ el proceso.
     $CX_{2} = CX_{2}+1$\;
   }{
     $aux=CX_{1}$\;
+    $CX_{1}=CX_{2}$\;
+    $CX_{2}=aux$\;
   }
+  $aux = ind_{1}$\;
+  $ind_{1}[CX_{1}:CX_{2}] = ind_{2}[CX_{1}:CX_{2}]$\;
+  $ind_{2}[CX_{1}:CX_{2}] = aux[CX_{1}:CX_{2}]$\;
+  \Return{$ind_{1}, ind_{2}$}\;
+  Terminar el programa;
   \caption{Cruza de dos puntos}\label{algo:cr2puntos}
 \end{algorithm}
 
@@ -317,66 +294,80 @@ Finalmente se optó por una sencilla suma del rendimiento volumétrico y la
 fracción de gases residuales para 6000 RPM, esto provó ser la función objetivo
 que mejores resultados dió, el código utilizado se lista a continuación.
 
-\begin{lstlisting}[float,label=lst:label,caption=falta]
-def local_evaluate_engine(individual):
-    """Takes a global instance of motor.MRCVC and calculates it's score based on
-    volumetric efficiency curve.
-    """
-    eng = utils.map_to_engine(individual, BINNARY_LEN,
-                              d_coeff, l_coeff, a_coeff)
-    if not m.check_angles(eng):
-        return False
-    config = m.list_to_config(eng)
-    counter = 0
-    run_flag = False
-    kargs, cyl_data, extras_data = m.run_and_read(
-        ENGINE_OBJ, config, multi=CORES)
-    vol_eff = m.calc_volumetric_efficiency(kargs, extras_data)
-    xr = m.calc_residual_gas_fraction(kargs, extras_data)
+% \begin{lstlisting}[float,label=lst:label,caption=falta]
+% def local_evaluate_engine(individual):
+%     """Takes a global instance of motor.MRCVC and calculates it's score based on
+%     volumetric efficiency curve.
+%     """
+%     eng = utils.map_to_engine(individual, BINNARY_LEN,
+%                               d_coeff, l_coeff, a_coeff)
+%     if not m.check_angles(eng):
+%         return False
+%     config = m.list_to_config(eng)
+%     counter = 0
+%     run_flag = False
+%     kargs, cyl_data, extras_data = m.run_and_read(
+%         ENGINE_OBJ, config, multi=CORES)
+%     vol_eff = m.calc_volumetric_efficiency(kargs, extras_data)
+%     xr = m.calc_residual_gas_fraction(kargs, extras_data)
 
-    m.clean_files(ENGINE_OBJ)
-    if 0 in vol_eff:
-        return False
-    else:
-        # aux = [r+1/x for r, x in zip(vol_eff, xr)]
-        aux = [1/i for i in xr]
-        return aux
-\end{lstlisting}
+%     m.clean_files(ENGINE_OBJ)
+%     if 0 in vol_eff:
+%         return False
+%     else:
+%         # aux = [r+1/x for r, x in zip(vol_eff, xr)]
+%         aux = [1/i for i in xr]
+%         return aux
+% \end{lstlisting}
 
-\begin{algorithm}
-  \KwIn{ind: vector con parámetros del motor a evaluar}
-  \KwOut{}
-  \SetKwFunction{me}{me}
-  \SetKwFunction{lc}{lc}
+\begin{algorithm} \caption{Evaluación del motor}\label{algo:pre_puntaje}
+  \KwIn{\\
+    $ind$, vector con parámetros del motor a evaluar.\\
+  }
+  \KwOut{\\
+  $S$, un valor utilizado para calcular el puntaje del individuo.}
+  \SetKwFunction{me}{transformar_a_motor}
+  \SetKwFunction{lc}{lista}
   \BlankLine
 
-  motor = \me{$ind, bin, d_{coeff}, l_{coeff}, a_{coeff}$}\;
-  config = \lc{motor}\;
-  k = 0\;
-  RUN = FALSO\;
+  puntaje = 0\;
+  Configurar simulación, $sim=f(ind)$\;
   Ejecutar y leer el simulador\;
   $\eta_{v}$ = Calcular el rendimeinto volumétrico\;
   $x_{r}$ = Calcular la fracción de gases residuales\;
   N = \L{$\eta_{v}$}
-  Borrar arhcivos de simulación\;
   \eIf{hay un cero en $\eta_{v}$
-  }{Terminar programa\;
-  }{\For{i = 0 \KwTo N}{aux = aux + $\eta_{v,i}+\frac{1}{x_{r,i}}$\;
+  }{$S=0$\;
+  }{\For{i = 0 \KwTo N
+    }{
+      $S = S + \eta_{v,i}+\frac{1}{x_{r,i}}$\;
     }
   }
+  \Return{$S$}\;
 \end{algorithm}
 
 
-\begin{lstlisting}[float,label=lst:label,caption=falta]
-def calc_fitness2(individual):
-    aux = local_evaluate_engine(individual)
-    indx = 8
-    if isinstance(aux, list) and (aux is not None):
-        score = sum(aux) + aux[indx-1]**2
-    else:
-        score = 1
-    return (score,)
-\end{lstlisting}
+\begin{algorithm} \caption{Función Objetivo}\label{algo:funcion_objetivo}
+  \KwIn{\\
+    $ind$, vector con parámetros del motor a evaluar.\\
+    $idx$, índice del elemento del puntaje que se quiere ponderar.\\
+  }
+  \KwOut{\\
+    $S^{*}$, }
+  \SetKwFunction{evalEng}{evaluarMotor}
+  \BlankLine
+
+  $S = \evalEng{ind}$\;
+  \eIf{
+    $S^{*} \neq \emptyset$\;
+  }{
+    $S^{*} = \sum{S}$ + $S_{idx}^{2}$\;
+  }{
+    $S^{*}=1$\;
+  }
+  \Return{$S^{*}$}\;
+\end{algorithm}
+
 
 Durante las primeras iteraciones del método, las poblaciones iniciales contienen
 una gran cantidad de geometrías inválidas que devuelven valores de puntaje 0, en
@@ -391,76 +382,61 @@ truncado $\sigma$ y transformación exponencial.
 En este trabajo se utilizará el escalado por transformación lineal, como se
 indica en los algoritmos que siguen abajo.
 
-% (TODO 3/8: falta cambiar el código por algorimtos o pseudocódigo).
+\begin{algorithm} \caption{Algoritmo de pre-escalado}\label{algo:pre-escala}
+  \KwIn{\\
+    $F$, es un vector que contiene los puntajes de todos los individuos\;\\
+    $k$, es un multiplicador para el escalado, se suele usar $f\in[1.2, 2]$\parencite{goldberg}\;\\
+  }
+  \KwOut{\\
+    $a, b$, son los coeficientes para la transformación lineal $f(x)=a\cdot x + b$\;
+  }
+  \SetKwFunction{max}{max}
+  \SetKwFunction{min}{min}
+  \SetKwFunction{media}{media}
+  \BlankLine
 
-\begin{lstlisting}[float,language=Python,label=lst:label,caption=falta]
-def pre_scale(fitness, fmult=2):
-    """
-    Pre-scale with a linear funciton for fitness values as in
-    Goldberg, see fig 3.21.
-
-    Input:
-        fitness: fitness array
-        fmult: fitnes scaling parameter, works well between (1.2, 2)
-    Output:
-        a and b values for the scaling function f(x) = a*x + b
-    """
-    u_max, u_min, u_avg = get_stats(fitness)
-    aux = (fmult * u_avg - u_max) / (fmult - 1)
-    if u_min > aux:
-        # Non neegative test
-        delta = u_max - u_avg
-        a = (fmult - 1.0) * u_avg / delta
-        b = u_avg * (u_max - fmult * u_avg) / delta
-    else:
-        # Max scaling
-        delta = u_avg - u_min
-        try:
-            a = u_avg / delta
-            b = -u_min * u_avg / delta
-        except ZeroDivisionError:
-            a = 1
-            b = 0
-    return a, b
-\end{lstlisting}
-
-\begin{lstlisting}[float,language=Python,label=lst:label,caption=falta]
-def scale(fitness, a, b):
-    """ Scale fitness value."""
-    scaled = a * fitness[0] + b
-    return (scaled,)
-\end{lstlisting}
+  $u_{max} = \max{F}$\;
+  $u_{min} = \min{F}$\;
+  $u_{medio} = \media{F}$\;
+  $aux = (k\cdot u_{medio} - u_{max}) \mathbin{/} k-1$\;
+  \eIf{$u_{min}> aux$}{
+    $\Delta u = u_{max}-u_{avg}$\;
+    $a = (k - 1) \cdot u_{avg} / \Delta u$\;
+    $b = u_{avg} \cdot (u_{max} - k \cdot u_{avg}) /Delta u$\;
+  }{
+    \If{$\Delta \neq 0$}{
+      $a = u_{avg} \mathbin{/} \Delta u$\;
+      $b = -u_{min} \cdot u_{avg} \mathbin{/} \Delta u$ \;
+    }{
+      $a=1$\;
+      $b=0$\;
+    }
+  }
+  \Return{$a, b$}
+\end{algorithm}
 
 
-% \begin{algorithm}\caption{}\label{}
-%   \SetAlgoLined
-%   \SetKwFunctions{Aptitud}{Aptitud}
-%   \KwIn{f, a, b}
-%   \KwResult{s}
-%   s \Leftarrow a \cdot f + b
-% \end{algorithm}
+\begin{algorithm}\caption{Escalado de población}\label{algo:pop_scale}
+  \KwIn{\\
+    $f$, es la aptitud.\\
+    $a, b$, son los parámetros de la función de pre-escala. \\
+  }
+  \KwOut{\\
+  $f^{*}$, los puntajes escalados.}
+  \SetKwFunction{ps}{PreEscalado}
+  \SetKwFunction{ll}{Largo}
+  \SetKwFunction{esc}{Escala}
+  \BlankLine
 
+  $a, b = \ps{f, 2}$\;
+  $f^{*} = ()$ \;
+  $n = \ll{f}$\;
+  \For{$i=1$ \KwTo $n$}{
+    $f^{*}_{i} = a\cdot f_{i} + b$\;
+  }
+  \Return{$f^{*}$}\;
+\end{algorithm}
 
-
-\begin{lstlisting}[float,language=Python,label=lst:label,caption=falta]
-def scale_pop(fitness):
-    """Scale population fitness."""
-    a, b = pre_scale(fitness, 2)
-    new_fitness = []
-    for fit in fitness:
-        new_fitness.append(scale(fit, a, b))
-    return new_fitness
-\end{lstlisting}
-
-% \begin{algorithm}\caption{}\label{}
-%   \SetAlgoLined
-%   \SetKwFunctions{ps}{ps}
-%   \KwIn{$\vec{f}$}
-%   \KwResult{s}
-%   a, b \Leftarrow ps{fit, 2}
-%   \For{$f_{i}$ \KwIn $\vec{f}$}{
-%   }
-% \end{algorithm}
 
 % \subsection{ICESym como evaluación de individuos}
 % %
@@ -537,57 +513,57 @@ algoritmo~\ref{alg:funcObj}.
   f' = \frac{f(i+1) - u(i)}{h}
 \end{equation}
 
-\begin{lstlisting}[language=Python]
-def evaluate_engine(individual, binnary_len, eng_obj, cores):
-    """Takes a global instance of motor.MRCVC and calculates it's score based on
-    volumetric efficiency curve.
-    """
-    if binnary_len:
-        eng = map_to_engine(individual, binnary_len)
-    else:
-        eng = individual
-        print(eng)
-    if m.check_angles(eng):
-        config = m.list_to_config(eng)
-        counter = 0
-        run_flag = False
-        while counter < 2:
-            print("counter", counter)
-            kargs, cyl_data, extras_data = m.run_and_read(eng_obj, config, multi=cores)
-            vol_eff = m.calc_volumetric_efficiency(kargs, extras_data)
-            print("vol eff", vol_eff)
-            if 0 in vol_eff:
-                counter += 1
-            else:
-                run_flag = True
-                break
-        if run_flag is False:
-            return False
-    else:
-        return False
-    return vol_eff
-\end{lstlisting}
+% \begin{lstlisting}[language=Python]
+% def evaluate_engine(individual, binnary_len, eng_obj, cores):
+%     """Takes a global instance of motor.MRCVC and calculates it's score based on
+%     volumetric efficiency curve.
+%     """
+%     if binnary_len:
+%         eng = map_to_engine(individual, binnary_len)
+%     else:
+%         eng = individual
+%         print(eng)
+%     if m.check_angles(eng):
+%         config = m.list_to_config(eng)
+%         counter = 0
+%         run_flag = False
+%         while counter < 2:
+%             print("counter", counter)
+%             kargs, cyl_data, extras_data = m.run_and_read(eng_obj, config, multi=cores)
+%             vol_eff = m.calc_volumetric_efficiency(kargs, extras_data)
+%             print("vol eff", vol_eff)
+%             if 0 in vol_eff:
+%                 counter += 1
+%             else:
+%                 run_flag = True
+%                 break
+%         if run_flag is False:
+%             return False
+%     else:
+%         return False
+%     return vol_eff
+% \end{lstlisting}
 
-\begin{algorithm}\caption{Función Objetivo}\label{algo:func_obj}
-  \SetAlgoLined
-  \If{Los parámetros están en cierto rango}{
-    configurar(motor)\\
-    $k \gets 0$
-  }
-\end{algorithm}
+% \begin{algorithm}\caption{Función Objetivo}\label{algo:func_obj}
+%   \SetAlgoLined
+%   \If{Los parámetros están en cierto rango}{
+%     configurar(motor)\\
+%     $k \gets 0$
+%   }
+% \end{algorithm}
 
-El conjunto de pesos utilizados para ponderar los rendimientos es el indicado
-en la tabla~\ref{tab:pesos}
+% El conjunto de pesos utilizados para ponderar los rendimientos es el indicado
+% en la tabla~\ref{tab:pesos}
 
 
-\begin{table}
-  \centering
-  \begin{tabular}{lccccccccc} \toprule
-      RPM & 1000 & 2000 & 3000 & 4000 & 5000 & 6000 & 7000 & 8000 & 9000 \\ \midrule
-      $w$ & 1 & 1 & 1 & 6 & 8 & 9 & 8 & 7 & 7 \\ \bottomrule 
-  \end{tabular}
-  \caption{Pesos}\label{tab:pesos}
-\end{table}
+% \begin{table}
+%   \centering
+%   \begin{tabular}{lccccccccc} \toprule
+%       RPM & 1000 & 2000 & 3000 & 4000 & 5000 & 6000 & 7000 & 8000 & 9000 \\ \midrule
+%       $w$ & 1 & 1 & 1 & 6 & 8 & 9 & 8 & 7 & 7 \\ \bottomrule
+%   \end{tabular}
+%   \caption{Pesos}\label{tab:pesos}
+% \end{table}
 
 
 Una vez evaluados todos los motores de la población, se debe seleccionar los
@@ -607,7 +583,3 @@ combinan con el método seleccionado.
 Finalmente se realiza una segunda iteración sobre la nueva población, aplicando
 el método de mutación a cada individuo, de acuerdo a la probabilidad de
 mutación indicada.
-
-
-
-
