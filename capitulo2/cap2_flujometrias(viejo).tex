@@ -241,12 +241,12 @@ indicados en la tabla~\ref{tab:estado_gas_icesym}.
   \centering
   \begin{tabular}{ll}\toprule
     Parámetro & Descripción \\ \midrule
-    $\rho_{c,i}$ & Es la densidad del gas de en la cámara de combustión $i$\\
-    $P_{c,i}$ & Es la presión del gas de en la cámara de combustión $i$ \\
-    $T_{c,i}$ & Es la temepratura del gas de la cámara de combustión $i$ \\
+    $\rho_{c,i}$ & Es la densidad del gas en la cámara de combustión $i$\\
+    $P_{c,i}$ & Es la presión del gas en la cámara de combustión $i$ \\
+    $T_{c,i}$ & Es la temepratura del gas en la cámara de combustión $i$ \\
     $\rho_{p,i}$ & Es la densidad del puerto $i$ \\
     $v_{p,i}$ & Es la velocidad del gas en el puerto $i$ \\
-    $P_{p,i}$ & Es la presión del gas en el p uerto $i$ \\ \bottomrule
+    $P_{p,i}$ & Es la presión del gas en el puerto $i$ \\ \bottomrule
     \end{tabular}
     \caption{Estado del gas leído de ICESym}\label{tab:estado_gas_icesym}
 \end{table}
@@ -271,7 +271,7 @@ evaluando un puerto de admisión o escape, ver tabla~\ref{tab:ci_calculados}.
     $\nu$ & Viscosidad cinemática \\
     $P_{R}$ & Número de Prandtl, ec\ref{eq:pr}\\
     $k_{est}$ & Energía cinética turbulenta, ec.\ref{eq:kappa_est} \\ \bottomrule
-    $\epsilon_{est}$ & Dicipación de la energía cinética turbulenta, ec.\ref{eq:epsilon_est}\\
+    $\epsilon_{est}$ & Disipación de la energía cinética turbulenta, ec.\ref{eq:epsilon_est}\\
     \end{tabular}
     \caption{Parámetros calculados para CI}\label{tab:ci_calculados}
 \end{table}
@@ -320,9 +320,9 @@ presiones aguas arriba $p_{0}$ y aguas abajo de la restricción $p_{T}$.
 %
 Si se cumple la inecuación~\ref{eq:condicion_bloqueo}, el flujo está bloqueado.
 
-El caudal másico para la condición de no bloquado se calcula con la
+El caudal másico para la condición de no bloqueado se calcula con la
 ecuación~\ref{eq:m_no_bloqueo} y la ecuación~\ref{eq:m_bloqueo} en caso de que
-que el flujo esté bloqueado.
+el flujo esté bloqueado.
 %
 Los parámetros involucrados en estas ecuaciones se describen en la
 tabla~\ref{tab:parametros_cd}.

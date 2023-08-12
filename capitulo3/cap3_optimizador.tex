@@ -269,9 +269,9 @@ que tan bien se desempeña un motor con respecto a otro en lo que respecta
 \emph{performance} del sistema de intercambio de gases.
 %
 Inicialmente se propuso que la función objetivo sea la suma de los rendimientos
-volumétricos a todas las velocidades simuladas, este tipo de funciones da como
-resultado una curva de rendimiento volumétrico aserrada como se muestra en la
-figura~\ref{fig:curva_aserrada}
+volumétricos a todas las velocidades simuladas $s=\sum \eta_{v}$, este tipo de
+funciones dió como resultado una curva de rendimiento volumétrico aserrada como
+se muestra en la figura~\ref{fig:curva_aserrada}.
 
 \begin{figure}[ht]
   \centering
@@ -279,108 +279,63 @@ figura~\ref{fig:curva_aserrada}
   \caption{Curvas de rendimiento volumétrico aserradas}\label{fig:curva_aserrada}
 \end{figure}
 
-
-Este comportamiento aserrado es poco deseable, por lo que se modificó la
-función para conseguir una curva de rendimiento volumétrico suave.
+Esta curva aserrada es poco deseable porque significa una entrega de torque y
+potencia dispar, por este motivo se modificó la función objetivo para favorecer
+curvas suaves y preferentemente un solo punto de inflexión.
 %
-Además se implementó una suma ponderada, para obtener un rendimiento
-volumétrico máximo en un valor arbitrario de 5000 RPM.\@
+Además, se implementó una suma ponderada, para obtener un rendimiento
+volumétrico máximo en un valor de 6000 RPM.
 %
-Para prevenir el comportamiento aserrado se introdujo un sistema de penalidades,
-que resta puntaje si la derivada de la función se modifica de una velocidad a
-otra.
-
+Este objetivo de velocidades se colocó para aprovechar las características de
+balanceo de fuerzas y mayores velocidades de giro de los motores rotativos.
+%
 Finalmente se optó por una sencilla suma del rendimiento volumétrico y la
 fracción de gases residuales para 6000 RPM, esto provó ser la función objetivo
-que mejores resultados dió, el código utilizado se lista a continuación.
+que mejores resultados dió, la metodología utilizada se resume a continuación.
 
-% \begin{lstlisting}[float,label=lst:label,caption=falta]
-% def local_evaluate_engine(individual):
-%     """Takes a global instance of motor.MRCVC and calculates it's score based on
-%     volumetric efficiency curve.
-%     """
-%     eng = utils.map_to_engine(individual, BINNARY_LEN,
-%                               d_coeff, l_coeff, a_coeff)
-%     if not m.check_angles(eng):
-%         return False
-%     config = m.list_to_config(eng)
-%     counter = 0
-%     run_flag = False
-%     kargs, cyl_data, extras_data = m.run_and_read(
-%         ENGINE_OBJ, config, multi=CORES)
-%     vol_eff = m.calc_volumetric_efficiency(kargs, extras_data)
-%     xr = m.calc_residual_gas_fraction(kargs, extras_data)
-
-%     m.clean_files(ENGINE_OBJ)
-%     if 0 in vol_eff:
-%         return False
-%     else:
-%         # aux = [r+1/x for r, x in zip(vol_eff, xr)]
-%         aux = [1/i for i in xr]
-%         return aux
-% \end{lstlisting}
-
-\begin{algorithm} \caption{Evaluación del motor}\label{algo:pre_puntaje}
-  \KwIn{\\
-    $ind$, vector con parámetros del motor a evaluar.\\
-  }
-  \KwOut{\\
-  $S$, un valor utilizado para calcular el puntaje del individuo.}
-  \SetKwFunction{me}{transformar_a_motor}
-  \SetKwFunction{lc}{lista}
-  \BlankLine
-
-  puntaje = 0\;
-  Configurar simulación, $sim=f(ind)$\;
-  Ejecutar y leer el simulador\;
-  $\eta_{v}$ = Calcular el rendimeinto volumétrico\;
-  $x_{r}$ = Calcular la fracción de gases residuales\;
-  N = \L{$\eta_{v}$}
-  \eIf{hay un cero en $\eta_{v}$
-  }{$S=0$\;
-  }{\For{i = 0 \KwTo N
-    }{
-      $S = S + \eta_{v,i}+ 1 \mathbini{/} x_{r,i}$\;
-    }
-  }
-  \Return{$S$}\;
-\end{algorithm}
+\begin{enumerate}
+        \item Se evalúa cada motor, calculando el rendimiento volumétrico
+$\eta_{v}$ y fracción de gases residuales $x_{r}$ para cada velocidad de giro
+simulada.
+        \item Con $\eta_{v} = (\eta_{v,1}, \ldots ,\eta_{v,n})$ y
+$x_{r}=(x_{r,1},\ldots,x_{r,n})$ se hace una suma para cada velocidad
+$S_{i}=\eta_{v,i} + x_{r,i}^{-1}$.
+        \item Cada motor tiene un vector o lista de valores
+$S = (S_{1},\ldots,S_{n})$ para cada velocidad evaluada, con esta lista se
+        calcula el puntaje del motor como:
+        \begin{equation}
+        f = \sum_{i=1}^{n}{S_{i}} + S_{k}^{2}
+        \end{equation} $S_{k}$ es el puntaje para la $k$ velociidad de giro
+(6000 RPM en este caso) y se eleva al cuadrado para favorecer altos rendimientos
+en esta velocidad.
+\end{enumerate}
 
 
-\begin{algorithm} \caption{Función Objetivo}\label{algo:funcion_objetivo}
-  \KwIn{\\
-    $ind$, vector con parámetros del motor a evaluar.\\
-    $idx$, índice del elemento del puntaje que se quiere ponderar.\\
-  }
-  \KwOut{\\
-    $S^{*}$, }
-  \SetKwFunction{evalEng}{evaluarMotor}
-  \BlankLine
-
-  $S = \evalEng{ind}$\;
-  \eIf{
-    $S^{*} \neq \emptyset$\;
-  }{
-    $S^{*} = \sum{S}$ + $S_{idx}^{2}$\;
-  }{
-    $S^{*}=1$\;
-  }
-  \Return{$S^{*}$}\;
-\end{algorithm}
-
-
-Durante las primeras iteraciones del método, las poblaciones iniciales contienen
-una gran cantidad de geometrías inválidas que devuelven valores de puntaje 0, en
-caso de que alguna de las soluciones tenga un puntaje relativamente alto, existe
-la posibilidad de caer en una dominancia temprana de la población causando una
-convergencia temprana.
+Durante las primeras iteraciones del método hay una gran cantidad de geometrías
+inválidas que devuelven puntaje nulo.
 %
-Para evitar esto se usa unca un cambio de escala de los puntajes de todos los
-individuos, algunos de los métodos utilizados son: transformación lineal,
-truncado $\sigma$ y transformación exponencial.
+En caso de que alguna de las soluciones tenga un puntaje relativamente alto,
+existe la posibilidad de una dominancia temprana de la población, provocando
+una convergencia temprana de la optimización.
 %
-En este trabajo se utilizará el escalado por transformación lineal, como se
-indica en los algoritmos que siguen abajo.
+Estos individuos o soluciones con puntajes relativamente altos en las primeras
+iteraciones tienen una mayor probabilidad de ``pasar'' sus características
+geométricas a generaciones futuras y es especialmente problemático en
+optimizaciones con pocos individuos (de alrededor de 100).
+%
+Para reducir la posibilidad de una convergencia temprana se utiliza un método de
+escalado de puntajes de la población, que consiste en una transfomración lineal.
+%
+Definiendo el puntaje bruto de un individuo como $f$, el puntaje escalado es $f'$ y la relación entre ambos es $f' = a\cdot f + b$.
+
+Los coeficientes $a$ y $b$
+
+% Para evitar esto se usa unca un cambio de escala de los puntajes de todos los
+% individuos, algunos de los métodos utilizados son: transformación lineal,
+% truncado $\sigma$ y transformación exponencial.
+% %
+% En este trabajo se utilizará el escalado por transformación lineal, como se
+% indica en los algoritmos que siguen abajo.
 
 \begin{algorithm} \caption{Algoritmo de pre-escalado}\label{algo:pre-escala}
   \KwIn{\\
@@ -437,66 +392,6 @@ indica en los algoritmos que siguen abajo.
   \Return{$f^{*}$}\;
 \end{algorithm}
 
-
-% \subsection{ICESym como evaluación de individuos}
-% %
-% ICESym lee un archivo de configuración en formato \emph{Python} que consta de
-% un arreglo llamado \emph{diccionario} con las siguientes entradas:
-
-% \begin{lstlisting}[language=Python]
-% kargs = {
-%     "Simulator": Simulator,
-%     "Cylinders": Cylinders,
-%     "Junctions": Junctions,
-%     "Tubes": Tubes,
-%     "Tanks": Tanks,
-%     "Atmospheres": Atmospheres,
-% }
-% \end{lstlisting}
-
-% En donde se guarda la información básica de la geometría del motor, modelos
-% termodinámicos utilizados, cantidad de RPM's a simular y modelo de $C_D$ entre
-% otros.
-
-% De manera resumda, son básicamente métodos de búsqueda aleatoria que
-% aprovechan la información de iteraciones previas para determinar la composición
-% futura de la población, representando individuos como un conjunto de datos.
-% La representación
-% %
-% Si bien es probable que no se alcance el óptimo, el método alcanza una solución
-% satisfactoria en un tiempo relativamente corto.
-
-
-% Los AG requieren que las variables del problema estén expresadas en forma de
-% coordenadas $(x_1, x_2, x_3, ..., x_n)$.
-%
-% \subsubsection{Representación de los individuos}
-% %
-% Para representar a cada individuo se utilizan 8 características geométricas:
-
-% \begin{enumerate}
-%     \item [DTA] Diámetro de tubo de admisión.
-%     \item [DTE] Diámetro de tubo de escape.
-%     \item [LIT] Largo de tubo de admisión.
-%     \item [LET] Largo de tubo de escape.
-%     \item [IIA] Ángulo geométrico de apertura de puerto de admisión.
-%     \item [IFA] Ángulo geométrico de cierre de puerto de admisión.
-%     \item [IIE] Ángulo geométrico de apertura de puerto de escape.
-%     \item [IFE] Ángulo geométrico de cierre de puerto de escape.
-% \end{enumerate}
-
-
-% % NOTA: antes de esto tendría que explicar como funciona icesym y como
-% % interactúa mi programa.
-% Con esta lista de decimales luego se generan los
-% archivos de alzada que representan la apertura de la válvula, la misma es una
-% alzada ficticia que se utiliza para calcular el área de referencia de puerto.
-
-% \begin{equation}
-%   A_{C} = \pi \cdot D_{v}\cdot l_{v}
-% \end{equation}
-
-
 Con la población definida se procede a los evaluar cada motor con la función
 objetivo, la cual se definió de manera tal de favorecer curvas de rendimiento
 volumétrico suaves y valores altos a mayores RPM.\@
@@ -513,66 +408,12 @@ algoritmo~\ref{alg:funcObj}.
   f' = \frac{f(i+1) - u(i)}{h}
 \end{equation}
 
-% \begin{lstlisting}[language=Python]
-% def evaluate_engine(individual, binnary_len, eng_obj, cores):
-%     """Takes a global instance of motor.MRCVC and calculates it's score based on
-%     volumetric efficiency curve.
-%     """
-%     if binnary_len:
-%         eng = map_to_engine(individual, binnary_len)
-%     else:
-%         eng = individual
-%         print(eng)
-%     if m.check_angles(eng):
-%         config = m.list_to_config(eng)
-%         counter = 0
-%         run_flag = False
-%         while counter < 2:
-%             print("counter", counter)
-%             kargs, cyl_data, extras_data = m.run_and_read(eng_obj, config, multi=cores)
-%             vol_eff = m.calc_volumetric_efficiency(kargs, extras_data)
-%             print("vol eff", vol_eff)
-%             if 0 in vol_eff:
-%                 counter += 1
-%             else:
-%                 run_flag = True
-%                 break
-%         if run_flag is False:
-%             return False
-%     else:
-%         return False
-%     return vol_eff
-% \end{lstlisting}
-
-% \begin{algorithm}\caption{Función Objetivo}\label{algo:func_obj}
-%   \SetAlgoLined
-%   \If{Los parámetros están en cierto rango}{
-%     configurar(motor)\\
-%     $k \gets 0$
-%   }
-% \end{algorithm}
-
-% El conjunto de pesos utilizados para ponderar los rendimientos es el indicado
-% en la tabla~\ref{tab:pesos}
-
-
-% \begin{table}
-%   \centering
-%   \begin{tabular}{lccccccccc} \toprule
-%       RPM & 1000 & 2000 & 3000 & 4000 & 5000 & 6000 & 7000 & 8000 & 9000 \\ \midrule
-%       $w$ & 1 & 1 & 1 & 6 & 8 & 9 & 8 & 7 & 7 \\ \bottomrule
-%   \end{tabular}
-%   \caption{Pesos}\label{tab:pesos}
-% \end{table}
-
-
 Una vez evaluados todos los motores de la población, se debe seleccionar los
 individuos que formarán la siguiente iteración del algoritmo.
 %
 El método de selección es de tipo TORNEO, en el cual se seleccionan los mejores
 $k$ individuos de un grupo al azar de $N$ candidatos.
 %
-% meter un dibujo de la selección de tipo torneo
 
 Con los nuevos candidatos seleccionados, se procede a variar la población,
 realizando la cruza y mutación.
