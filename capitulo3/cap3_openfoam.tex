@@ -1,6 +1,6 @@
 \section{OpenFOAM}
 %
-Las flujometrías se realizaron con \emph{OpenFOAM}, un software de de
+Las flujometrías se realizaron con \emph{OpenFOAM}, un software de
 Fluidodinámica Computacional, o CFD por sus siglas en inglés, de código libre y
 abierto escrito en ``C++''.
 %
@@ -12,7 +12,7 @@ geometría a modelar y post-procesar los resultados..
 %
 \subsection{Metodología}
 %
-El esquema de trabajo para realizar las simulaciones consistió básicamente en:
+El esquema de trabajo para realizar las simulaciones consistió en:
 
 \begin{enumerate}
         %
@@ -58,10 +58,34 @@ El esquema de trabajo para realizar las simulaciones consistió básicamente en:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Configuración}
+%
+Para configurar una simulación de OpenFOAM se configura el directorio de
+simiulación como se indica en la figura XXX y XXX, cada directorio contiene una
+carpeta con condiciones iniciales ``0'', malla ``constant'' y configuraciones
+particulares de cada solver ``system''.
+
+En el directorio ``0'' se dejan las condiciones iniciales y de borde de cada
+simulación, utilizando una configuración genérica con parámetros definidos en un
+archivo con los valores de condiciones iniciales, aprovechando las
+características paramétricas de OpenFOAM, que permite corridas de una gran
+cantidad de simulaciones en serie.
+
+Estos archivos de condicinoes inciiales se generan con un \emph{script} que toma
+valores de las simulaciones de \emph{ICESym}, como se indicó en la
+sección~\ref{cap2:cond_iniciales}, en la que también se detallan las ecuaciones
+e hipótesis utilizadas para obtener dichos valores.
+%
+La ejecución de las simulaciones también se automatizan con scripts de
+\emph{bash} con los pasos para ejecutar las corridas con \emph{ICESym}.
+%
+Con los resultados de las simulaciones se procede a calcular/leer la magnitud
+del caudal másico, necesario para el cálculo del coeficiente de descarga.
+
 \subsubsection{Pre procesado}
 %
-El preprocesado consiste en definir geometría y condiciones iniciales, esto se
-obtiene de las simulaciones de optimización con ICESym.
+El preprocesado consiste en definir geometría y condiciones iniciales, los datos
+de partida  se obtienen de las simulaciones con ICESym.
 %
 Con los resultados del simulador se grafica la diferencia de presión entre
 el puerto de admisión o escape y la cámara de combustión en función de
@@ -98,9 +122,9 @@ El valor de alzada está directamente relacionado con el la posición angular de
 cigüeñal, por lo que una vez seleccionados los puntos de interés se puede
 extraer la geometría deseada de un modelo de CAD paramétrico del motor.
 %
-Este modelo tiene solamente la mitad del que contiene los puertos de admisión y
-escape, se obtuvo realizando uniones e intersecciones de volúmenes que
-representan diferentes componentes del motor, como son el estator, rotor,
+Este modelo tiene solamente la mitad que contiene los puertos de admisión y
+escape, se obtuvo realizando operaciones geométricas con los volúmenes que
+representan diferentes componentes del motor como son el estator, rotor,
 paletas, etc.
 %
 En la figura~\ref{fig:admision_50} se muestra parte del proceso para obtener el
@@ -120,9 +144,9 @@ exportada a un archivo
 ``.BREP''\footnote{\href{https://dev.opencascade.org/doc/overview/html/specification\_\_brep\_format.html}{Formato
 BREP, opencascade.org}} para luego ser importada en Salome\parencite{salome},
 %
-Salome se utiliza para generar una malla cerrada, hermética, la cual es
-necesaria para que pueda ser procesada por los complementos de OpenFOAM
-utilizados para generar la malla de la simulación.
+Salome se utiliza para generar una malla cerrada, hermética para que pueda ser
+procesada por los complementos de OpenFOAM utilizados para generar la malla de
+la simulación.
 %
 Es importante que la hermeticidad de la malla, esto significa que los nodos en
 la frontera entre superficies coincidan, como se ve en la
@@ -165,7 +189,10 @@ elementos de menor tamaño en zonas de mayor curvatura.
 %
 En la figura~\ref{fig:salome_fina_gruesa} se ve la diferencia en cantidad de
 nodos de dos mallas, una malla fina a la izquierda y una malla gruesa a la
-derecha las configuración de cada malla se muestra en la tabla \ref{tab:salome_fina_gruesa}.
+derecha.
+%
+En la tabla \ref{tab:salome_fina_gruesa} se muestra la diferencia entre algunos
+parámetros básicos de configuración para las dos mallas.
 %
 % Esto sin requerir de una gran cantidad de elementos para no ralentizar el
 % procesado con SnappyHexMesh.
@@ -200,18 +227,20 @@ derecha las configuración de cada malla se muestra en la tabla \ref{tab:salome_
     \label{tab:salome_fina_gruesa}
 \end{table}
 
-Una vez obtenido el archivo STL con la calidad deseada, se procede a la
-generación de la malla dentro de OpenFOAM con BlockMesh y snappyHexMesh.
+\subsubsection{Malla}
 %
-En primer lugar crea una malla con blockMesh que  debe contener la totalidad del
-volumen del puerto a simular, como se ve en la
+Una vez obtenido el archivo STL se procede a la generación de la malla dentro de
+OpenFOAM con \emph{blockMesh} y \emph{snappyHexMesh}.
+%
+Primero se crea crea una malla con \emph{blockMesh} que  debe contener la
+totalidad del volumen del puerto a simular, como se ve en la
 figura~\ref{fig:paraview_blockMesh_stl}.
-
-En este paso inicial se define también el tamaño de base de la malla y el nivel
-general de refinamiento, a partir de estos cubos se produce el refinamiento por
-``castelación'' que consiste en dividir las celdas en cubos más pequeños y luego
-aplicar el ``snapping'' para adaptarse a la superficie del volúmen que se está
-modelando, ver figura~\ref{fig:openfoam_shm_pasos}
+%
+En este paso se define el tamaño de base de la malla y el nivel general de
+refinamiento, a partir de estos cubos se produce el refinamiento por
+\emph{castelación} que consiste en dividir las celdas en cubos más pequeños y luego
+aplicar el \emph{snapping} para adaptarse a la superficie del volúmen que se está
+modelando, ver figura~\ref{fig:openfoam_shm_pasos}.
 %
 
 \begin{figure}
@@ -239,6 +268,22 @@ modelando, ver figura~\ref{fig:openfoam_shm_pasos}
     \end{subfigure}
     \caption{Pasos de SnappyHexMesh\parencite{shm_steps}}\label{fig:openfoam_shm_pasos}
 \end{figure}
+
+
+\emph{blockMesh} crea una malla paramétrica con bloques con opción de gradientes
+de tamaños y bordes curvados, los bordes pueden ser lineas rectas, arcos o
+``splines''.
+%
+La malla se genera o configura con un diccionario \emph{blockMeshDict} ubicado
+en \emph{constant/polyMesh}.
+
+\emph{snappyHexMesh} es un generador de malla que toma una malla existente y la
+\emph{talla} en la malla deseada, generando una malla 3D conformada por
+hexaedors y hexaedros partidos a partir de superficies de caras triangulares en
+formato de \emph{estereolitografía} (STL por sus siglas en inglés).
+%
+Además permite refinar zonas particulares de la geomeria y un refinamiento mayor
+de la malla en la zona de la capa límite.
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

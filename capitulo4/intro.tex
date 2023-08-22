@@ -1,0 +1,99 @@
+Los resultados obtenidos en cada uno de los pasos de este trabajo se detallan en
+este capítulo, comenzando por el motor obtenido en la primer iteración de
+optimización con el algoritmo genético junto con el modelo de CAD generado.
+%
+Luego se muestran los resultados de las flujometrías realizadas a partir del
+modelo de CAD, incluyendo las mallas obtenidas para algunos casos seleccionados
+y el resultado detallado de algunas de las flujometrías, finalizando con el mapa
+de $C_{D}$ obtenido, tanto para el puerto de admisión como para
+el puerto de escape.
+
+Por último se presentan los resultados de la segunda ronda de optimización con
+el algoritmo genético, en la que se utilizó el mapa de $C_{D}$ obtenido en el
+paso previo.
+%
+% En esta sección se muestra además el modelo de CAD generado para esta
+% geometría.
+
+% Se simuló un MRCVC de 3 paletas con ICESym~\parencite{icesym} con el propósito
+% de obtener curvas de rendimiento volumétrico.
+% %
+% Estas serán el principal criterio para evaluar el diseño de los sistemas de
+% intercambio de gases, que consisten de los puertos y conductos.
+% %
+% La geometría se optimizará mediante un algoritmo genético, el cual transforma
+% los datos de rendimiento volumétrico en un puntaje representativo de cada
+% motor.
+
+
+% La simulación con ICESym requiere del conocimiento previo de los coeficientes
+% de descarga de los puertos, en la primer iteración se asume un valor constante
+% para cada puerto que vale 0.7 y 0.75 para admisión y escape respectivamente.
+% %
+% Se utilizará la geometría obtenida en esta primer iteración para crear modelos
+% en CAD de los puertos de admisión y escape, junto con una porción de la cámara
+% de combustión para realizar flujometrías virtuales.
+% %
+% De este modo se puede obtener los coeficientes de descarga de cada puerto en
+% distintos grados de apertura.
+
+% Con el resultado de las flujometrías se construye un mapa del $C_D$ en función
+% de la alzada, que representa la posición del puerto y la diferencia de presión
+% entre el puerto y la cámara de combustión.
+
+% Este mapa se introduce en ICESym y se vuelve a realizar el proceso de
+% optimización con el algoritmo genético.
+
+% El Simulador de Motores de Combustión Interna (ICESym) permite la simulación de
+% motores tanto alternativos como rotativos en general y el MRCVC en particular,
+% en su código se incluyen modelos de la geometría del motor, la transferencia de
+% calor y el solape de cámaras.
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \section{CAD}
+% %
+% El modelo 3D de los puertos de admisión, escape y los componentes internos del
+% motor que afectan el flujo y son relevantes a la flujometría se realizaron con
+% FreeCAD\parencite{freecad} para generar un archivo en formato \emph{.BREP} para cada
+% posición analizada.
+% %
+% Estos archivos son importados al software salome\parencite{salome}, ese permite
+% generar una malla cerrada que se puede utilizar para OpenFOAM.\@
+% %
+% Antes de generar la malla se aplican los nombres de los parches, en los que
+% luego se toman de referencia para aplicar las reglas para realizar el
+% refinamiento con snappyHexMesh, aplicar condiciones de contorno, iniciales y
+% demás.
+% %
+% Se genera la malla con el mallador NETGEN 1D-2D-3D y se exporta parche por
+% parche en formato \emph{ASCII.stl}.
+
+% %
+% El archivo \emph{stl} se utiliza en OpenFOAM para generar la malla con
+% \emph{snappyHexMesh}.
+
+% Dada la cantidad de geometrías posibles y el tiempo que toma el proceso, se
+% realizaron algunas simplificaciones, las cuales se listan a continuación.
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% % \subsection{Geometría}
+% %
+% \begin{enumerate}
+
+%     \item La interfaz entre los puertos de admisión y escape con sus respectivos
+%         conductos de conexión con la atmósfera es de sección circular.
+%         %
+%     \item La altura de la ranura se adopta en $2/3$ del alto de la cámara,
+%         siendo $h_c=\lua{tex.print(myData.hc)}\ mm$.
+%         %
+%     \item El eje del puerto se hace perpendicular a una línea que pasa entre el
+%         centro del motor y el la línea media del puerto.
+% \end{enumerate}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

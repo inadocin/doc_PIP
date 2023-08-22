@@ -43,7 +43,7 @@ Otros métodos de optimización se mueven de un punto al siguiente en el espacio
 solución, basándose en alguna regla de decisión lo que puede dar como resultado
 un máximo (o mínimo) local.
 
-\subsection{Componentes básicos de un AG}
+% \subsection{Componentes básicos de un AG}
 %
 Los mecanismos básicos que hacen a un algoritmo genético son: 1) SELECCIÓN,
 2) CRUZA y 3) MUTACIÓN, el funcionamiento básico se sintetiza en el
@@ -264,14 +264,15 @@ individuo, modificando la lista, por ejemplo: $12345 \rightarrow 12543$.
 \subsection{Función objetivo}\label{sec:funcion_objetivo}
 %
 La función objetivo es la encargada de dar puntaje a los individuos, en la
-analogía con la selección natural esta función es el ambiente, la que determina
-que tan bien se desempeña un motor con respecto a otro en lo que respecta
+analogía con la selección natural esta función es el ambiente.
+%
+Determina la aptitud de un motor con respecto a otro en lo que respecta
 \emph{performance} del sistema de intercambio de gases.
 %
 Inicialmente se propuso que la función objetivo sea la suma de los rendimientos
 volumétricos a todas las velocidades simuladas $s=\sum \eta_{v}$, este tipo de
-funciones dió como resultado una curva de rendimiento volumétrico aserrada como
-se muestra en la figura~\ref{fig:curva_aserrada}.
+funciones dió como resultado una curva de $\eta_{v}$ aserrada como se muestra en
+la figura~\ref{fig:curva_aserrada}.
 
 \begin{figure}[ht]
   \centering
@@ -281,17 +282,17 @@ se muestra en la figura~\ref{fig:curva_aserrada}.
 
 Esta curva aserrada es poco deseable porque significa una entrega de torque y
 potencia dispar, por este motivo se modificó la función objetivo para favorecer
-curvas suaves y preferentemente un solo punto de inflexión.
+curvas suaves y preferentemente con un solo punto de inflexión.
 %
-Además, se implementó una suma ponderada, para obtener un rendimiento
-volumétrico máximo en un valor de 6000 RPM.
+Se implementó una suma ponderada para obtener un rendimiento volumétrico máximo
+en un valor de 6000 RPM aprovechando las características de balanceo de fuerzas
+y mayores velocidades de giro de los motores rotativos.
 %
-Este objetivo de velocidades se colocó para aprovechar las características de
-balanceo de fuerzas y mayores velocidades de giro de los motores rotativos.
+La aptitud resulta de la suma del rendimiento volumétrico y el inverso de la
+fracción de gases residuales, esto provó ser la función objetivo que mejores
+resultados dió.
 %
-Finalmente se optó por una sencilla suma del rendimiento volumétrico y la
-fracción de gases residuales para 6000 RPM, esto provó ser la función objetivo
-que mejores resultados dió, la metodología utilizada se resume a continuación.
+La metodología utilizada se resume a continuación.
 
 \begin{enumerate}
         \item Se evalúa cada motor, calculando el rendimiento volumétrico
@@ -312,36 +313,47 @@ en esta velocidad.
 
 
 Durante las primeras iteraciones del método hay una gran cantidad de geometrías
-inválidas que devuelven puntaje nulo.
+inválidas que devuelven puntaje muy bajo o nulo.
 %
 En caso de que alguna de las soluciones tenga un puntaje relativamente alto,
 existe la posibilidad de una dominancia temprana de la población, provocando
 una convergencia temprana de la optimización.
 %
-Estos individuos o soluciones con puntajes relativamente altos en las primeras
-iteraciones tienen una mayor probabilidad de ``pasar'' sus características
-geométricas a generaciones futuras y es especialmente problemático en
-optimizaciones con pocos individuos (de alrededor de 100).
+Estos motores tienen una mayor probabilidad de ``pasar'' sus características
+geométricas a las iteraciones siguientes y es algo especialmente problemático en
+optimizaciones poblaciones de alrededor de 100 individuos.
 %
 Para reducir la posibilidad de una convergencia temprana se utiliza un método de
-escalado de puntajes de la población, que consiste en una transfomración lineal.
+escalado de puntajes, que consiste en una transfomración lineal.
 %
-Definiendo el puntaje bruto de un individuo como $f$, el puntaje escalado es $f'$ y la relación entre ambos es $f' = a\cdot f + b$.
+Definiendo el puntaje bruto de un individuo como $f$ y el puntaje escalado es
+$f'$, la relación entre ambos es $f' = a\cdot f + b$.
 
-Los coeficientes $a$ y $b$
+Los coeficientes $a$ y $b$ se determinan de modo que $f'_{media}=f_{media}$, de
+este modo un motor con puntaje promedio tiene la misma influencia sobre la
+población ya sea con la aptitud original o escalada.
+%
+Para controlar la influencia de  del mejor individuo de una generación sobre la
+próxima, los puntajes se transforman de tal modo que
+$f'_{max}=C_{mult}f_{media}$.
+%
+El valor de $C_{mult}$ es la cantidad de copias que se espera obtener del mejor
+de los candidatos en la generación siguiente y se usa en 1.2 a 2 para
+poblaciones de entre 50 y 100 individuos.
 
-% Para evitar esto se usa unca un cambio de escala de los puntajes de todos los
-% individuos, algunos de los métodos utilizados son: transformación lineal,
-% truncado $\sigma$ y transformación exponencial.
-% %
-% En este trabajo se utilizará el escalado por transformación lineal, como se
-% indica en los algoritmos que siguen abajo.
+Hacia el final de una corrida de optimización $C_{mult}$ agranda las diferencias
+entre puntajes de individuos.
+
+En caso de existir individuos con puntaje muy bajo o nulo se hace un
+pre-escalado del puntaje que fija el mínimo en $f'_{min}=0$, el procedimiento se
+lista en los algorimtos \ref{algo:pre-escala} y \ref{algo:pop_scale}.
+
 
 \begin{algorithm} \caption{Algoritmo de pre-escalado}\label{algo:pre-escala}
   \KwIn{\\
     $F$, es un vector que contiene los puntajes de todos los individuos\;\\
-    $k$, es un multiplicador para el escalado, se suele usar $f\in[1.2, 2]$\parencite{goldberg}\;\\
-  }
+    $C_{mult}$, es un multiplicador para el escalado, se suele usar
+$f\in[1.2, 2]$\;\\ }
   \KwOut{\\
     $a, b$, son los coeficientes para la transformación lineal $f(x)=a\cdot x + b$\;
   }
@@ -353,15 +365,15 @@ Los coeficientes $a$ y $b$
   $u_{max} = \max{F}$\;
   $u_{min} = \min{F}$\;
   $u_{medio} = \media{F}$\;
-  $aux = (k\cdot u_{medio} - u_{max}) \mathbin{/} k-1$\;
-  \eIf{$u_{min}> aux$}{
-    $\Delta u = u_{max}-u_{avg}$\;
-    $a = (k - 1) \cdot u_{avg} / \Delta u$\;
-    $b = u_{avg} \cdot (u_{max} - k \cdot u_{avg}) /Delta u$\;
+  \eIf{$u_{min}> aux = (C_{mult}\cdot u_{medio} - u_{max}) \mathbin{/} (C_{mult}-1)$
+    }{
+    $\Delta_{u} = u_{max}-u_{avg}$\;
+    $a = (C_{mult} - 1) \cdot u_{avg} / \Delta u$\;
+    $b = u_{avg} \cdot (u_{max} - C_{mult} \cdot u_{avg}) \Delta_{u} $\;
   }{
     \If{$\Delta \neq 0$}{
-      $a = u_{avg} \mathbin{/} \Delta u$\;
-      $b = -u_{min} \cdot u_{avg} \mathbin{/} \Delta u$ \;
+      $a = u_{avg} \mathbin{/} \Delta_{u}$\;
+      $b = -u_{min} \cdot u_{avg} \mathbin{/} \Delta_{u}$ \;
     }{
       $a=1$\;
       $b=0$\;
@@ -392,35 +404,36 @@ Los coeficientes $a$ y $b$
   \Return{$f^{*}$}\;
 \end{algorithm}
 
-Con la población definida se procede a los evaluar cada motor con la función
-objetivo, la cual se definió de manera tal de favorecer curvas de rendimiento
-volumétrico suaves y valores altos a mayores RPM.\@
+% Con la población definida se procede a los evaluar cada motor con la función
+% objetivo, la cual se definió de manera tal de favorecer curvas de rendimiento
+% volumétrico suaves y valores altos a mayores RPM.\@
 
-La suavidad de la curva de rendimiento volumétrico se calcula midiendo los
-cambios de pendiente de la derivada la cual se aproxima con la fórmula de
-diferencia progresiva~\ref{eq:derivada}.
+% La suavidad de la curva de rendimiento volumétrico se calcula midiendo los
+% cambios de pendiente de la derivada la cual se aproxima con la fórmula de
+% diferencia progresiva~\ref{eq:derivada}.
+% %
+% Solamente interesa el signo, por lo que el valor de $h$ en el denominador no
+% interesa y se hace 1, con esto la función objetivo queda como el
+% algoritmo~\ref{alg:funcObj}.
+
+% \begin{equation}\label{eq:derivada}
+%   f' = \frac{f(i+1) - u(i)}{h}
+% \end{equation}
+
+% Una vez evaluados todos los motores de la población, se debe seleccionar los
+% individuos que formarán la siguiente iteración del algoritmo.
+% %
+% El método de selección es de tipo TORNEO, en el cual se seleccionan los mejores
+% $k$ individuos de un grupo al azar de $N$ candidatos.
+% %
+
+% Con los nuevos candidatos seleccionados, se procede a variar la población,
+% realizando la cruza y mutación.
+
+% Luego se toman pares de individuos y de acuerdo a la probabilidad de cruza, se
+% combinan con el método seleccionado.
+
+% Finalmente se realiza una segunda iteración sobre la nueva población, aplicando
+% el método de mutación a cada individuo, de acuerdo a la probabilidad de
+% mutación indicada.
 %
-Solamente interesa el signo, por lo que el valor de $h$ en el denominador no
-interesa y se hace 1, con esto la función objetivo queda como el
-algoritmo~\ref{alg:funcObj}.
-
-\begin{equation}\label{eq:derivada}
-  f' = \frac{f(i+1) - u(i)}{h}
-\end{equation}
-
-Una vez evaluados todos los motores de la población, se debe seleccionar los
-individuos que formarán la siguiente iteración del algoritmo.
-%
-El método de selección es de tipo TORNEO, en el cual se seleccionan los mejores
-$k$ individuos de un grupo al azar de $N$ candidatos.
-%
-
-Con los nuevos candidatos seleccionados, se procede a variar la población,
-realizando la cruza y mutación.
-
-Luego se toman pares de individuos y de acuerdo a la probabilidad de cruza, se
-combinan con el método seleccionado.
-
-Finalmente se realiza una segunda iteración sobre la nueva población, aplicando
-el método de mutación a cada individuo, de acuerdo a la probabilidad de
-mutación indicada.
