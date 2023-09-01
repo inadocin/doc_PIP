@@ -1,11 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Flujometrías}
 
-De los resultados de la primer otpimización se extrajo una curva de diferencia
-de presión vs alzada en diferentes velocidades del motor con el finde de
-identificar los puntos de mayor interés para realizar las flujometrías,
-tratando de obtener una buena cobertura del rango de funcionamiento de cada
-puerto.
+De los resultados de la primer otpimización se obtuvo la geometria de los
+puertos y una curva de diferencia de presión contra alzada a diferentes
+velocidades de giro del motor, con el fin de identificar los puntos de mayor
+interés para realizar las flujometrías.
 
 % inicialmente se propusieron un total de XXX flujometŕias, sin embargo algunas
 % combinaciones de $\l_{v}, \Delta P$ no se pudieron ejecutar hasta la
@@ -13,111 +12,212 @@ puerto.
 % final a xxx flujometrías, xxx para el puerto de admisión y xxx para el puerto
 % de escape, el par  se detalla en la figura XXX y tabla xxx.
 
-Los pares $(\l_{v}, \Delta P)$ se detallan en la figura XXX, en estos puntos se
-flujó el puerto para luego se calcular el coeficiente de descarga, obteniendo
-la base para generar el mapa de $C_D$ que se utilizará en el próximo paso de
-simulación.
+Los pares $(l_{v}, \Delta P)$ seleccionados se detallan en las
+figuras~\ref{fig:delta_p_admision} y~\ref{fig:delta_p_escape}, en estos puntos
+se busca estimar el coeficiente de descarga para generar el mapa de
+funcionamiento del puerto.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{flujometrias/admision_delta_p_anot.png}
+  \caption{Flujometrías puerto de admisión}\label{fig:delta_p_admision}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{flujometrias/escape_delta_p_anot.png}
+  \caption{Flujometrías puerto de escape}\label{fig:delta_p_escape}
+\end{figure}
+
+De las 51 flujometŕias propuestas se realizaron un total de 36 simulaciones las
+cuales devoliveron un 56 puntos de valores de $C_{D}$.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{cccccc}\toprule
+    GRA/RPM & 1000 & 2000 & 3000 & 7000 & 9000 \\ \midrule
+    0       & -    & X    & -    & X    & - \\
+    10      & -    & -    & -    & X    & - \\
+    50      & -    & -    & X    & X    & X \\
+    100     & X    & -    & -    & X    & - \\
+    590     & X    & X    & X    & -    & - \\ \bottomrule
+  \end{tabular}
+  \caption{Flujometrías puerto de admisión}\label{tab:flujometrias_admision}
+\end{table}
+
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{cccccccc}\toprule
+    GRA/RPM & 1000 & 2000 & 3000 & 4000 & 7000 & 8000 & 9000 \\ \midrule
+    405     & X    & X    & -    & -    & X    & -    & X \\
+    410     & -    & X    & -    & X    & X    & X    & - \\
+    420     & -    & -    & -    & X    & -    & X    & - \\
+    430     & -    & X    & -    & -    & -    & -    & - \\
+    440     & X    & -    & -    & -    & X    & -    & X \\
+    500     & -    & -    & X    & -    & X    & X    & - \\ \bottomrule
+  \end{tabular}
+  \caption{Flujometrías puerto de escape}\label{tab:flujometrias_escape}
+\end{table}
+
+Algunas flujometŕias se realizaron en tres etapas, partiendo de una malla gruesa
+con celdas de 15mm de tamaño inicial, culminando en celdas de 5mm.
+%
+En otros se realizó directamente la flujometría con mallas base de 5mm de lado.
+
+En general se simuló alrededor de 0.2 segundos de flujo lo cual fue suficiente
+en muchos casos para que se alcance un estado estacionario del flujo, como se ve
+en la figura~\ref{fig:flujoemtrias_1_a} y~\ref{fig:flujoemtrias_1_b}.
+%
+En la primera se presenta el desarrollo del flujo másico para el puerto de
+admisión con el cigüeñl en $\theta=10^{\circ}$, para esta posición hay solape de
+cámaras por lo que se tienen dos flujos másico, el gráfico de la izquierda
+corresponde a una cámara de combustión con $\theta=10^{\circ}$ y la próxima
+corresponde a $\theta=130^{\circ}$.
+%
+En ámbos gráficos se ve una línea de color anaranjado sobre el final de la
+simulación, esta representa la poricón de datos que se seleccionó para calcular
+el caudal másico.
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{flujometrias/admision_SFV_10_0.png}
+    \caption{Cámara 0 ($\theta=10^{\circ}$)}\label{fig:flujoemtrias_1_a}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{flujometrias/admision_SFV_130_0.png}
+    \caption{Cámara 1 ($\theta=130^{\circ}$)}\label{fig:flujoemtrias_1_b}
+  \end{subfigure}
+  \caption{Avance de $\dot{m_{f}}$ con tiempo de simulación}\label{fig:flujometrias_1}
+\end{figure}
+
+
+
+% TODO: esto lo ebería indicar mas abajo, como parte de los detalles que doy
+% cuando hable del mapa de coeficiente de descarga obtenido.
+
+% \begin{figure}[ht]
+%   \centering
+%   \includegraphics[width=\textwidth]{flujometrias/adm_0_2000.png}
+%   \caption{Puerto de admisión 0º \@ 2000RPM}\label{fig:adm_0_2000}
+% \end{figure}
+
+% \begin{figure}[ht]
+%   \centering
+%   \includegraphics[width=\textwidth]{flujometrias/adm_100_1000.png}
+%   \caption{Puerto de admisión 100º \@ 1000RPM}\label{fig:adm_100_1000}
+% \end{figure}
+
+% \begin{figure}[ht]
+%   \centering
+%   \includegraphics[width=\textwidth]{flujometrias/adm_50_7000.png}
+%   \caption{Puerto de admisión 50º \@ 7000RPM}\label{fig:adm_50_7000}
+% \end{figure}
 
 Como se mencionó en el apartado~\ref{capitulo:DESARROLLO}, la modificaión
 realizada a ICESym para funcionar con un mapa de $C_{D}$ dependiente de dos
-variable, requiere que los datos de entrada estén distribuidos en una grilla
-rectangular, motivo por el cual a partir de estos valores se utilizó el método
-de interpolación por IDW para generar una dicha grilla de $(l_{v}, \Delta P)$
-con $C_{D}$ interpolado de los datos conocidos, como se ve en las
-figuras~\ref{fig:mapa_cd_admision} y~\ref{fig:mapa_cd_escape}.
+variables requiere que los datos de entrada estén distribuidos en una grilla
+rectangular.
+%
+A partir de las flujometrías realizadas se confeccionó el mapa de $C_{D}$, la
+totalidad de puntos evaluados se presenta en la tabla~\ref{tab:mapa_cd} en el
+adjunto~\ref{adj:mapa_cd}.
+%
+Los datos obtenidos no forman una grilla rectangular, por lo que se utilizó
+un método de suavizado de promedio móvil con $N=2$ para generar dicha grilla, el
+resultado se ve en las figuras~\ref{fig:mapa_cd_admision}
+y~\ref{fig:mapa_cd_escape}.
 
-\begin{figure}
+\begin{figure}[ht!]
     \centering
-    \begin{subfigure}{0.4\textwidth}
+    \begin{subfigure}{0.7\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{mapa_cd/idw16_mapa_adm.png}
-        \caption{cambiar}
+        \includegraphics[width=\textwidth]{mapa_cd/mc_s2_mapa_adm.png}
+        \caption{Puerto de admisión}\label{fig:mapa_cd_admisión}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{0.4\textwidth}
+    \begin{subfigure}{0.7\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{mapa_cd/idw16_mapa_adm.png}
-        \caption{cambiar}
+        \includegraphics[width=\textwidth]{mapa_cd/mc_s2_mapa_esc.png}
+        \caption{Puerto de escape}\label{fig:mapa_cd_escape}
     \end{subfigure}
-    \caption{cabmiar}\label{fig:mapa_cd_admision}
+    \caption{Mapas de $C_{D}$}\label{fig:mapa_cd_mc_s2}
 \end{figure}
 
-\begin{figure}
+En el mapa del puerto de admisión se observa un máximo de $C_{D}\simeq 0.6$ para
+para $l_{v}=62.95 mm$ y $\Delta P\simeq -7.37 kPa$, obteneniendo un flujo hacia
+afuera del puerto de $\dot{0.122092} kg/seg$, este valor se obtiene para un
+reflujo de gases residuales apenas abre el puerto de admisión, en particular
+este valor se obtuvo para el el $10^{\circ}$ a 7000 RPM.
+%
+Las líneas de flujo para este caso se ven en la figura~\ref{fig:adm_cd_max}.
+%
+El menor valor también se obtiene para un valor muy próximo a la apertura del
+puerto de admisión, siendo $C_{D}\simeq 0.12$ con un reflujo de
+$\dot{m}\le 0.005$, $l_{v}=144.3 mm$ y $\Delta_{P}=-6.57 kPa$ para el puerto a
+$590^{\circ}$ a 1000 RPM, las líneas de corriente para la flujometría de este
+caso se ven en la figura~\ref{fig:adm_cd_min}.
+%
+En términos de flujo másico, el mayor valor  es de $\dot{m}=70 g/seg$ se da
+durante un período de máxima apertura del puerto con $l_{v}=81.94 mm$ y
+$\Delta_{P}=4.95 kPa$ siendo $C_{D}=0.32874$, la flujometría correspondiente se
+ve en la figura~\ref{fig:adm_m_max}.
+
+\begin{figure}[ht]
     \centering
-    \begin{subfigure}{0.4\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{mapa_cd/idw16_mapa_adm.png}
-        \caption{cambiar}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.4\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{mapa_cd/idw16_mapa_adm.png}
-        \caption{cambiar}
-    \end{subfigure}
-    \caption{cabmiar}\label{fig:mapa_cd_escape}
+    \includegraphics[width=0.7\textwidth]{flujometrias/adm_cd_max.png}
+    \caption{Valor máximo de $C_{D}$}\label{fig:adm_cd_max}
 \end{figure}
 
-En el mapa del puerto de admisión se observa un máximo para para aperturas del
-puerto mayores a 80mm, con $\Delta P$ de entre 1000 Pa a 15000 Pa.
-%
-El coefiente de descarga máximo es $C_{D}(100mm, 1500Pa) = 0.6$ y corresponde a
-la flujometría $N^{\circ} X$, el flujo másico obtenido para este régimen es de
-0.02 kg/s, con un a velocidad máxima de xxx m/s en la garganta.
-%
-El peor valor se es $C_{D}(100mm, 1500Pa) = 0.6$ y corresponde a aperturas
-pequeñas del puerto, en la que debido a la reducida sección de pasaje de flujo
-se tiene velocidades eleveadas, siendo la máxima de xxx m/s.
-%
-Para visualizar la diferencia entre uno y otro caso, se representan las líneas
-de corriente para ambos casos en la figura
-\ref{fig:comparativa_lineas_corriente}.
-
-\begin{figure}
+\begin{figure}[ht]
     \centering
-    \begin{subfigure}{0.4\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{flujometrias/ejemplo_lineas_corriente.jpg}
-        \caption{Valor máximo de $C_{D}$}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.4\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{flujometrias/ejemplo_lineas_corriente.jpg}
-        \caption{Valor mínimo de $C_{D}$}
-    \end{subfigure}
-    \caption{cabmiar}\label{fig:comparativa_lineas_corriente}
+    \includegraphics[width=0.7\textwidth]{flujometrias/adm_cd_min.png}
+    \caption{Valor mínimo de $C_{D}$}\label{fig:adm_cd_min}
 \end{figure}
 
-Para el mapa del puerto de escape se observa un máximo para para aperturas del
-puerto mayores a 80mm, con $\Delta P$ de entre 1000 Pa a 15000 Pa.
-%
-El coefiente de descarga máximo es $C_{D}(100mm, 1500Pa) = 0.6$ y corresponde a
-la flujometría $N^{\circ} X$, el flujo másico obtenido para este régimen es de
-0.02 kg/s, con un a velocidad máxima de 10m/s en la garganta, como se ve en la
-figura \ref{fig:admision_10_2000.jpg}.
-
-\begin{figure}
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\textwidth]{flujometrias/admision_10_2000.jpg}
-    \caption{Puerto de admisión - $10^{\circ}$@2000 RPM}\label{fig:admision_10_2000.jpg}
+    \includegraphics[width=0.7\textwidth]{flujometrias/adm_cd_max.png}
+    \caption{Valor máximo de $\dot{m}$}\label{fig:adm_m_max}
 \end{figure}
 
-El peor valor se es $C_{D}(100mm, 1500Pa) = 0.6$ y corresponde a aperturas
-pequeñas del puerto, en la que debido a la reducida sección de pasaje de flujo
-se tiene velocidades eleveadas, siendo la máxima de xxx m/s.
+Para el puerto de escape se observa el máximo $C_{D}=0.57686$ para
+$l_{v}=87.76 mm$, $\Delta_{P}=-10.7 kPa$ con un flujo másico de $145 g/s$
+hacia afuera para $440^{\circ}$ a 9000 RPM.
 %
-Para visualizar la diferencia entre uno y otro caso, se representan las líneas
-de corriente para ambos casos en la figura \ref{fig:admision_10_2000.jpg}.
+Las líneas de corriente para este caso se muestran en la
+figura~\ref{fig:esc_cd_max}.
+%
+El menor del mapa es de $C_{D}=0.09631$ para $l_{v}=16.83 mm$ y
+$\Delta_{P}=-652.9 kPa$, un caso en el que se observa el flujo bloqueado por la
+alta diferencia de presiones alcanzando un flujo másico de $\dot{m}=38,6 g/seg$,
+en la figura~\ref{fig:esc_cd_min} se muestran las líneas de corriente para este caso.
+%
+El máximo valor de flujo másico se estima en $\dot{m}=176.1 g/seg$ para
+$l_{v}=87.76 mm$ y $\Delta_{P}=-334 kPa$, esto con el ciclo a $440^{\circ}$ y 7000
+RPM, los resultados de la flujometría se muestran en la figura~\ref{fig:esc_m_max}.
 
-\begin{figure}
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\textwidth]{flujometrias/ejemplo_lineas_corriente.jpg}
-    \caption{Puerto de admisión - $10^{\circ}$@2000 RPM}\label{fig:admision_10_2000.jpg}
+    \includegraphics[width=0.7\textwidth]{flujometrias/adm_cd_max.png}
+    \caption{Valor máximo de $C_{D}$}\label{fig:esc_cd_max}
 \end{figure}
 
-En las tablas~\ref{tab:mapa_cd_admision} y~\ref{tab:mapa_cd_escape} se muestran los
-resultados de realizar las flujometrías de los puertos de admisión y escape.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{flujometrias/adm_cd_min.png}
+    \caption{Valor mínimo de $C_{D}$}\label{fig:esc_cd_min}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{flujometrias/adm_cd_max.png}
+    \caption{Valor máximo de $\dot{m}$}\label{fig:esc_m_max}
+\end{figure}
 
 \begin{table}
   \centering
@@ -195,7 +295,7 @@ Como es de esperarse, incorporar estos mapa al modelo del motor tiene un efecto
 en el comportamiento del mismo, esto se puede observar principalmente en las
 curvas de presión del motor.
 
-\subsection{Mapa de $C_D$}
+% \subsection{Mapa de $C_D$}
 %
 Para obtener el mapa se tomaran valores de flujo másico en las combinaciones de
 $(\Delta P, l_v)$ que están indicadas en la tabla~\ref{tab:casos}.
