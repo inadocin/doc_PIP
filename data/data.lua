@@ -85,3 +85,12 @@ function mapaCd(data)
   end
   return s
 end
+
+-- para imprimir las tablas del mapa de cd hacer:
+-- \centering
+-- \begin{tabular}{rccc}\toprule
+--   Item & $L_v[m]$ & $\Delta P[Pa]$ & $C_D$ \\ \midrule
+--   \lua{tex.print(mapaCd(myData.escape))}
+--   \bottomrule
+--   \end{tabular}
+-- \caption{Mapa $C_D$ del puerto de Escape}\label{tab:mapaEsc}

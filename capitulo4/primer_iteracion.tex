@@ -23,11 +23,11 @@ El algoritmo genético se ejecutó durante 100 generaciones con una población d
 sección~\ref{sec:funcion_objetivo} con los pesos indicados, operadores y
 parámetros correspondientes indicados en la tabla~\ref{tab:config_genetico}.
 
-\begin{table}[h]
+\begin{table}[ht!]
   \centering
   \begin{tabular}{cc} \toprule
     Parámetro & Valor \\ \midrule
-    RPMS & $(1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000)$ \\
+    RPMS & $1000\times[1, 2, 3, 4, 5, 6, 7, 8, 9]$ \\
     Pesos de función objetivo & $(1, 1, 1, 6, 8, 9, 8, 7, 7)$ \\
     Cantidad de ciclos de ICESym & 2 \\
     Diámetro mínimo & 0.05 \\
