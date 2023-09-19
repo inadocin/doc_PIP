@@ -5,11 +5,56 @@ como dato de entrada para ICESym, con esto se realizó una serie de corridas de
 optimización con el algoritmo genético, de las cuales se seleccionaron los
 mejores candidatos.
 %
-Se obtuvieron 3 candidatos principales, indicados como \emph{$run_34$},
-\emph{$run_38$}, \emph{$run_51$}; cuyas curvas de rendimiento volumétrico y
+Se obtuvieron 3 candidatos principales, indicados como \emph{$run_{34}$},
+\emph{$run_{38}$}, \emph{$run_{51}$}; cuyas curvas de rendimiento volumétrico y
 fracción de gases residuales se indican en la figura \ref{fig:2iter_general}.
 %
 Para determinar cuál de todos es el más promoetedor, se compararon las curvas
-de presión, torque y potencia, las cuales se muestran en las figuras
-\ref{fig:2iter_presion}, \ref{fig:2iter_torque} y \ref{fig:2iter_potencia}
-respectivamente.
+de presión, torque y potencia, las cuales se muestran en la figura~\ref{fig:PoTi_segunda_op}
+
+\begin{figure}
+  \begin{center}
+    \begin{tikzpicture}[baseline, trim axis right]
+      \begin{axis}[
+        xlabel=Velocidad del motor [RPM],
+        yticklabel pos=upper,
+        ylabel={$\eta_{v},x_{r}$},
+        ylabel near ticks,
+        grid=both,
+        legend pos=south east,
+        ]
+        \addplot table [x=RPM,y=RendVol]{data/segundo_rend_vol.dat} ;
+        \addplot table [x=RPM,y=RendVol]{data/primer_rend_vol.dat} ;
+        \addplot table [x=RPM,y=FracRes]{data/segundo_rend_vol.dat} ;
+        \addplot table [x=RPM,y=FracRes]{data/primer_rend_vol.dat} ;
+        \legend{$\eta_{v,2}$, $\eta_{v,1}$, $x_{r,2}$ , $x_{r,1}$ }
+      \end{axis}
+    \end{tikzpicture}
+\end{center}
+\caption{Segunda Iteración} \label{fig:primer_op}
+\end{figure}
+
+
+\begin{figure}
+  \begin{center}
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel=Velocidad del motor [RPM],
+      ylabel={$P_{i}[HP],T_{i}[N.m.]$},
+      legend pos=south east,
+      grid=both,
+      width={13cm},
+      ]
+      % \addplot table [x=RPM,y=PotInd]{data/segundo_rend_vol.dat} ;
+      \addplot[mark=o,solid,red] table [x=RPM,y=PotNet]{data/segundo_rend_vol.dat} ;
+      % \addplot table [x=RPM,y=TorqInd]{data/segundo_rend_vol.dat} ;
+      \addplot[mark=o,solid,black] table [x=RPM,y=TorqNet]{data/segundo_rend_vol.dat} ;
+      \addplot[mark=o,dashed,red] table [x=RPM,y=PotNet]{data/primer_rend_vol.dat} ;
+      \addplot[mark=o,dashed,black] table [x=RPM,y=TorqNet]{data/primer_rend_vol.dat} ;
+      % \legend{$\dot{W}_{i,n,2}$,$\dot{W}_{freno,2}$ , $T_{i,2}$, $T_{freno,2}$, $\dot{P}_{freno,1}$, $T_{freno,1}$}
+      \legend{$\dot{W}_{freno,2}$ , $T_{freno,2}$, $\dot{P}_{freno,1}$, $T_{freno,1}$}
+    \end{axis}
+  \end{tikzpicture}
+  \end{center}
+  \caption{Torque y Potencia de Segunda Iteración} \label{fig:PoTi_segunda_op}
+\end{figure}

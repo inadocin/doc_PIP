@@ -88,18 +88,16 @@ rendimiento en la curva, siendo el segundo con $r_{v} \simeq 0.79$ a 7500 RPM.
     &
     \begin{tikzpicture}[baseline, trim axis right]
       \begin{axis}[
-        xlabel=RPM,
+        xlabel=Velocidad del motor [RPM],
         yticklabel pos=upper,
         ylabel={$\eta_{v},x_{r}$},
         ylabel near ticks,
         grid=both,
         legend pos=south east,
         ]
-
         \addplot table [x=RPM,y=RendVol]{data/primer_rend_vol.dat} ;
         \addplot table [x=RPM,y=FracRes]{data/primer_rend_vol.dat} ;
         \legend{$\eta_{v}$, $x_{r}$ }
-
       \end{axis}
     \end{tikzpicture}
     \\
@@ -136,14 +134,17 @@ NOTA: FALTA CORREGIR ESTA POTENCIA CON EL MODELO DE FLOR O DE KNOLL
   \begin{center}
   \begin{tikzpicture}
     \begin{axis}[
-      xlabel=RPM,
+      xlabel=Velocidad del motor [RPM],
       ylabel={$P_{i}[HP],T_{i}[N.m.]$},
   legend pos=south east,
       grid=both,
       width={13cm}]
       \addplot table [x=RPM,y=PotInd]{data/primer_rend_vol.dat} ;
+      \addplot table [x=RPM,y=PotNet]{data/primer_rend_vol.dat} ;
       \addplot table [x=RPM,y=TorqInd]{data/primer_rend_vol.dat} ;
-      \legend{Media, Máximo}
+      \addplot table [x=RPM,y=TorqNet]{data/primer_rend_vol.dat} ;
+      \legend{Potencia Indicada, Potencia Neta, Torque Indicado, Torque Neto}
+      \legend{$\dot{W}_{i,n,1}$,$\dot{W}_{freno,1}$ , $T_{i,1}$, $T_{freno,1}$}
     \end{axis}
   \end{tikzpicture}
   \end{center}
