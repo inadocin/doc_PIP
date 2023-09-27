@@ -77,7 +77,7 @@ rendimiento en la curva, siendo el segundo con $r_{v} \simeq 0.79$ a 7500 RPM.
       \begin{axis}[
         xlabel=Generación,
         ylabel=Puntaje,
-    legend pos=south east,
+        legend pos=south east,
         grid=both,
         ]
         \addplot table [x=Gen,y=Avg]{data/genetico.dat} ;
@@ -93,7 +93,6 @@ rendimiento en la curva, siendo el segundo con $r_{v} \simeq 0.79$ a 7500 RPM.
         ylabel={$\eta_{v},x_{r}$},
         ylabel near ticks,
         grid=both,
-        legend pos=south east,
         ]
         \addplot table [x=RPM,y=RendVol]{data/primer_rend_vol.dat} ;
         \addplot table [x=RPM,y=FracRes]{data/primer_rend_vol.dat} ;
