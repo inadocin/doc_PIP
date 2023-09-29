@@ -37,11 +37,18 @@ este motor.
 %
 En la figura \ref{fig:ciclo_pv_mrcvc} se presenta el diagrama $P-V$ de una
 simulación de ICESym del MRCVC.
-%
-\begin{figure} \centering
-    \includegraphics[width=.7\textwidth]{ciclo/diagramaPV.png}
-    \caption{Diagrama P-V del MRCVC}\label{fig:ciclo_pv_mrcvc}
-    %
+
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{gnuplot/vol.pdf}
+  \caption{Diagrama P-V del MRCVC}\label{fig:ciclo_pv_mrcvc}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{gnuplot/vol_vs_pres.pdf}
+  \caption{Ciclo operativo del MRCVC}\label{fig:ciclo_mrcvc}
 \end{figure}
 
 
@@ -62,42 +69,17 @@ La paleta que delimitaba el frente de la cámara se retrasa con respecto a la
 cámara con la que inició el ciclo, produciendo que este dure más de 1 revolución
 resultando en aproximadamente 600º.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{ciclo/ciclo_operativo.png}
-  \caption{Ciclo operativo del MRCVC}\label{fig:ciclo_mrcvc}
-\end{figure}
-
-
-
-
 Para un motor de $R=\lua{tex.print(myData.R)}$ mm y
 $r=\lua{tex.print(myData.r)}$ mm  el volumen mínimo alcanzado permanece
 constante por un período de $44.65^\circ$, como se puede ver en la
 figura~\ref{fig:vol_constante} en donde se esquematiza la variación del volumen
 con respecto al ciclo.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.7\textwidth]{perspectiva_mrcvc.png}
-    \caption{MRCVC\parencite{mrcvc_geom}}\label{fig:mrcvc}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-            xlabel=Angulo $(deg)$,
-            ylabel=Volumen $(mm^3)$,
-            grid=major,
-            mark size=0pt,
-        ]
-
-        \addplot table [x=Angle,y=Volume] {data/vol.dat};
-        \end{axis}
-    \end{tikzpicture}
-    \caption{Variación del volumen del MRCVC de 3 paletas}\label{fig:vol_constante}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=\textwidth]{gnuplot/vol.pdf}
+%     \caption{Variación del volumen del MRCVC de 3 paletas}\label{fig:vol_constante}
+% \end{figure}
 
 \begin{table}
     \centering

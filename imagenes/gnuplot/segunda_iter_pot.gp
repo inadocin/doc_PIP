@@ -1,8 +1,6 @@
 ifile = ARG1
 ofile = ARG2
 
-print ARG2
-
 set terminal tikz standalone color size 13cm,8cm
 set termoption dash
 set output ofile

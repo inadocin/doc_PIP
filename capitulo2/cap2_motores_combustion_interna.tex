@@ -84,17 +84,22 @@ un barrido de los gases quemados.
 %
 \end{description}
 
-\begin{figure} \centering \includegraphics[width=0.7\textwidth]{4stroke.jpg}
+\begin{figure}
+  \centering
+  \begin{subfigure}{0.6\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{4stroke.jpg}
     \caption{Ciclo de cuatro tiempos}\label{fig:4tiempos} %
-https://www.istockphoto.com/es/vector/motor-di%C3%A9sel-de-cuatro-tiempos-gm586705100-100702521
+  \end{subfigure}%
+  \begin{subfigure}{0.4\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{pms_pmi.jpg}
+    \caption{PMS y PMI}\label{fig:pms_pmi}
+  \end{subfigure}
+  \caption{Ciclo de cuatro tiempos}
 \end{figure}
 
-
-\begin{figure} \centering \includegraphics[width=0.4\textwidth]{pms_pmi.jpg}
-    \caption{PMS y PMI}\label{fig:pms_pmi} %
-https://www.istockphoto.com/es/vector/motor-di%C3%A9sel-de-cuatro-tiempos-gm586705100-100702521
-\end{figure}
-
+% https://www.istockphoto.com/es/vector/motor-di%C3%A9sel-de-cuatro-tiempos-gm586705100-100702521
 
 \subsection{Motores rotativos}
 %
@@ -620,21 +625,24 @@ combustible.
 En un motor de encendido por compresión, la mezcla combustible se forma en la
 cámara de combustión, luego de la inyección directa del combustible.
 
-\begin{figure} \centering
-    \begin{subfigure}{0.4\textwidth} \centering
-\includegraphics[width=\textwidth]{combustion_vol_cte.jpg}
-        \caption{Combustión a Volumen Constante}
-    \end{subfigure} \hfill
-    \begin{subfigure}{0.4\textwidth} \centering
-\includegraphics[width=\textwidth]{combustion_presion_cte.jpg}
-        \caption{Combustión a Presión Constante}
-    \end{subfigure} \hfill
-    \begin{subfigure}{0.4\textwidth} \centering
-\includegraphics[width=\textwidth]{combustion_presion_limitada.jpg}
-        \caption{Combustión a Presión Limitada}
-    \end{subfigure}
-    \caption{Diagramas P-V para ciclos
-ideales\parencite{heywood}}\label{fig:ciclos_ideales}
+\begin{figure}
+  \centering
+  \begin{subfigure}{0.33\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{combustion_vol_cte.jpg}
+    \caption{Combustión a Volumen Constante}
+  \end{subfigure}%
+  \begin{subfigure}{0.33\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{combustion_presion_cte.jpg}
+    \caption{Combustión a Presión Constante}
+  \end{subfigure}%
+  \begin{subfigure}{0.4\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{combustion_presion_limitada.jpg}
+    \caption{Combustión a Presión Limitada}
+  \end{subfigure}
+  \caption{Diagramas P-V para ciclos ideales\parencite{heywood}}\label{fig:ciclos_ideales}
 \end{figure}
 
 El MRCVC es un motor de combustión interna encendido por chispa en el que,

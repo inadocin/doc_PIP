@@ -234,22 +234,16 @@ combustión como del puerto que se esté analizando, para la posición de alzada
 RPM requeridas.
 %
 Con estos valores se calculan las propiedades termodinámcicas del gas con las
-siguientes relaciones para cada cámara analizada, los valores leídos son los
-indicados en la tabla~\ref{tab:estado_gas_icesym}.
+siguientes relaciones para cada cámara analizada, los valores leídos son:
 
-\begin{table}
-  \centering
-  \begin{tabular}{ll}\toprule
-    Parámetro & Descripción \\ \midrule
-    $\rho_{c,i}$ & Es la densidad del gas en la cámara de combustión $i$\\
-    $P_{c,i}$ & Es la presión del gas en la cámara de combustión $i$ \\
-    $T_{c,i}$ & Es la temepratura del gas en la cámara de combustión $i$ \\
-    $\rho_{p,i}$ & Es la densidad del puerto $i$ \\
-    $v_{p,i}$ & Es la velocidad del gas en el puerto $i$ \\
-    $P_{p,i}$ & Es la presión del gas en el puerto $i$ \\ \bottomrule
-    \end{tabular}
-    \caption{Estado del gas leído de ICESym}\label{tab:estado_gas_icesym}
-\end{table}
+\begin{itemize}
+    \item $\rho_{c,i}$, Es la densidad del gas en la cámara de combustión $i$.
+    \item $P_{c,i}$, Es la presión del gas en la cámara de combustión $i$.
+    \item $T_{c,i}$, Es la temepratura del gas en la cámara de combustión $i$.
+    \item $\rho_{p,i}$, Es la densidad del puerto $i$.
+    \item $v_{p,i}$, Es la velocidad del gas en el puerto $i$.
+    \item $P_{p,i}$, Es la presión del gas en el puerto $i$.
+\end{itemize}
 
 A partir de esta información también se calculan los valores medios, en caso de
 haber solape de cámaras para el caso analizado, se utiliza el valor medio para
@@ -257,24 +251,18 @@ calcular los valores iniciales del caso.
 
 Con estos valores iniciales se pueden calcular o estimar las propiedades
 termodinámicas de la mezcla de gases frescos o quemados, dependiendo si se está
-evaluando un puerto de admisión o escape, ver tabla~\ref{tab:ci_calculados}.
+evaluando un puerto de admisión o escape:
 %
-
-\begin{table}
-  \centering
-  \begin{tabular}{ll}\toprule
-    Parámetro & Descripción \\ \midrule
-    $M_{M}$ & Masa molar, ec.\ref{eq:mw} \\
-    $C_{p}$ & Calor específico a presión constante \\
-    $\gamma$ & Relación $C_{p}/C_{v}$ del gas \\
-    $\mu$ & Viscosidad dinámica, ec.\ref{eq:mu} \\
-    $\nu$ & Viscosidad cinemática \\
-    $P_{R}$ & Número de Prandtl, ec\ref{eq:pr}\\
-    $k_{est}$ & Energía cinética turbulenta, ec.\ref{eq:kappa_est} \\ \bottomrule
-    $\epsilon_{est}$ & Disipación de la energía cinética turbulenta, ec.\ref{eq:epsilon_est}\\
-    \end{tabular}
-    \caption{Parámetros calculados para CI}\label{tab:ci_calculados}
-\end{table}
+\begin{itemize}
+    \item $M_{M}$, Masa molar, ec.\ref{eq:mw}
+    \item $C_{p}$, Calor específico a presión constante.
+    \item $\gamma$, Relación $C_{p}/C_{v}$ del gas
+    \item $\mu$, Viscosidad dinámica, ec.\ref{eq:mu}
+    \item $\nu$, Viscosidad cinemática
+    \item $P_{R}$, Número de Prandtl, ec\ref{eq:pr}
+    \item $k_{est}$, Energía cinética turbulenta, ec.\ref{eq:kappa_est}
+    \item $\epsilon_{est}$, Disipación de la energía cinética turbulenta, ec.\ref{eq:epsilon_est}
+\end{itemize}
 
 Para simplificar el análisis no se tuvo en cuenta la fracción de gases
 residuales, el gas ``flujado'' es siempre aire limpio o el gas quemado de una
@@ -290,14 +278,16 @@ secciones anteriores, ver sección~\ref{subsec:prop_mezcla}.
 La malla se construyó a partir del modelo de CAD generado con los resultados
 obtenidos de las simulaciones del motor.
 
-La implementación de las diferentes herramientas requeridas para generar una malla apta para realizar las flujometrías se describe en el apartado~\ref{sec:cap3_of_malla}
+La implementación de las diferentes herramientas requeridas para generar una
+malla apta para realizar las flujometrías se describe en el
+apartado~\ref{sec:cap3_of_malla}
 
-La malla utilizada y las características de la construcción de la misma se
-describen en la sección TODO,
+% La malla utilizada y las características de la construcción de la misma se
+% describen en la sección TODO,
 
-el grado de refinamiento de la misma se determinó
-luego de realizar una serie de flujometrías con tamaños decrecientes de celda y
-viendo la variabilidad de los resultados.
+El grado de refinamiento de la misma se determinó luego de realizar una serie de
+flujometrías con tamaños decrecientes de celda y viendo la variabilidad de los
+resultados.
 %
 El objetivo de las flujometrías es obtener el flujo másico $\dot{m}$ del puerto
 para un estado del gas dado, se redujo el tamaño inicial de celda hasta que el
@@ -331,8 +321,15 @@ El caudal másico para la condición de no bloqueado se calcula con la
 ecuación~\ref{eq:m_no_bloqueo} y la ecuación~\ref{eq:m_bloqueo} en caso de que
 el flujo esté bloqueado.
 %
-Los parámetros involucrados en estas ecuaciones se describen en la
-tabla~\ref{tab:parametros_cd}.
+Los parámetros involucrados en estas ecuaciones son:
+\begin{itemize}
+    \item $p_0$, es la presión de estancamiento antes de la restricción.
+    \item $T_0$, es la temperatura de estancamiento antes de la restricción.
+    \item $p_T$, es la presión estática justo después de la restricción.
+    \item $A_R$, es el área de referencia.
+    \item $\dot{m}$, es el caudal másico.
+    \item $\gamma$, es el cociente de capacidades térmicas del gas.
+\end{itemize}
 
 \begin{equation}\label{eq:condicion_bloqueo}
   \frac{p_{T}}{p_{0}} \le {\left(\frac{2}{\gamma+1}\right)}^{\frac{\gamma}{\gamma - 1}}
@@ -350,24 +347,6 @@ tabla~\ref{tab:parametros_cd}.
             \gamma^{1/2}
             {\left( \frac{2\gamma}{\gamma+1} \right)}^{(\gamma+1)/(2(\gamma-1))}
 \end{equation}
-
-
-\begin{table}
-  \centering
-  \begin{tabular}{ll}\toprule
-    Parámetro & Descripción \\ \midrule
-    $p_0$ & es la presión de estancamiento antes de la restricción \\
-    $T_0$ & es la temperatura de estancamiento antes de la restricción \\
-    $p_T$ & es la presión estática justo después de la restricción \\
-    $A_R$ & es el área de referencia \\
-    $\dot{m}$ & es el caudal másico \\
-    $\gamma$ & es el cociente de capacidades térmicas del gas \\ \bottomrule
-  \end{tabular}
-  \caption{Parámetros de
-ecuaciones~\ref{eq:condicion_bloqueo},~\ref{eq:m_bloqueo},
-y~\ref{eq:m_no_bloqueo}}\label{tab:parametros_cd}
-\end{table}
-
 
 Un parámetro importante en las ecuaciones anteriores es el área de referencia
 $A_{R}$ porque define el área utilizada para calcular el caudal másico que

@@ -61,9 +61,27 @@ El esquema de trabajo para realizar las simulaciones consistió en:
 \subsection{Configuración}
 %
 Para configurar una simulación de OpenFOAM se configura el directorio de
-simiulación como se indica en la figura XXX y XXX, cada directorio contiene una
-carpeta con condiciones iniciales ``0'', malla ``constant'' y configuraciones
-particulares de cada solver ``system''.
+simiulación como se indica en la figura~\ref{fig:direc_pf}
+y~\ref{fig:direc_rpf}, cada directorio contiene una carpeta con condiciones
+iniciales ``0'', malla ``constant'', configuraciones particulares de cada solver
+``system'' y una caperta con los resultados del post-preprocesado realizado
+durante cada paso de simulación o al final del proceso.
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \includegraphics{flujometrias/direct_pimplefoam.pdf}
+    \caption{\emph{pimpleFoam}\label{fig:direc_pf} }
+  \end{subfigure}%
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \includegraphics{flujometrias/direct_rhopimplefoam.pdf}
+    \caption{\emph{rhoPimpleFoam}\label{fig:direc_rpf} }
+  \end{subfigure}
+  \caption{Esquema de directorios OpenFOAM}
+\end{figure}
+
 
 En el directorio ``0'' se dejan las condiciones iniciales y de borde de cada
 simulación, utilizando una configuración genérica con parámetros definidos en un
@@ -227,7 +245,7 @@ parámetros básicos de configuración para las dos mallas.
     \label{tab:salome_fina_gruesa}
 \end{table}
 
-\subsubsection{Malla}
+\subsubsection{Malla}\ref{sec:cap3_of_malla}
 %
 Una vez obtenido el archivo STL se procede a la generación de la malla dentro de
 OpenFOAM con \emph{blockMesh} y \emph{snappyHexMesh}.

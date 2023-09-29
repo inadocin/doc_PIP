@@ -251,15 +251,22 @@ La mutación juega un rol secundario pero importante, una pequeña probabilidad
 de que alguno de los genes se modifique en un valor aleatorio contribuye a que
 el algoritmo genético no se estanque en soluciones máximos o mínimos locales.
 
-Algunos de los métodos de mutación utilizados son: 1) FLIP BIT, 2) INTERCAMBIO,
-3) INVERSION, 4) REORDENADO ALEATORIO.
+Algunos de los métodos de mutación utilizados son:
+
+\begin{enumerate}
+  \item FLIP BIT
+  \item INTERCAMBIO,
+  \item INVERSION
+  \item REORDENADO ALEATORIO
+\end{enumerate}
 
 % FLIP BIT se utiliza para números binarios y el método consiste en intercambiar
 % ceros y unos con una probabilidad al azar en ubicaciones al azar, por ejemplo
 % $10101 \rightarrow 11101$.
 
-para este método se cambian al azar el orden de los números que hacen al
-individuo, modificando la lista, por ejemplo: $12345 \rightarrow 12543$.
+En este trabajo se utiliza el método de reordenado aleatorio en el cual se
+modfiica al azar el orden de los números que hacen al individuo, modificando la
+lista que lo define, por ejemplo: $12345 \rightarrow 12543$.
 
 \subsection{Función objetivo}\label{sec:funcion_objetivo}
 %
@@ -276,7 +283,7 @@ la figura~\ref{fig:curva_aserrada}.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\textwidth]{genetico/curvas_aserradas.png}
+  \includegraphics[width=0.7\textwidth]{gnuplot/rendimiento_aserrado.pdf}
   \caption{Curvas de rendimiento volumétrico aserradas}\label{fig:curva_aserrada}
 \end{figure}
 
