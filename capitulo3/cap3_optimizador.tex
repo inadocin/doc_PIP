@@ -22,7 +22,7 @@ Además, el punto de partida de la optimización es una población generada al
 azar, de modo que se tiene un muestreo aleatorio del dominio que se está
 evaluando.
 %
-Esto hace que el método sea poco susceptible a caer en un óptimo local.
+Esto hace que el método sea poco susceptible a óptimos locales.
 
 Se puede decir que un algoritmo genético es un método de búsqueda aleatoria
 guiada.
@@ -33,15 +33,15 @@ guiada.
   \item Los AG pueden operar sobre una representación de las variables estudiadas y
 no necesariamente sobre las variables de estudio.
   \item Cada iteración utiliza un conjunto de datos con cierto grado de
-aleatoreidad..
+aleatoreidad.
   \item Utilizan una función objetivo para evaluar cada punto sin necesidad de
 conocer la derivada de la función que se está evaluando.
-  \item Los AG usan reglas probabilísticas, no deterministas.
+  \item Los AG usan reglas probabilísticas de decisión.
 \end{enumerate}
 
 Otros métodos de optimización se mueven de un punto al siguiente en el espacio
-solución, basándose en alguna regla de decisión lo que puede dar como resultado
-un máximo (o mínimo) local.
+solución basándose en regla de decisión definida por el usuario, esto puede dar
+como resultado un máximo (o mínimo) local.
 
 % \subsection{Componentes básicos de un AG}
 %
@@ -66,13 +66,16 @@ individuos para obtener uno nuevo, esto se asemeja a la reproducción.
 Finalmente la MUTACIÓN es la encargada de modificar aleatoriamente uno o más
 parámetros de cada nuevo individuo.
 %
-Este operador juega un rol secundario pero muy importante, es secundario porque
-se pueden alcanzar soluciones satisfactorias sin incluir este mecanismo sin
-embargo, se utiliza con probabilidades pequeñas para evitar la pérdida temprana
-de información relevante.
-%
-Si la probabilidad de mutación es muy alta, el AG se convierte en un algoritmo
-de búsqueda aleatoria.
+Este operador juega un rol secundario pero muy importante en la simulación:
+\begin{enumerate}
+  \item Secundario porque se pueden alcanzar soluciones satisfactorias sin incluir este
+        mecanismo
+  \item Importante porque utilizado con probabilidades pequeñas de ocurrencia
+permite evitar la pérdida temprana de información relevante.
+        %
+        Si la probabilidad de mutación es muy alta, el AG se convierte en un
+algoritmo de búsqueda aleatoria.
+\end{enumerate}
 
 
 \begin{algorithm} \caption{Algoritmo de optimización}\label{algo:genetico}
@@ -80,7 +83,7 @@ de búsqueda aleatoria.
   Inicializar población.\;
   \While{No se cumpla condición de parada}{
     SELECCIÓN se crean y seleccionan los individuos más aptos.\;
-    CRUZA los candidatos seleccionados (creación de la anueva población)\;
+    CRUZA los candidatos seleccionados (creación de la nueva población)\;
     MUTACIÓN algunos individuos de la nueva población\;
     generación = generación + 1\;
     \If{Verifica condición de parada}{
@@ -93,9 +96,9 @@ de búsqueda aleatoria.
 %
 % \subsection{Implementación}
 %
-Gran parte de este trabajo fue utilizar a ICESym como parte de la función
-objetivo aprovechando la cualidad de ``caja negra'' que se le puede dar al
-simulador.
+Gran parte de este trabajo consistió en implementar y utilizar a ICESym como
+parte de la función objetivo, aprovechando la cualidad de ``caja negra'' que se
+le puede dar al simulador.
 %
 Para lograr esto se modificó parte del código de ICESym con el objetivo de
 facilitar la configuración, ejecución y lectura de los resultados que arroja el
@@ -149,28 +152,30 @@ Esto facilita la implementación de los operadores de selección, cruza y
 mutación, pudiendo aprovechar implementaciones de operadores existentes en
 librerías como DEAP.
 %
-Estos 8 números binarios luego se convierten una lista de enteros que mediante
-un cambio de escala $f(x)$, en la que se ingresa con un entero entre 0 y
-$2^{n}-1$, siendo $n$ la cantidad de dígitos del binario (en este caso 5).
+Estos 8 números binarios luego se convierten una lista de enteros mediante un
+una transformación lineal $f(x)=a\cdot x+b$, en la que se ingresa con un entero
+entre 0 y $2^{n}-1$ para ir del número binario a un decimal, siendo $n$ la
+cantidad de dígitos del binario (en este caso 5).
 %
 Los coeficientes $a$ y $b$ son tal que $f(0)=x_{0}$ y $f(2^{n}-1) = x_{1}$,
 donde $x_{0}$ y $x_{1}$ son los extremos del rango para el que se quiere aplicar
 la transformación.
 %
-Los coeficientes $a$ y $b$ son particulares a cada parámetro, porque se
+Estos coeficientes ($a$ y $b$) son particulares a cada parámetro, porque se
 determinan de acuerdo a los valores que puede tomar cada uno.
 
-De este modo se obtienen el valor de cada uno de los parámetros que hacen a la
-configuración particular de cada motor en ICESym, ver figura~\ref{fig:pop_bit}.
+De este modo se obtiene el valor de cada uno de los parámetros que hacen a la
+configuración particular de cada motor en ICESym.
 %
 El orden de los mismos se mantiene constante, por lo que cada sección del número
-representa una característica en particular del motor.
+representa una característica en particular del motor, como se muestra en la
+figura~\ref{fig:pop_bit}.
 %
 
 \begin{figure}[ht]
   \centering
   \includegraphics[]{genetico/representacion_bits.png}
-  \caption{Individuo como binario}\label{fig:pop_bit}
+  \caption{Representación del individuo}\label{fig:pop_bit}
 \end{figure}
 
 
@@ -180,9 +185,9 @@ Para crear la nueva población se debe elegir a los nuevos candidatos basándose
 en los puntajes de la población actual, hay varios métodos diferentes de
 selección, como son de ruleta, aleatoria, por puntaje y de tipo torneo.
 %
-El método seleccionado es el torneo, el cual consiste en comparar los puntajes
-de $n$ individuos seleccionados al azar y el que tenga el mejor puntaje es el
-seleccioando o ganador.
+Para este trabajo se seleccionó el método de torneo, que consiste en comparar
+los puntajes de $n$ individuos seleccionados al azar y el que tenga el mejor
+puntaje es el seleccioando o ganador.
 %
 La cantidad de individuos comparados $n$ es el tamaño de muestreo o de torneo,
 cuanto más grande sea este número más posibilidades tiene de ganar los
@@ -195,21 +200,21 @@ generación de candidatos.
 %
 El operador de cruza se encarga de combinar los genes de dos individuos para
 producir un individuo nuevo, la función es la de intercambiar los parámetros que
-hacen a uno y otro para dar lugar a una nueva posible solución
+hacen a uno y otro para dar lugar a una nueva posible solución.
 %
 Para individuos representados por un vector se suelen usar operadores de tipo
-curza de uno o mùltiples puntos como tambièn cruza uniforme.
+cruza de uno o múltiples puntos como también cruza uniforme.
 %
 El método seleccionado es \emph{cruza de dos puntos}, en este método
 se corta el vector que forma al individuo en dos puntos, la posición de estos
 puntos se selecciona al azar, manteniendo el largo original de los vectores.
 %
-Luego los individuos ``cruzados'' se combinan de forma complementaria, como en
+Luego los individuos ``cruzados'' se combinan de forma complementaria, como se muestra
 la figura~\ref{fig:cr2puntos}, en el algoritmo~\ref{algo:cr2puntos} se esquematiza
 el proceso.
 % TODO: pongo pseudocódigo? o dejo el còdigo
 
-\begin{figure}
+\begin{figure}[ht!]
   \centering
   \includegraphics[width=0.5\textwidth]{cruza2puntos.png}
   \caption{Cruza de dos puntos}\label{fig:cr2puntos}
@@ -265,8 +270,9 @@ Algunos de los métodos de mutación utilizados son:
 % $10101 \rightarrow 11101$.
 
 En este trabajo se utiliza el método de reordenado aleatorio en el cual se
-modfiica al azar el orden de los números que hacen al individuo, modificando la
-lista que lo define, por ejemplo: $12345 \rightarrow 12543$.
+modfiica al azar el orden de los números que hacen al individuo, modificando los
+índices de la lista que define el arreglo, por ejemplo:
+$12345 \rightarrow 12543$.
 
 \subsection{Función objetivo}\label{sec:funcion_objetivo}
 %
@@ -297,9 +303,7 @@ y mayores velocidades de giro de los motores rotativos.
 %
 La aptitud resulta de la suma del rendimiento volumétrico y el inverso de la
 fracción de gases residuales, esto provó ser la función objetivo que mejores
-resultados dió.
-%
-La metodología utilizada se resume a continuación.
+resultados dió, la metodología utilizada se resume a continuación.
 
 \begin{enumerate}
         \item Se evalúa cada motor, calculando el rendimiento volumétrico
@@ -313,9 +317,11 @@ $S = (S_{1},\ldots,S_{n})$ para cada velocidad evaluada, con esta lista se
         calcula el puntaje del motor como:
         \begin{equation}
         f = \sum_{i=1}^{n}{S_{i}} + S_{k}^{2}
-        \end{equation} $S_{k}$ es el puntaje para la $k$ velociidad de giro
-(6000 RPM en este caso) y se eleva al cuadrado para favorecer altos rendimientos
-en esta velocidad.
+      \end{equation}
+
+El valor $S_{k}$ es el puntaje para la $k-ésima$ velocidad de giro (6000 RPM en
+este caso) y se eleva al cuadrado para favorecer altos rendimientos en esta
+velocidad.
 \end{enumerate}
 
 
@@ -326,30 +332,30 @@ En caso de que alguna de las soluciones tenga un puntaje relativamente alto,
 existe la posibilidad de una dominancia temprana de la población, provocando
 una convergencia temprana de la optimización.
 %
-Estos motores tienen una mayor probabilidad de ``pasar'' sus características
+Estos candidatos tienen una mayor probabilidad de ``pasar'' sus características
 geométricas a las iteraciones siguientes y es algo especialmente problemático en
-optimizaciones poblaciones de alrededor de 100 individuos.
-%
-Para reducir la posibilidad de una convergencia temprana se utiliza un método de
-escalado de puntajes, que consiste en una transfomración lineal.
-%
-Definiendo el puntaje bruto de un individuo como $f$ y el puntaje escalado es
-$f'$, la relación entre ambos es $f' = a\cdot f + b$.
+optimizaciones con poblaciones de alrededor de 100 individuos.
 
+Para reducir la posibilidad de una convergencia temprana se utiliza un método de
+escalado de puntajes, que consiste en una transfomración lineal en la que se
+define el puntaje bruto de un individuo como $f$ y el puntaje escalado como
+$f'$, la relación entre ambos es $f' = a\cdot f + b$.
+%
 Los coeficientes $a$ y $b$ se determinan de modo que $f'_{media}=f_{media}$, de
 este modo un motor con puntaje promedio tiene la misma influencia sobre la
 población ya sea con la aptitud original o escalada.
 %
-Para controlar la influencia de  del mejor individuo de una generación sobre la
+Para controlar la influencia del mejor individuo de una generación sobre la
 próxima, los puntajes se transforman de tal modo que
 $f'_{max}=C_{mult}f_{media}$.
 %
 El valor de $C_{mult}$ es la cantidad de copias que se espera obtener del mejor
 de los candidatos en la generación siguiente y se usa en 1.2 a 2 para
-poblaciones de entre 50 y 100 individuos.
+poblaciones de entre 50 y 100 individuos~\parencite{goldberg}.
 
-Hacia el final de una corrida de optimización $C_{mult}$ agranda las diferencias
-entre puntajes de individuos.
+Hacia el final donde la diferencia entre puntajes de los individuos de la
+población tiende a achicarse, el parámetro $C_{mult}$ cumple la función de
+acrecentar las diferencias individuos.
 
 En caso de existir individuos con puntaje muy bajo o nulo se hace un
 pre-escalado del puntaje que fija el mínimo en $f'_{min}=0$, el procedimiento se
@@ -393,7 +399,7 @@ $f\in[1.2, 2]$\;\\ }
 \begin{algorithm}\caption{Escalado de población}\label{algo:pop_scale}
   \KwIn{\\
     $f$, es la aptitud.\\
-    $a, b$, son los parámetros de la función de pre-escala. \\
+    $a, b$, son los parámetros de la función de pre-escalado. \\
   }
   \KwOut{\\
   $f^{*}$, los puntajes escalados.}

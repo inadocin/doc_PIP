@@ -1,5 +1,5 @@
-ifile = ARG1
-ofile = ARG2
+ifile = "vol.dat"
+ofile = "vol.pdf"
 
 set terminal tikz standalone color size 13cm,8cm
 set termoption dash

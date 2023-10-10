@@ -34,13 +34,13 @@ sellos~\parencite{roldan}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-La motivación de este trabajo surge del deseo de continuar con el
-desarrollo del MRCVC, en particular mejorar el pre-diseño de los sistemas de
-intercambio de gases, sentando la base para una futura optimización de los
-mismos en un motor con requisitos de diseño concretos.
+La motivación de este trabajo surge del deseo de continuar con el desarrollo del
+MRCVC y mejorar el pre-diseño de los sistemas de intercambio de gases, sentando
+la base para una futura optimización de los mismos en un motor con requisitos de
+diseño concretos.
 
 
-Se busco obtener un pre-diseño satisfactorio del sistema, en particular de la
+Se busco obtener un pre-diseño satisfactorio del sistema haciendo énfasis en la
 geometría de los puertos de admisión y escape, definiendo las métricas a
 utilizar para medir la eficiencia del sistema y poder realizar comparaciones
 cuantitativas de los diseños propuestos.
@@ -51,11 +51,10 @@ cuantitativas de los diseños propuestos.
 %
 Debido al costo computacional de las simulaciones necesarias para realizar esta
 optimización se restringe el modelado de la geometría a definir posiciones
-angulares, largos y diámetros.
+angulares, largos y diámetros de los puertos.
 %
 No se repara en detalles como la forma de la transición entre las paredes del
-puerto hacia la cámara de combustión, el ángulo del puerto respecto al estator y
-detalles similares.
+puerto hacia la cámara de combustión, el ángulo al estator y detalles similares.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 La optimización se realizó utilizando en conjunto una serie de herramientas de
@@ -92,75 +91,30 @@ los candidatos generados por el algoritmo.
 El diseño preliminar de la primer ronda de optimización se volcó en un modelo
 3D de los puertos, parametrizado de modo tal que se puede alterar rápidamente
 la geometría, modificando variables como el diámetro de los conductos y la
-posición relativa en el motor.
+posición relativa en la periferia del motor.
 %
-Este modelo de 3D se utilizó para extraer la geometría a simular con OpenFOAM,
-para realizar las flujometrías que devuelvan el flujo másico ($\dot{m}$) en
-estado estacionario de un punto operativo del motor, es decir, para una
+Este modelo 3D se utilizó para extraer la geometría a simular con OpenFOAM y
+realizar flujometrías de las que se obtiene un valor flujo másico ($\dot{m}$) en
+estado estacionario para un punto operativo del motor, es decir, para una
 combinación de diferencia de presión puerto-cámara y grado de apertura del
 puerto.
 %
-El flujo másico se utilizó para medir la eficiencia con la cual escurre el gas
-a través del puerto, por medio del \emph{coeficiente de descarga} o $C_D$.
-
-El objeto de estas flujometrías es crear un mapa del $C_D$ en función de las
+El flujo másico se utilizó para medir la eficiencia con la cual escurre el gas a
+través del puerto, por medio del \emph{coeficiente de descarga} o $C_D$ con el
+objetivo de crear un mapa del coeficiente de descarga que sea función de las
 variables mencionadas: apertura de puerto y diferencia de presión.
 %
-El mapa se utilizará como retroalimentación del simulador de motores ICESym,
+Este mapa se utilizará como retroalimentación del simulador de motores ICESym,
 para tener un mejor modelado del flujo de gas a través de los puertos en un
 rango operativo del motor y con esto realizar una nueva corrida de optimización
 para refinar el diseño obtenido en la primer iteración.
-
-%
-% Es decir, no se realizarán simulaciones detalladas con la misma geometría
-% global. alterando detalles particulares como los mencionados anteriormente.
-% ,sino que se recurre a \emph{reglas del buen arte} y a geometrías existentes
-% de motores similares.
-
-
-
-% \section{El Motor Rotativo de Combustión a Volumen Constante}
-%
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% \subsection{Estrategias de simulación de motores}
-% %
-% El ciclo operativo del MRCVC se simulará con ICESym, un simulador de motores de
-% combustión interna que utiliza modelos 0D para la combustión y 1D para el flujo
-% de gases a través de los conductos (fuera de la cámara de combustión).
-% %
-% Permite evaluar la \emph{performance} de un motor a un costo computacional bajo
-% además, la manera en que se implementó la entrada y salida de datos permite
-% utilizar el simulador como una \emph{caja negra} de modo que se pudo
-% implementar en un \emph{script} como una función a la que se le otorga un
-% conjunto de parámetros de entrada y devuelve los resultados de la simulación en
-% un formato que permite la lectura y evaluación de los mismos.
-% %
-% Gracias a esta característica se pudo acoplar ICESym con un algoritmo genético
-% para realizar la optimización de la geometría.
-%
-%
-% Como se mencionó en el apartado~\ref{sec:indicadores_rendimiento}, en trabajos
-% previos se realizó un pre diseño de los puertos de admisión y escape en el que
-% se determinó coeficientes aproximados para simular el flujo en los puertos de
-% admisión y escape.
-% %
-% Con el objetivo de modelar con mayor precisión el flujo a través de los puertos
-% se realizó una modificación al código de ICESym que permite utilizar un mapa de
-% $C_D$ como variable de entrada para modelar el flujo por los puertos en función
-% de la apertura del puerto y la diferencia de presión instantánea como, $C_D =
-% f(lv, \Delta P)$.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Primer capitulo
 La organización de este trabajo es como sigue, en el presente capítulo se dio
 una introducción al trabajo, motivación y objetivos del mismo.
 
 % Segundo capitulo
-En el segundo capitulo se da una breve descripción del funcionamiento de los
+En el segundo capítulo se da una breve descripción del funcionamiento de los
 motores de combustión interna, seguido de los indicadores utilizados para medir
 el rendimiento de motores en general e indicadores particulares de la
 eficiencia de los sistemas de intercambio de gases, como el rendimiento
@@ -173,9 +127,9 @@ aplicaciones.
 También se describe el proceso de intercambio de gases y se define el
 coeficiente de descarga $C_D$ y las ecuaciones asociadas.
 
-Finalmente se presentan las flujometrías a realizar, modelos de turbulencia
-utilizados y las condiciones iniciales y de contorno utilizadas en las
-simulaciones.
+Para finalizar el capítulo se presentan las flujometrías a realizar, modelos de
+turbulencia utilizados y las condiciones iniciales y de contorno utilizadas en
+las simulaciones.
 %
 
 En el tercer capítulo se describe la parte computacional del trabajo, se

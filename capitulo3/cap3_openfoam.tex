@@ -10,21 +10,20 @@ abierto escrito en ``C++''.
 Junto con este programa se utilizaron otras herramientas libres para generar la
 geometría a modelar y post-procesar los resultados..
 %
-\subsection{Metodología}
-%
 El esquema de trabajo para realizar las simulaciones consistió en:
 
 \begin{enumerate}
         %
     \item Pre-procesado
       %
+
         \begin{enumerate}
                 %
             \item Definir la geometría a analizar.
               %
-            \item Generar una malla con un tamaño de elemento adecuado, la
-                solución a problemas de CFD depende fuertemente de la cantidad
-                y tamaño de celdas utilizadas.
+            \item Generar una malla con un tamaño de elemento adecuado (la
+solución a problemas de CFD depende fuertemente de la cantidad y tamaño de
+celdas utilizadas).
               %
             \item Seleccionar los modelos adecuados.
               %
@@ -58,72 +57,35 @@ El esquema de trabajo para realizar las simulaciones consistió en:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Configuración}
+\subsection{Pre-procesado}
 %
-Para configurar una simulación de OpenFOAM se configura el directorio de
-simiulación como se indica en la figura~\ref{fig:direc_pf}
-y~\ref{fig:direc_rpf}, cada directorio contiene una carpeta con condiciones
-iniciales ``0'', malla ``constant'', configuraciones particulares de cada solver
-``system'' y una caperta con los resultados del post-preprocesado realizado
-durante cada paso de simulación o al final del proceso.
-
-\begin{figure}[ht]
-  \centering
-  \begin{subfigure}[b]{0.4\textwidth}
-    \centering
-    \includegraphics{flujometrias/direct_pimplefoam.pdf}
-    \caption{\emph{pimpleFoam}\label{fig:direc_pf} }
-  \end{subfigure}%
-  \begin{subfigure}[b]{0.4\textwidth}
-    \centering
-    \includegraphics{flujometrias/direct_rhopimplefoam.pdf}
-    \caption{\emph{rhoPimpleFoam}\label{fig:direc_rpf} }
-  \end{subfigure}
-  \caption{Esquema de directorios OpenFOAM}
-\end{figure}
-
-
-En el directorio ``0'' se dejan las condiciones iniciales y de borde de cada
-simulación, utilizando una configuración genérica con parámetros definidos en un
-archivo con los valores de condiciones iniciales, aprovechando las
-características paramétricas de OpenFOAM, que permite corridas de una gran
-cantidad de simulaciones en serie.
-
-Estos archivos de condicinoes inciiales se generan con un \emph{script} que toma
-valores de las simulaciones de \emph{ICESym}, como se indicó en la
-sección~\ref{cap2:cond_iniciales}, en la que también se detallan las ecuaciones
-e hipótesis utilizadas para obtener dichos valores.
+El preprocesado consiste en definir geometría y condiciones iniciales de la
+simulación a partir de los datos obtenidos de las simulaciones con el
+optimizador e ICESym.
 %
-La ejecución de las simulaciones también se automatizan con scripts de
-\emph{bash} con los pasos para ejecutar las corridas con \emph{ICESym}.
+Con los resultados del simulador se grafica la diferencia de presión entre el
+puerto de admisión o escape y la cámara de combustión en función de la apertura
+del puerto, para un rango de velocidades de 1000 a 9000 RPM, con el fin de
+identificar las zonas en las condiciones operativas en las que evaluar el puerto.
 %
-Con los resultados de las simulaciones se procede a calcular/leer la magnitud
-del caudal másico, necesario para el cálculo del coeficiente de descarga.
+En la figura figura~\ref{fig:puntos_interes} se muestra una gráfica de
+$\Delta_{P}$ y alzada para los puertos de admisión y escape del motor resultante
+de la primer iteración (con un $C_{D}$ constante).
 
-\subsubsection{Pre procesado}
+Como es de esperarse se tienen mayores diferenciales de presión a menores
+aperturas del puerto porque se está próximo a los eventos de apertura o cierre
+del puerto.
 %
-El preprocesado consiste en definir geometría y condiciones iniciales, los datos
-de partida  se obtienen de las simulaciones con ICESym.
-%
-Con los resultados del simulador se grafica la diferencia de presión entre
-el puerto de admisión o escape y la cámara de combustión en función de
-la apertura del puerto para velocidades de 1000 RPM a 9000 RPM.
-%
-Un ejemplo de esto se puede ver en la figura~\ref{fig:puntos_interes}, como
-es de esperarse se tienen mayores diferenciales de presión a manores aperturas
-del puerto porque para estas alzadas se está en la apertura o cierre del mismo.
-
 A diferencia del puerto de admisión, en el puerto de escape se ve una banda
-bastante definida de operación que se hace más ``llena'' a medida que se abre el
-puerto.
+bastante definida de operación que se hace más ``llena'' a medida que aumenta el
+área del puerto expuesta a la cámara (alzada).
 %
 Durante la apertura del puerto se ven las mayores diferencias de presión en las
 que hay dos bandas bien definidas, se toman algunos puntos arriba en la zona con
 mayor $\Delta P$ y una cantidad menor para velocidades con $\Delta P = 0$.
 %
 A medida que el puerto se abre la diferencia de presión con el gas en la cámara
-de combustión se equaliza y esta banda se afina, requiriendo menos puntos para
-caracterizar el funcionamiento de los mismos.
+de combustión se equaliza y esta banda se afinaja.
 
 \begin{figure}
     \centering
@@ -140,7 +102,7 @@ El valor de alzada está directamente relacionado con el la posición angular de
 cigüeñal, por lo que una vez seleccionados los puntos de interés se puede
 extraer la geometría deseada de un modelo de CAD paramétrico del motor.
 %
-Este modelo tiene solamente la mitad que contiene los puertos de admisión y
+En este modelo se representó la mitad que contiene los puertos de admisión y
 escape, se obtuvo realizando operaciones geométricas con los volúmenes que
 representan diferentes componentes del motor como son el estator, rotor,
 paletas, etc.
@@ -161,8 +123,7 @@ Esta geometría fue generada por el programa FreeCAD~\parencite{freecad},
 exportada a un archivo
 ``.BREP''\footnote{\href{https://dev.opencascade.org/doc/overview/html/specification\_\_brep\_format.html}{Formato
 BREP, opencascade.org}} para luego ser importada en Salome\parencite{salome},
-%
-Salome se utiliza para generar una malla cerrada, hermética para que pueda ser
+que se utiliza para generar una malla cerrada, hermética, que puede ser
 procesada por los complementos de OpenFOAM utilizados para generar la malla de
 la simulación.
 %
@@ -171,18 +132,8 @@ la frontera entre superficies coincidan, como se ve en la
 figura~\ref{fig:salome_malla_hermetica}, en la que se ven dos superficies
 "walls" y "outlet" y los nodos compartidos entre ambas superficies.
 %
-% Esto es así porque SnappyHexMesh parte de una malla como la generada por
-% BlockMesh y la intersección de la misma con la superficie de un archivo".stl"
-% (entre otros formatos).
-%
-% Se debe indicar un punto dentro o fuera de esta superficie \emph{stl},
-% dependiendo del lado/cara por la que va a simularse el flujo, esto varía si un
-% flujo externo o interno a la geometría.
-%
-% En este trabajo todos los flujos son internos por lo que se define una caja que
-% encierra la totalidad del volumen de la malla \emph{stl} creada por Salome.
 
-\begin{figure}
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.5\textwidth]{./flujometrias/salome_malla_hermetica.png}
     \caption{Malla hermética}\label{fig:salome_malla_hermetica}
@@ -190,9 +141,10 @@ figura~\ref{fig:salome_malla_hermetica}, en la que se ven dos superficies
 
 El proceso en Salome consta de importar la geometría generada por FreeCAD y
 separar la misma en superficies utilizadas para definir condiciones de contorno
-en OpenFOAM, las superficies diferenciadas son: puerto, cámara/s, pared.
+en OpenFOAM, las superficies diferenciadas son: puerto, cámara/s y pared, ver
+figura~\ref{fig:openfoam_parches}.
 
-\begin{figure}
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\textwidth]{./flujometrias/openfoam_parches.png}
     \caption{Nombres de Nombres de Parches}\label{fig:openfoam_parches}
@@ -245,7 +197,58 @@ parámetros básicos de configuración para las dos mallas.
     \label{tab:salome_fina_gruesa}
 \end{table}
 
-\subsubsection{Malla}\ref{sec:cap3_of_malla}
+
+
+
+
+\subsubsection{Configuración}
+%
+Para configurar una simulación de OpenFOAM se organiza el directorio de
+simiulación como se indica en la figura~\ref{fig:direc_pf} para las flujometrías
+de aire considerado como incompresible  y~\ref{fig:direc_rpf} en los casos en
+los que se tiene en cuenta la compresibilidad del aire.
+%
+Cada directorio contiene una carpeta con condiciones iniciales ``0'', malla
+``constant'', configuraciones particulares de cada solver ``system'' y una
+caperta con los resultados del post-preprocesado el cual se puede realizar
+durante cada paso de simulación o al final del proceso dependiendo de la
+configuración que se haya utilziado.
+
+\begin{figure}[ht!]
+  \centering
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \includegraphics{flujometrias/direct_pimplefoam.pdf}
+    \caption{\emph{pimpleFoam}\label{fig:direc_pf} }
+  \end{subfigure}%
+  \begin{subfigure}[b]{0.4\textwidth}
+    \centering
+    \includegraphics{flujometrias/direct_rhopimplefoam.pdf}
+    \caption{\emph{rhoPimpleFoam}\label{fig:direc_rpf} }
+  \end{subfigure}
+  \caption{Esquema de directorios OpenFOAM}
+\end{figure}
+
+
+En el directorio ``0'' se dejan las condiciones iniciales y de borde de cada
+simulación, utilizando una configuración genérica con parámetros definidos en un
+archivo separado, esto se realiza así para aprovechar las características
+paramétricas de OpenFOAM, permitiendo ejecutar una gran cantidad de simulaciones
+en serie variando solamente los parámetros definidos en un archivo externo
+``inital\_conditions.cc''.
+
+Estos archivos de condiciones inciales se generan con un \emph{script} que toma
+valores de las simulaciones de \emph{ICESym}, como se indicó en la
+sección~\ref{cap2:cond_iniciales}, en la que también se detallan las ecuaciones
+e hipótesis utilizadas para obtener dichos valores.
+%
+La ejecución de las simulaciones también se automatizan con scripts de
+\emph{bash} con los pasos para ejecutar las corridas con \emph{ICESym}.
+%
+Con los resultados de las simulaciones se procede a calcular/leer la magnitud
+del caudal másico, necesario para el cálculo del coeficiente de descarga.
+
+\subsubsection{Malla}\label{sec:cap3_of_malla}
 %
 Una vez obtenido el archivo STL se procede a la generación de la malla dentro de
 OpenFOAM con \emph{blockMesh} y \emph{snappyHexMesh}.
@@ -288,20 +291,22 @@ modelando, ver figura~\ref{fig:openfoam_shm_pasos}.
 \end{figure}
 
 
-\emph{blockMesh} crea una malla paramétrica con bloques con opción de gradientes
-de tamaños y bordes curvados, los bordes pueden ser lineas rectas, arcos o
-``splines''.
+El complemento \emph{blockMesh} crea una malla paramétrica con bloques, con
+opciones para la creación de la malla con gradientes de tamaño de bloques y
+diferentes opciones para los bordes, estos se pueden construir por líneas
+rectas, arcos o ``splines''.
 %
 La malla se genera o configura con un diccionario \emph{blockMeshDict} ubicado
 en \emph{constant/polyMesh}.
 
-\emph{snappyHexMesh} es un generador de malla que toma una malla existente y la
-\emph{talla} en la malla deseada, generando una malla 3D conformada por
-hexaedors y hexaedros partidos a partir de superficies de caras triangulares en
-formato de \emph{estereolitografía} (STL por sus siglas en inglés).
+El complemento \emph{snappyHexMesh} es el segundo paso del mallado,  parte de
+una malla de bloques como la de openfoam y la \emph{talla} para acomodarse a la
+geometría dada, generando una malla 3D conformada por hexaedors y hexaedros
+partidos a partir de superficies de caras triangulares en formato de
+\emph{estereolitografía} (STL por sus siglas en inglés).
 %
-Además permite refinar zonas particulares de la geomeria y un refinamiento mayor
-de la malla en la zona de la capa límite.
+Además permite refinar zonas particulares de la geometría y crear una un
+refinamiento mayor en la zona de la capa límite.
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

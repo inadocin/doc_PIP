@@ -6,49 +6,41 @@ ciclo operativo del MRCVC.
 Los componentes principales del motor son: rotor, estator, paletas, bieletas,
 rueda paralelizadoras, eje de motor, conducto de admisión y conducto de escape;
 el motor analizado en este trabajo tiene 3 paletas con ápices agudos, que
-corresponden a la geometría ideal del motor (con ápices de paletas de radio
-nulo).
+corresponden a la geometría ideal del motor (ápices de paletas de radio nulo).
 %
 La forma de estos elementos se puede ver en la figura~\ref{fig:mrcvc} y en la
 tabla~\ref{tab:geom_mrcvc} se resume el valor de los parámetros geométricos que
 utilizados en este trabajo.
-
-% Para un motor de $n$ paletas de radio de punta nulo, la geometría como función
-% del ángulo del cigüeñal queda totalmente definida por el radio de trayectoria
-% de paletas $R$, semi ancho de paletas $r$ y altura de cámara $h$.
 
 Uno de los aspectos más importantes de este motor es la geometría de la cámara
 de combustión, su forma es tal que el volumen mínimo del ciclo permanece
 constante por un período angular considerable, determinado por la geometría del
 motor.
 %
-Este período es lo suficientemente grande para permitir que la combustión se
-realice casi en su totalidad a volumen constante.
+Este período es lo suficientemente grande para permitir que la combustión ocurra
+casi en su totalidad a volumen constante, como se observa en la
+figura~\ref{fig:mrcvc_vol_cte} y~\ref{fig:PV_mrcvc}.
 %
-
-La combustión a volumen constante brinda una mejora en el rendimiento energético
-del motor además, el balanceo de fuerzas que se obtiene por ser un motor
-rotativo permite operar el motor a altas RPM y así alcanzar mayores potencias
-que motores de tamaño o cilindrada similar.
+Este tipo de combustión brinda una mejora en el rendimiento energético del motor
+además, el balanceo de fuerzas que se obtiene por ser un motor rotativo permite
+operar el motor a altas RPM y así alcanzar mayores potencias en comparación a
+motores de tamaño o cilindrada similar.
 %
-Esta combinación de un rendimiento y potencia que, en principio pueden ser altos
-en comparación a motores cilindrada similar, hace atractivo el desarrollo de
-este motor.
+Esta combinación de rendimiento y potencia que, en principio pueden ser
+relativamente altos, hace atractivo el desarrollo de este motor.
 %
-En la figura \ref{fig:ciclo_pv_mrcvc} se presenta el diagrama $P-V$ de una
-simulación de ICESym del MRCVC.
 
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{gnuplot/vol.pdf}
-  \caption{Diagrama P-V del MRCVC}\label{fig:ciclo_pv_mrcvc}
+  \caption{Variación del volúmen del MRCVC}\label{fig:mrcvc_vol_cte}
 \end{figure}
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{gnuplot/vol_vs_pres.pdf}
-  \caption{Ciclo operativo del MRCVC}\label{fig:ciclo_mrcvc}
+  \caption{Ciclo operativo del MRCVC}\label{fig:PV_mrcvc}
 \end{figure}
 
 
@@ -58,32 +50,32 @@ trabajo rota con respecto al eje del cigüeñal.
 %
 En la figura~\ref{fig:ciclo_mrcvc} se puede ver una progresiva del ciclo del
 MRCVC con estas carreras representadas en azul para la admisión, compresión en
-amarillo, la expansión en rojo y escape o barrido en violeta.
+amarillo, expansión en rojo y escape o barrido en violeta.
 
 Durante el ciclo se destaca un aspecto particular de este motor, siguiendo la
 paleta de color negro se ve que durante el proceso de compresión y combustión,
 las paletas que forman la frontera aguas arriba y aguas abajo de la cámara de
 combustión cambian.
 %
-La paleta que delimitaba el frente de la cámara se retrasa con respecto a la
+La paleta que delimita el frente de la cámara se retrasa con respecto a la
 cámara con la que inició el ciclo, produciendo que este dure más de 1 revolución
-resultando en aproximadamente 600º.
+resultando en aproximadamente $600^{\circ}$ de giro del cigüeñal.
 
 Para un motor de $R=\lua{tex.print(myData.R)}$ mm y
 $r=\lua{tex.print(myData.r)}$ mm  el volumen mínimo alcanzado permanece
 constante por un período de $44.65^\circ$, como se puede ver en la
-figura~\ref{fig:vol_constante} en donde se esquematiza la variación del volumen
+figura~\ref{fig:mrcvc_vol_cte} en donde se esquematiza la variación del volumen
 con respecto al ciclo.
 
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=\textwidth]{gnuplot/vol.pdf}
-%     \caption{Variación del volumen del MRCVC de 3 paletas}\label{fig:vol_constante}
-% \end{figure}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{ciclo/ciclo_operativo.pdf}
+  \caption{Ciclo operativo del MRCVC}\label{fig:ciclo_mrcvc}
+\end{figure}
 
 \begin{table}
     \centering
-    \begin{tabular}{r|cccccccc} \toprule
+    \begin{tabular}{rcccccccc} \toprule
      Parámetro & n & R & r & $h_c$ & rc & V0 & $R_i$ & $R_e$ \\ \midrule
      Valor & \lua{tex.print(myData.n)} & \lua{tex.print(myData.R)} & \lua{tex.print(myData.r)} & \lua{tex.print(myData.hc)} & \lua{tex.print(myData.rc)} & \lua{tex.print(myData.V0)} & \lua{tex.print(trunc(myData.Ri))} & \lua{tex.print(trunc(myData.Re))} \\
      Unidades & --- & mm & mm & mm & --- & $cm^3$ & mm & mm \\ \bottomrule
@@ -91,150 +83,18 @@ con respecto al ciclo.
     \caption{Geometría del MRCVC}\label{tab:geom_mrcvc}
 \end{table}
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% \subsection{Geometría}
-% %
-% La geometría del MRCVC permite que gran parte de la combustión se de a volumen
-% constante\parencite{mrcvc_geom}, como se puede ver en la figura~\ref{fig:vol_constante},
-% en donde se esquematiza la variación del volumen con respecto al ciclo.
-%
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=0.7\textwidth]{comparacion_ciclos.png}
-%     \caption{Comparación de ciclos ideales (cambiar por una imagen propia)}\label{fig:comparacion_ciclos}
-% \end{figure}
-%
-%
-% Para un motor de $n$ paletas de radio de punta nulo, la geometría como función
-% del ángulo del cigüeñal queda totalmente definida por el radio de trayectoria de
-% paletas $R$, semi ancho de paletas $r$ y altura de cámara $h$.
-%
-% \begin{figure}
-%     \centering
-%     \begin{tikzpicture}
-%         \begin{axis}[
-%             xlabel=Angulo $(deg)$,
-%             ylabel=Volumen $(mm^3)$,
-%             grid=major,
-%             mark size=0pt,
-%         ]
-%         \addplot table [x=Angle,y=Volume] {data/vol.dat};
-%         \end{axis}
-%     \end{tikzpicture}
-%     \caption{Combustión a volumen constante}\label{fig:vol_constante}
-% \end{figure}
-%
-% La geometría utilizada para este trabajo se resumen en la
-% tabla~\ref{tab:geom_mrcvc} y se ilustra en la figura~\ref{fig:geom_mrcvc}.
-% %
-% Esta geometría es la continuación de la utilizada en trabajos anteriores, con la
-% cual se realizó parte del prediseño del sistema de intercambio de gases.
-%
-% \begin{table}
-%     \centering
-%     \begin{tabular}{rcc} \toprule
-%         Parámetro & Valor                            & Unidades \\ \midrule
-%         n         & \lua{tex.print(myData.n)}        & unidades \\
-%         R         & \lua{tex.print(myData.R)}        & mm \\
-%         r         & \lua{tex.print(myData.r)}        & mm \\
-%         $h_c$     & \lua{tex.print(myData.hc)}       & mm \\
-%         rc        & \lua{tex.print(myData.rc)}       & --- \\
-%         V0        & \lua{tex.print(myData.V0)}       & $cm^3$ \\
-%         $R_i$     & \lua{tex.print(trunc(myData.Ri))} & mm \\
-%         $R_e$     & \lua{tex.print(trunc(myData.Re))} & mm \\
-%     \end{tabular}
-%     \caption{Geometría del MRCVC}\label{tab:geom_mrcvc}
-% \end{table}
-%
-% Los ángulos que determinan el reglaje de los puertos de admisión y escape son los
-% de inicio y de cierre del puerto.
-% %
-% Como ejemplo, la posición del puerto de escape queda determinada por los  valores
-% EIA y EFA como se ve en la figura~\ref{fig:angulos_escape}.
-%
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=0.5\textwidth]{angulos_escape.png}
-%     \caption{Puerto de escape}\label{fig:angulos_escape}
-% \end{figure}
-%
-% % NOTA: esto deberia ir en la parte de geometria de los puertos, luego de la
-% % primer iteracion de opttimizacion
-%
-% % Como se puede ver en la figura~\ref{fig:primeros_puertos}, se buscó suavizar los
-% % vértices en donde la pared del puerto intersecta la cámara de combustión.
-%
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% \subsection{Ciclo operativo}
-% %
-% La variación de la geometría y el funcionamiento en detalle de ICESym, así como
-% también el modelo de solape de cámaras desarrollado para el uso con el MRCVC.\@
-% %
-% Para una misma relación de compresión, una combustión a volumen constante
-% alcanza valores de presión y temperatura mayores en comparación a otros ciclos.
-% %
-% En la figura~\ref{fig:comparacion_rendimientos} se ve como para una $r_c$ dada,
-% el ciclo a volumen constante tiene el mayor rendimiento.
-%
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=1\textwidth]{rendimiento_conv_comb.png}
-%     \caption{Comparación de rendimientos (cambiar por una imagen propia)}\label{fig:comparacion_rendimientos}
-% \end{figure}
-%
-% El indicador que se tomará como referencia para evaluar y comparar diferentes
-% geometrías es el rendimiento volumétrico ($\eta_v$), este parámetro se define
-% como:
-%
-% \begin{equation}
-%     \eta_v = \frac{m_a}{\rho_{a,i}V_d}
-% \end{equation}
-%
-% Dónde:
-% %
-% \begin{description}
-%     %
-%     \item[$m_i$] es la masa de mezcla fresca inductada
-%         %
-%     \item[$\rho_{a,i}$] es la densidad del aire en el puerto de admisión
-%         %
-%     \item[$V_d$] es el volumen desplazado
-%         %
-% \end{description}
-%
-% El rendimiento volumétrico tiene una dependencia compleja de varios factores,
-% este parámetro es el que da forma a las curvas de \emph{performance} que se
-% suelen ver en literatura ya que indica la cantidad de mezcla fresca disponible
-% para la combustión. 
-% %
-% % En caso de motores de inyección directa (tanto de CI SI)
-% % NOTA: no se que quise poner aca, voy a tener que leerlo con mas de talle de
-% % nuevo
-%
-% La combustión es estequeométrica con $a_{weibe}=5$ y $m_{weibe}=2$, el combustible utilizado
-% es \emph{isooctano} con las siguientes características:
-% \begin{itemize}
-%     \item $y = 2.25$
-%     \item $H_{vap} = 2.25 MJ/kg$
-%     \item $Q_{fuel} = 44 MJ/kg_f$
-% \end{itemize}
-%
-% La temperatura de pared se asume en 450K.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Sistemas de intercambio de gases}
 %
 En un motor típico de combustión interna el sistema de intecambio de gases se
-compone de una toma de aire, filtro de aire, cuerpo de mariposa, puerto de
+compone de una toma de aire, filtro, cuerpo de mariposa, puerto y conducto de
 admisión, puerto y conducto de escape, catalizador y silenciador hasta
 finalmente descargar en la atmósfera.
 
-Para simplificar el sistema analizado, no se tuvieron en cuenta elementos como:
-mariposa, carburador,filtros de aire, convertidores catalíticos y demás;  sino
-que se utilizó un sistema simplificado en el que solamente se tiene conducto de
+Para simplificar el sistema analizado no se tuvieron en cuenta elementos como:
+mariposa, carburador, filtros de aire, convertidores catalíticos y demás; se
+utilizó un sistema simplificado en el que solamente se tiene conducto de
 admisión y escape junto con puertos de admisión y escape.
 %
 El eje de los conductos coincide con el eje del puerto, estos últimos hacen una

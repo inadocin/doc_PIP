@@ -1,72 +1,52 @@
 \section{Flujometrías y CFD}
 %
-Para obtener una mejor caracterización del funcionamiento de los puertos de
-admisión y escape es necesario tener mayor conocimiento del coeficiente de
-descarga $C_{D}$ en diferentes condiciones operativas de los mismos.
+Se realizó una serie de flujometrías para obtener valores de $C_{D}$ en función
+de la diferencia de presión que \emph{ve} el puerto y la apertura del
+mismo\footnote{ICESym utiliza alzada, por lo que se traduce área de pasaje de
+puerto en alzada de válvula equivalente.}, con el fin de obtener un mapa en
+función de la presión y la alzada $C_{D} = f(\Delta P,l_v)$.
 %
-Esto se logró realizando una serie de flujometrías para obtener valores de
-$C_{D}$ en función de la diferencia de presión que \emph{ve} el puerto y la
-apertura del mismo\footnote{ICESym utiliza alzada, por lo que se traduce área de
-pasaje de puerto en alzada de válvula equivalente.}, con el fin de obtener un
-mapa en función de la presión y la alzada $C_{D} = f(\Delta P,l_v)$.
-
-El simulador ICESym requiere de información sobre el coeficiente de descarga
-para calcular el área efectiva de pasaje de flujo de las válvulas (o puertos en
-el caso del MRCVC), introduciendo el mapa de coeficientes se tiene una mejor
-aproximación al funcionamiento del sistema de intercambio de gases porque se
-tiene un modelado de la eficiencia del sistema para distintos regímenes del
-motor.
-
-% El código del programa es accesible por los usuarios, esta es una característica
-% entender cómo funcionan y qué parámetros requieren algunas de las condiciones
-% de contorno y post-procesadores utilizados en este trabajo.
-
-% Para realizar las simulaciones se utilizaron los \emph{solvers}
-% \emph{pimpleFoam} para flujo incompresible y \emph{rhoPimpleFoam} para flujo
-% compresible.
-%
-% Para la turbulencia se utilizó un modelo de dos ecuaciones
-% \emph{$\kappa-\epsilon$}\parencite{wilcox}, este es uno de los más utilizados
-% y por ser de dos ecuaciones es un modelo completo.
-% es decir , provee una ecuación para $\kappa$ y otra para la escala de longitud
-% turbulenta $l_m$.
-%
-% Este modelo requiere que se aproximen los valores iniciales de $\kappa$ y
-% $\epsilon$, que a su vez requieren de la estimación de la longitud de mezcla o
-% escala de la viscosidad $l_m$.
+ICESym requiere de información sobre el $C_{D}$ para calcular el área efectiva
+de pasaje de flujo de las válvulas (o puertos en el caso del MRCVC),
+introduciendo el mapa de $C_{D}$ se tiene un mejor modelado del funcionamiento
+del sistema de intercambio de gases porque se conoce la pérdida de carga
+localizada para un rango de operación del motor.
 
 \subsection{Modelos de turbulencia}
-% pag 99 (83)
-
-El flujo a través del puerto es de carácter transitorio, turbulento.
 %
-%TODO: pongo algo de RAS?
-Para modelar este tipo de flujo se utilizó el modelo de dos ecuaciones
+El flujo a través del puerto es de carácter transitorio, turbulento; para
+modelar este tipo de flujo se utilizó el modelo de turbulencia de dos ecuaciones
 \emph{$\kappa-\epsilon$}\parencite{wilcox}, que brinda una ecuación para la
 \emph{energía cinética turbulenta} $\kappa$ y otra para la \emph{velocidad de
 disipación de la energía cinética turbulenta} $\epsilon$.
 %
 El modelo está basado en el modelo estándar
-$\kappa-\epsilon$~\parencite{launderSpalding}, es uno de los más populares con
-\emph{performance} conocida y las ecuaciones del modelo son
+$\kappa-\epsilon$~\parencite{launderSpalding} y es uno de los más populares con
+\emph{performance} conocida, las ecuaciones del modelo son:
 
 \begin{equation}\label{eq:k}
   \frac{D}{Dt}(\rho \kappa) = \nabla \cdot (\rho D_{\kappa}\nabla \kappa) + P - \rho \epsilon
 \end{equation}
 
 Dónde:
-$\kappa$ es la energía cinética turbulente en $m^{2}s^{-2}$
-$D_{\kappa}$ es la difusividad efectiva para $\kappa$
-$P$ es la velocidad de producción de energía cinética turbulenta en $m^{2}s^{-3}$
-$\epsilon$ es la velocidad de disipación de energía cinética turbulenta en $m^{2}s^{-3}$
+\begin{itemize}
+  \item[-] $\kappa$ es la energía cinética turbulente en $m^{2}s^{-2}$.
+  \item[-] $D_{\kappa}$ es la difusividad efectiva para $\kappa$.
+  \item[-] $P$ es la velocidad de producción de energía cinética turbulenta en $m^{2}s^{-3}$.
+  \item[-] $\epsilon$ es la velocidad de disipación de energía cinética turbulenta en $m^{2}s^{-3}$.
+\end{itemize}
 
 
 \begin{equation}\label{eq:k}
   \frac{D}{Dt}(\rho \epsilon) = \nabla \cdot (\rho D_{\epsilon}\nabla \epsilon) \frac{C_{1}\epsilon}{\kappa} \left( P+C_{3}\frac{2}{3}\kappa\nabla\cdot u \right) - C_{2}\rho\frac{\epsilon^{2}}{\kappa}
 \end{equation}
 
-Dónde: 1) $D_{\epsilon}$ es la difusividad efectiva de $\epsilon$, 2) $C_{1}$ es
-un coeficiente del modelo, 3) $C_{2}$ es un coeficiente del modelo.
+Dónde:
+\begin{itemize}
+  \item[-] $D_{\epsilon}$ es la difusividad efectiva de $\epsilon$.
+  \item[-] $C_{1}$ es un coeficiente del modelo.
+  \item[-] $C_{2}$ es un coeficiente del modelo.
+\end{itemize}
 
 La ecuación para la viscosidad turbulenta $\nu_{t}$ es
 
@@ -74,8 +54,11 @@ La ecuación para la viscosidad turbulenta $\nu_{t}$ es
   \nu_{t} = C_{\mu}\frac{\kappa^{2}}{\epsilon}
 \end{equation}
 
-Dónde: 1) $C_{mu}$ es un coeficiente del modelo, 2) $\nu_{t}$ es la viscosidad
-turbulente en $m^{2}s^{-1}$.
+Dónde:
+\begin{itemize}
+        \item[-] $C_{mu}$ es un coeficiente del modelo.
+        \item[-] $\nu_{t}$ es la viscosidad turbulente en $m^{2}s^{-1}$.
+\end{itemize}
 
 Los coeficientes por defecto del modelo son
 
@@ -97,64 +80,24 @@ El valor inicial para $\kappa$ se puede estimar con:
   \kappa = \frac{3}{2} {\left( |u_{ref}| \cdot I \right)}^{2}
 \end{equation}
 
-Dónde: 1) $I$ es la intensidad de turbulencia en \%, 2) $u_{ref}$ es una
-velocidad de referencia en $ms^{-1}$.
+Dónde:
+\begin{itemize}
+  \item[-] $I$ es la intensidad de turbulencia en \%.
+  \item[-] $u_{ref}$ es una velocidad de referencia en $ms^{-1}$.
+\end{itemize}
 
 El valor inicial para $\epsilon$ se puede estimar con:
 \begin{equation}\label{eq:epsilon_est}
   \epsilon = \frac{{C_{\mu}}^{3/4} \cdot {\kappa}^{3/2}} {l_{m}}
 \end{equation}
 
-Dónde: 1) $C_{\mu}$ es una constante del modelo que valo 0.09 por defecto, 2)
-$l_{m}$ es una longitud de referencia, para flujos internos se estima con el
-diámetro hidráulico de la cañería, $0.07\cdot D_{m}$.
+Dónde:
+\begin{itemize}
+ \item[-] $C_{\mu}$ es una constante del modelo que valo 0.09 por defecto
+ \item[-] $l_{m}$ es una longitud de referencia, para flujos internos se estima con el diámetro hidráulico de la cañería, $0.07 D_{m}$.
+\end{itemize}
 
-% % Auxiliary Relations
-% \begin{equation}
-%   w = \epsilon/(C_{\mu}k)
-%   \quad
-%   \textrm{y}
-%   \quad
-%   l = C_{\mu}k^{3/2}/\epsilon
-% \end{equation}
-
-% Y los coeficientes utilizados en este trabajo son los siguientes:
-
-% \begin{align*}
-%     %
-%   C_{\mu} &= 0.09 \\
-%     %
-%   I &= 0.05 \\
-%     %
-%   l_{m} &= 0.07 \cdot D_{m} \\
-%   %
-%   \kappa &= 1.5 \cdot {\left( u_{ref} \cdot I \right)}^{2}\\
-%     %
-%   \epsilon &= \frac{{C_{\mu}}^{3/4} \cdot {\kappa}^{3/2}} {l_{m}}
-%     %
-% \end{align*}
-
-% Dónde:
-% %
-% \begin{itemize}
-
-%     \item $C_{\mu}$, es un coeficiente propio del modelo.
-%         %
-%     \item I, es la intensidad de turbulencia estimada, se utilizó 0.05.
-%         %
-%     \item $l_m$, es la longitud de mezcla o escala de viscosidad,
-%      para flujos internos se suele usar el diámetro hidráulico de la cañería.
-%         %
-%     \item $u_{ref}$, es la velocidad de referencia del flujo en m/s.
-%         %
-%     \item $\kappa$, es la energía cinética turbulenta.
-%         %
-%     \item $\epsilon$, es la disipación de energía cinética turbulenta.
-%         %
-% \end{itemize}
-
-% %
-% % https://www.openfoam.com/documentation/guides/latest/doc/guide-turbulence-ras-k-epsilon.html
+% https://www.openfoam.com/documentation/guides/latest/doc/guide-turbulence-ras-k-epsilon.html
 
 Las ecuaciones anteriores de  $\kappa$ y $\epsilon$ son estimaciones para dar un
 valor inicial al problema.
@@ -197,39 +140,12 @@ representa el gas dentro de la cámara de combustión.
 Independientemente del tipo de flujo que se esté simulando, de ICESym se toman
 los valores de presión, temperatura, densidad y velocidad para calcular los
 valores iniciales.
-%
-% En la tabla~\ref{tab:condiciones_iniciales} se muestran los datos necesarios
-% para las flujometrías, separados en flujo incompresibles (pimpleFoam) y
-% compresibles (rhoPimpleFoam).
 
-% \begin{table}
-% \centering
-    % \begin{tabular}{rccc} \toprule
-    %   Variable      & Descripción   & Incompresible & Compresible \\ \midrule
-    %   $\epsilon$    &               &               & \\
-    %   $\kappa$      &               &               & \\
-    %   $\gamma$      &               &               & \\
-    %   $\mu$         &               &               & \\
-    %   $\nu$         &               &               & \\
-    %   $M_{w}$       &               &               & \\
-    %   $P_{r}$       &               &               & \\
-    %   $\rho$        &               &               & \\
-    %   $P_{puerto}$  &               &               & \\
-    %   $P_{cámara}$  &               &               & \\
-    %   $V_{puerto}$  &               &               & \\
-    %   $T_{puerto}$  &               &               & \\
-    %   $T_{cámara}$  &               &               & \\ \bottomrule
-    % \end{tabular}
-    % \caption{Condiciones Iniciales}\label{tab:condiciones_iniciales}
-% \end{table}
-
-% No se considera la transferencia de calor en las paredes.
-
-Debido a la cantidad de flujometrías a realizar, se utilizó un script para leer
+Debido a la cantidad de flujometrías a realizar, se utilizó un \emph{script} para leer
 los datos de salida de ICESym y calcular los valores requeridos en función del
 tipo de flujo a simular.
-
-Este script toma el estado del gas del simulador tanto en la cámara de
+%
+Este \emph{script} toma el estado del gas del simulador tanto en la cámara de
 combustión como del puerto que se esté analizando, para la posición de alzada y
 RPM requeridas.
 %
@@ -237,21 +153,17 @@ Con estos valores se calculan las propiedades termodinámcicas del gas con las
 siguientes relaciones para cada cámara analizada, los valores leídos son:
 
 \begin{itemize}
-    \item $\rho_{c,i}$, Es la densidad del gas en la cámara de combustión $i$.
-    \item $P_{c,i}$, Es la presión del gas en la cámara de combustión $i$.
-    \item $T_{c,i}$, Es la temepratura del gas en la cámara de combustión $i$.
-    \item $\rho_{p,i}$, Es la densidad del puerto $i$.
-    \item $v_{p,i}$, Es la velocidad del gas en el puerto $i$.
-    \item $P_{p,i}$, Es la presión del gas en el puerto $i$.
+    \item $\rho_{c,i}$, es la densidad del gas en la cámara de combustión $i$.
+    \item $P_{c,i}$, es la presión del gas en la cámara de combustión $i$.
+    \item $T_{c,i}$, es la temepratura del gas en la cámara de combustión $i$.
+    \item $\rho_{p,i}$, es la densidad del puerto $i$.
+    \item $v_{p,i}$, es la velocidad del gas en el puerto $i$.
+    \item $P_{p,i}$, es la presión del gas en el puerto $i$.
 \end{itemize}
-
-A partir de esta información también se calculan los valores medios, en caso de
-haber solape de cámaras para el caso analizado, se utiliza el valor medio para
-calcular los valores iniciales del caso.
 
 Con estos valores iniciales se pueden calcular o estimar las propiedades
 termodinámicas de la mezcla de gases frescos o quemados, dependiendo si se está
-evaluando un puerto de admisión o escape:
+evaluando un puerto de admisión o escape, los valores calculados son:
 %
 \begin{itemize}
     \item $M_{M}$, Masa molar, ec.\ref{eq:mw}
@@ -265,25 +177,23 @@ evaluando un puerto de admisión o escape:
 \end{itemize}
 
 Para simplificar el análisis no se tuvo en cuenta la fracción de gases
-residuales, el gas ``flujado'' es siempre aire limpio o el gas quemado de una
-mezcla estequeométrica de aire-combustible, siendo isooctano $C_{8}H_{18}$ el
-combustible seleccionado.
-
-Se utilizaron rutinas computacionales para modelar las propiedades
-termodinámicas de las mezclas aire-combustible, descritas brevemente en
-secciones anteriores, ver sección~\ref{subsec:prop_mezcla}.
+residuales, el gas ``flujado'' es siempre aire limpio en el caso de los puertos
+de admisión o el gas quemado de una mezcla estequeométrica de aire-combustible
+en caso de los puertos de escape, siendo isooctano $C_{8}H_{18}$ el combustible
+seleccionado.
+%
+Las ecuaciones utilizadas para modelar las propiedades termodinámicas de las
+mezclas aire-combustible fueron descritas brevemente en la
+sección~\ref{subsec:prop_mezcla}.
 
 \subsection{Malla}
 
 La malla se construyó a partir del modelo de CAD generado con los resultados
 obtenidos de las simulaciones del motor.
-
+%
 La implementación de las diferentes herramientas requeridas para generar una
 malla apta para realizar las flujometrías se describe en el
-apartado~\ref{sec:cap3_of_malla}
-
-% La malla utilizada y las características de la construcción de la misma se
-% describen en la sección TODO,
+apartado~\ref{sec:cap3_of_malla}.
 
 El grado de refinamiento de la misma se determinó luego de realizar una serie de
 flujometrías con tamaños decrecientes de celda y viendo la variabilidad de los
@@ -294,19 +204,22 @@ para un estado del gas dado, se redujo el tamaño inicial de celda hasta que el
 valor de $\dot{m}$ no se modificó en más de un 5\% del valor anterior, con un
 nivel de refinamiento mayor.
 %
-En algunos casos se utilizaron mallas más gruesas para obtener un valor inicial
-de una malla de mayor refinamiento.
+En algunos casos se utilizaron los resultados de flujometrías con mallas menos
+refinadas como valor inicial de una malla de mayor refinamiento, esto con el
+propósito de reducir el tiempo de simulación de las mallas con mayor número de
+celdas.
 %
 Por ejemplo, con una malla inicial de cubos de 15mm de lado se obtiene una
-solución que se usa como valor inicial para una malla de 10mm y finalmente se
-realiza la simulación con la malla de 5mm para obtener el valor final del flujo
-másico.
+solución que se usa como valor inicial para una malla de 10mm, a su vez este
+resultado se utiliza como valor inicial de la simulación final con una malla de
+cubos de 5mm de lado para obtener el valor de $\dot{m}$ utilizado para calcular
+el $C_{D}$.
 
 \subsection{Coeficiente de descarga $C_{D}$}\label{sec:cap2_cd}
 
-El flujo másico que fluja el puerto se calcula a partir de las ecuaciones de
-flujo compresible a través de una restricción, habiendo dos casos distintivos:
-flujo bloqueado y no bloqueado.
+El flujo másico que circula a través del puerto se calcula a partir de las
+ecuaciones de flujo compresible a través de una restricción, habiendo dos casos
+distintivos: flujo bloqueado y no bloqueado.
 
 El flujo está bloqueado si la velocidad en la garganta de la restricción alcanza
 la velocidad sónica, dada esta condición el flujo másico alcanza un límite y
@@ -317,9 +230,9 @@ presiones aguas arriba $p_{0}$ y aguas abajo de la restricción $p_{T}$.
 %
 Si se cumple la inecuación~\ref{eq:condicion_bloqueo}, el flujo está bloqueado.
 
-El caudal másico para la condición de no bloqueado se calcula con la
+El caudal másico para la condición de flujo no bloqueado se calcula con la
 ecuación~\ref{eq:m_no_bloqueo} y la ecuación~\ref{eq:m_bloqueo} en caso de que
-el flujo esté bloqueado.
+esté bloqueado.
 %
 Los parámetros involucrados en estas ecuaciones son:
 \begin{itemize}
@@ -349,45 +262,52 @@ Los parámetros involucrados en estas ecuaciones son:
 \end{equation}
 
 Un parámetro importante en las ecuaciones anteriores es el área de referencia
-$A_{R}$ porque define el área utilizada para calcular el caudal másico que
-circula por el puerto, en un motor con válvulas se suele tomar el área de
-cortina como valor de referencia que se define como el producto de la
-circunferencia de la válvula ($\pi D_{v} \cdot h_{v}$) con la alzada, ver
-figura~\ref{fig:area_referencia}(a).
+$A_{R}$, define el área utilizada para calcular el caudal másico que circula por
+el puerto.
 %
+En un motor con válvulas se suele tomar el área de cortina como el producto de
+la circunferencia de la válvula con la alzada, es decir
+
+\begin{equation}\label{eq:ar_cortina}
+  A_{R}=\pi D_{v} \cdot h_{v}
+\end{equation}
+
 El área de referencia utilizada en ICESym es el área frontal del puerto expuesta
-a la cámara que se esté analizando, calculada como $A_{R} = h_{p} \cdot l_{v}$, ver
-figura~\ref{fig:area_referencia}(b).
+a la cámara que se esté analizando, calculada como
 
-% Debido a que el MRCVC no tiene válvulas, en trabajos anteriores se confeccionó
-% un script para calcular la distancia $l_{v}$ en función del ángulo del ciclo.
+\begin{equation}\label{eq:ar_mrcvc}
+  A_{R} = h_{p} \cdot l_{v}
+\end{equation}
+
+El área de cortina se ilustra en la figura~\ref{fig:area_cortina} y el área
+utilizada en ICESym para el MRCVC en la figura~\ref{fig:area_referencia}.
 %
-% En la figura~\ref{fig:area_referencia} se ilustran las áreas de referencia para
-% una posición del rotor en la que hay solape de cámaras con $\theta = 55^{\circ}$.
+En esta última figura se observan dos zonas coloreadas, que hacen referencia al
+área de dos cámaras durante el solape de cámaras que ocurre en el puerto.
 
-\begin{figure}
+\begin{figure}[ht]
     \centering
     \begin{subfigure}{0.5\textwidth}
       \centering
-      \includegraphics{valve_curtain.jpg}
-      \caption{Área de cortina}
+      \includegraphics[width=\textwidth]{valve_curtain.pdf}
+      \caption{Área de cortina}\label{fig:area_cortina}
     \end{subfigure}%
     \begin{subfigure}{0.5\textwidth}
       \centering
-      \includegraphics{area_referencia.png}
-      \caption{Área de referencia MRCVC}
+      \includegraphics[width=\textwidth]{area_referencia.png}
+      \caption{Área de referencia MRCVC}\label{fig:area_referencia}
     \end{subfigure}
-    \caption{Área de referencia}\label{fig:area_referencia}
+    \caption{Área de referencia}
 \end{figure}
 
 Los valores de densidad, velocidad, presión y temperatura se obtienen de los
 datos de salida de ICESym para un puerto, ángulo y velocidad dada.
 %
-Para la temperatura se utiliza la temperatura de cámara, $T_0 = T_C$, la
-presión antes y después del puerto se selecciona de acuerdo al sentido de
-flujo, en caso de ser flujo hacia la cámara de combustión, la presión en el
-puerto se utiliza como inicial $P_0$ y la presión en la cámara es la
-aproximación a la presión en la restricción $P_T$.
+Para la temperatura se utiliza la temperatura de cámara, $T_0 = T_C$, la presión
+antes y después del puerto se selecciona de acuerdo al sentido de flujo, en caso
+de ser hacia la cámara de combustión la presión en el puerto se utiliza como
+inicial $P_0$ y la presión en la cámara es la aproximación a la presión en la
+restricción $P_T$.
 
 El valor de $\gamma$ se obtiene de las propiedades de la mezcla con las rutinas
 computacionales descritas en el apartado~\ref{subsec:prop_mezcla}.

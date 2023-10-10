@@ -57,98 +57,56 @@ parámetros correspondientes indicados en la tabla~\ref{tab:config_genetico}.
 % buenos resultados, esto se debe a que los datos de partida para la segunda
 % iteración, son los resultados de la primer iteración.
 %
-%
-%
 
-En la gráfica de evolución se observa  que se obtuvo rápidamente un individuo
-con un puntaje relativamente alto en en las primeras iteraciones, el resultado
-final tiene una aptitud 1.5 veces la aptitud media de la población de la última
+En la gráfica de evolución se observa que se obtuvo rápidamente un individuo con
+un puntaje relativamente alto en en las primeras iteraciones, el resultado final
+tiene una aptitud 1.5 veces la aptitud media de la población de la última
 generación, los parámetros que definen este candidato son los listados en la
-tabla y se ilustran en la figura~\ref{fig:primer_op}.
+tabla~\ref{tab:resultado_primer_it} y se ilustran en la
+figura~\ref{fig:primer_op}.
 %
 Este motor tiene un rendimiento volumétrico máximo de $r_{v} \simeq 0.83$ para 2500
 RPM y si bien la función objetivo favorece curvas suaves, se ven dos picos de
 rendimiento en la curva, siendo el segundo con $r_{v} \simeq 0.79$ a 7500 RPM.
 
-\begin{figure}
-\begin{center}
-  \begin{tabular}{rl}
-    \begin{tikzpicture}[baseline, trim axis left]
-      \begin{axis}[
-        xlabel=Generación,
-        ylabel=Puntaje,
-        legend pos=south east,
-        grid=both,
-        ]
-        \addplot table [x=Gen,y=Avg]{data/genetico.dat} ;
-        \addplot table [x=Gen,y=Max]{data/genetico.dat} ;
-        \legend{Media, Máximo}
-      \end{axis}
-    \end{tikzpicture}
-    &
-    \begin{tikzpicture}[baseline, trim axis right]
-      \begin{axis}[
-        xlabel=Velocidad del motor [RPM],
-        yticklabel pos=upper,
-        ylabel={$\eta_{v},x_{r}$},
-        ylabel near ticks,
-        grid=both,
-        ]
-        \addplot table [x=RPM,y=RendVol]{data/primer_rend_vol.dat} ;
-        \addplot table [x=RPM,y=FracRes]{data/primer_rend_vol.dat} ;
-        \legend{$\eta_{v}$, $x_{r}$ }
-      \end{axis}
-    \end{tikzpicture}
-    \\
-  \end{tabular}
-\end{center}
-\caption{Primer Iteración} \label{fig:primer_op}
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[]{gnuplot/genetico.pdf}
+  \end{subfigure}%
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[]{gnuplot/primer-rendimiento.pdf}
+  \end{subfigure}
+  \caption{Primer Iteración} \label{fig:primer_op}
 \end{figure}
 
 \begin{table}
   \centering
-  \begin{tabular}{ccc} \toprule
-    Parámetro & Valor & Unidad \\ \midrule
-    DTA & 97.24 & mm\\
-    DTE & 81.15 & mm\\
-    LIT & 519.31 & mm\\
-    LET & 976.66 & mm\\
-    IIA & 1.12 & grado\\
-    IFA & 70.15 & grado\\
-    EIA & 85.14 & grado\\
-    EFA & 11.13 & grado\\ \bottomrule
+  \begin{tabular}{cccccccc} \toprule
+    DTA   & DTE   & LIT    & LET    & IIA     & IFA     & EIA     & EFA \\
+    $[mm]$  & $[mm]$  & $[mm]$   & $[mm]$   & $[grado]$ & $[grado]$ & $[grado]$ & $[grado]$ \\ \midrule
+    97.24 & 81.15 & 519.31 & 976.66 & 1.12    & 70.15   & 85.14   & 11.13 \\ \bottomrule
   \end{tabular}
-  \caption{Mejor Candidato.}\label{tab:resultado_primer_it}
+  \caption{Geometría del mejor candidato}\label{tab:resultado_primer_it}
 \end{table}
 
 En la figura~\ref{fig:PoTi_primer_op} se muestran las curvas de potencia y
 torque del motor, como es de esperarse se ve que ambas copian la curva de
-rendimiento volumétrico, con una potencia indicada máxima de 230 HP a 9000 rpm y
-un torque máximo de 210 N.m. a\ 7500 RPM.
-NOTA: FALTA CORREGIR ESTA POTENCIA CON EL MODELO DE FLOR O DE KNOLL
-% TODO
-% NOTA: FALTA CORREGIR ESTA POTENCIA CON EL MODELO DE FLOR O DE KNOLL
+rendimiento volumétrico, con una potencia al freno máxima de 177 CV a 7500 RPM y
+un torque máximo de 191 N.m. a\ 2500 RPM.
 
-\begin{figure}
-  \begin{center}
-  \begin{tikzpicture}
-    \begin{axis}[
-      xlabel=Velocidad del motor [RPM],
-      ylabel={$P_{i}[HP],T_{i}[N.m.]$},
-  legend pos=south east,
-      grid=both,
-      width={13cm}]
-      \addplot table [x=RPM,y=PotInd]{data/primer_rend_vol.dat} ;
-      \addplot table [x=RPM,y=PotNet]{data/primer_rend_vol.dat} ;
-      \addplot table [x=RPM,y=TorqInd]{data/primer_rend_vol.dat} ;
-      \addplot table [x=RPM,y=TorqNet]{data/primer_rend_vol.dat} ;
-      \legend{Potencia Indicada, Potencia Neta, Torque Indicado, Torque Neto}
-      \legend{$\dot{W}_{i,n,1}$,$\dot{W}_{freno,1}$ , $T_{i,1}$, $T_{freno,1}$}
-    \end{axis}
-  \end{tikzpicture}
-  \end{center}
+\parbox{.5\textwidth}{\colorbox{yellow}{NOTA: FALTA CORREGIR CON EL MODELO DE
+FLOR}}
+
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{gnuplot/primer-potencia.pdf}
   \caption{Torque y Potencia de Primer Iteración} \label{fig:PoTi_primer_op}
 \end{figure}
+
 
 
 \section{Modelo de CAD}
@@ -158,8 +116,8 @@ que se ilustra en la figura~\ref{fig:motor_cad1} y~\ref{fig:motor_cad2}.
 %
 Se representó solamente la mitad superior del motor que contiene ambos puertos
 de admisión y escape, este modelo es paramétrico y permite rotar los componentes
-del motor para obtener distintas posiciones del conjunto para generar la
-geometría a evaluar.
+del motor para obtener distintas posiciones del conjunto y así poder generar la
+geometría a evaluar con las flujometrías.
 
 % Algunos redondearon las aristas internas incluyendo las paletas y las puntas del rotor para favorecer el proceso de mallado, ya que los bordes agudos pueden ser problmeáticos para el mallador \emph{snappyHexMesh}.
 
@@ -200,7 +158,5 @@ propósito de eliminar una variable de la geometŕia a modelar.
 %
 El foco de esta etapa de optimización es el diámetro del puerto y el reglaje.
 %
-% Se generó uno de estos modelos para cada posición del cigueñal simulada en las
-% fluojmetrías.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

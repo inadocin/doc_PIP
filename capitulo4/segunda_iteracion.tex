@@ -7,17 +7,15 @@ mejores candidatos.
 %
 Se obtuvieron 3 candidatos principales, indicados como \emph{$run_{34}$},
 \emph{$run_{38}$}, \emph{$run_{51}$} cuyas geometrías se indican en la
-tabla~\ref{tab:2iter_geom}, se ve que los diámetros son similraes y que la mayor variaión
+tabla~\ref{tab:2iter_geom}, se ve que los diámetros son similares y que la mayor variaión
 se dan en los largos de los conductos de admisión y escape.
 %
 Exceptuando la corrida $run_{51}$ los ángulos de apertura de los puertos de
-admisión se mantienen cercanos
-
-figura \ref{fig:2iter_general}.
+admisión se mantienen cercanos figura \ref{fig:2iter_general}.
 %
 Para determinar cuál de todos es el más promoetedor, se compararon las curvas de
 presión, torque y potencia, las cuales se muestran en la
-figura~\ref{fig:PoTi_segunda_op}
+figura~\ref{fig:PoTi_segunda_op}.
 
 \begin{table}
 \centering
@@ -31,10 +29,19 @@ figura~\ref{fig:PoTi_segunda_op}
 \caption{Geometrías de segunda iteración}\label{tab:2iter_geom}
 \end{table}
 
-\begin{figure}{h}
+\begin{figure}[ht]
   \centering
-    \includegraphics{/gnuplot/segunda_iter_pot.pdf}
-\caption{Segunda Iteración} \label{fig:primer_op}
+  \begin{subfigure}[b]{.5\textwidth}
+    \centering
+    \includegraphics{gnuplot/segunda_iter_pot.pdf}
+    \caption{Potencia indicada y al freno} \label{fig:primer_op}
+  \end{subfigure}%
+  \begin{subfigure}[b]{.5\textwidth}
+    \centering
+    \includegraphics{gnuplot/segundo_rend_vol.pdf}
+    \caption{Rendimiento Volumétrico}
+  \end{subfigure}
+    \caption{Segunda Iteración} \label{fig:primer_op}
 \end{figure}
 
 
@@ -42,25 +49,13 @@ El motor tiene una potencia máxima de 117 CV a las 6500 RPM y un par máximo de
 177Nm a 4000 RPM, este coincide con el máximo de rendimiento volumétrico de
 $\sim 0.845$
 %
-En la figura~\ref{fig:PoTi_segunda_op} se nota los efectos del coeficiente de descarga
-en la simiulación del motor, el máximo
+En la figura~\ref{fig:PoTi_segunda_op} se nota los efectos del coeficiente de
+descarga en la simiulación del motor, esto se ve comparando los resultados de la
+primer iteración con coeficientes de descarga constantes a la segunda con el
+mapa de $C_{D}$ en función de presión y velocidad de operación del motor.
 
-\begin{figure}
-  \begin{center}
-  \begin{tikzpicture}
-    \begin{axis}[
-      xlabel=Velocidad del motor [RPM],
-      ylabel={$P_{i}[HP],T_{i}[N.m.]$},
-      legend pos=south east,
-      grid=both,
-      ]
-      \addplot[mark=o,solid,red] table [x=RPM,y=PotNet]{data/segundo_rend_vol.dat} ;
-      \addplot[mark=o,solid,black] table [x=RPM,y=TorqNet]{data/segundo_rend_vol.dat} ;
-      \addplot[mark=o,dashed,red] table [x=RPM,y=PotNet]{data/primer_rend_vol.dat} ;
-      \addplot[mark=o,dashed,black] table [x=RPM,y=TorqNet]{data/primer_rend_vol.dat} ;
-      \legend{$\dot{W}_{freno,2}$ , $T_{freno,2}$, $\dot{P}_{freno,1}$, $T_{freno,1}$}
-    \end{axis}
-  \end{tikzpicture}
-  \end{center}
-  \caption{Torque y Potencia de Segunda Iteración} \label{fig:PoTi_segunda_op}
+\begin{figure}[ht]
+  \centering
+  \includegraphics{gnuplot/comparativa.pdf}
+  \caption{Comparativa de Torque y potencia al freno} \label{fig:PoTi_segunda_op}
 \end{figure}
