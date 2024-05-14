@@ -4,9 +4,9 @@ ICESym es un simulador de motores de combustión interna que  utiliza modelos 0D
 para la cámara de combustión y 1D para el flujo a través del sistema de
 intercambio de gases.
 %
-Permite evaluar la \emph{performance} de un motor a un costo computacional bajo
-además, la implementación de entrada y salida de datos permite utilizar el
-simulador como una \emph{caja negra}.
+Esta combinación permite evaluar la \emph{performance} de un motor a un costo
+computacional bajo; además la implementación de entrada y salida de datos
+permite utilizar el simulador como una \emph{caja negra}.
 %
 Esto permitió incluir al simulador en un \emph{script} como una función a la que
 se le otorga un conjunto de parámetros de entrada y devuelve los resultados de
@@ -16,7 +16,7 @@ Contiene en su código las rutinas necesarias para simular el ciclo operativo y 
 geometría del MRCVC.
 
 Se realizaron modificaciones menores al simulador para facilitar la ejecución en
-conjunto con el optimizador, algunas de estas modificaicones fueron:
+conjunto con el optimizador, algunas de estas modificaciones fueron:
 %
 \begin{enumerate}
     \item Modificar el formato de los archivos de salida, eliminando valores que
@@ -32,19 +32,23 @@ $C_D$.
 
 \section{Modificaciones a ICESym}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Flujo a través de los puertos}
+\subsection{Flujo a Través de los Puertos}
 %
 Se introdujo una opción para poder ejecutar ICESym con un modelo del coeficiente
 de descarga que dependa de dos variables, diferencia de presión y \emph{alzada}
-o apertura del puerto $C_D = f(\Delta P; lv)$.
+o apertura del puerto $C_D = f(lv; \Delta P)$.
 %
 Esto significó agregar un \emph{switch} en el código que permita seleccionar
 entre un modelo de una o dos variables, con el agregado de las instrucciones de
 lectura de datos y armado de un arreglo bidimensional que contiene los valores
 del mapa de $C_{D}$ en un orden dado.
 %
-Con esto se construye una mapa del coeficiente de descarga de la forma $C_D =
-f(lv, dp)$, que se utiliza para calcular el área efectiva de la válvula.
+Con esto se construye un mapa del coeficiente de descarga de la forma $C_D =
+f(lv, dp)$, que se utiliza para calcular el área efectivo del puerto.
+
+
+\nomenclature[F]{\(\Delta P\)}{Diferencia de presión a través de un puerto}
+
 
 Independientemente de la cantidad de variables que formen parte del $C_{D}$, a
 ICESym se introduce un vector o matriz para el caso 1D o 2D respectivamente.
@@ -53,57 +57,35 @@ En ambos casos se intrudce una cantidad discreta de valores por lo que es
 necesario realizar una interpolación lineal o bilineal para utilizar el valor de
 $C_{D}$.
 %
-La interpolación lineal 1D es parte del código de ICESym, la interpolación 2D o
-bilineal se introdujo como parte de este trabajo.
+La interpolación lineal 1D es parte del código de ICESym, mientras que la
+interpolación 2D o bilineal se introdujo como parte de este trabajo.
 
 Esta última se realiza sobre una malla rectangular, de modo de reutilizar el
-código existente de para el caso 1D y realizar  simplemente una interpolación
+código existente para el caso 1D y realizar  simplemente una interpolación
 lineal entre dos valores en planos con datos conocidos.
 
-En el algoritmo~\ref{algo:interpolacion_lineal}, se describe la interpolación 1D
-comentada del código de ICESym, para el caso en 2D se reutiliza esta rutina para
-interpolar entre los planos correspondientes a los valores requeridos.
+% En el algoritmo~\ref{algo:interpolacion_lineal} se describe la interpolación 1D
+% comentada del código de ICESym.
+%
+Para el caso bidimensional, se utiliza la interpolación lineal 1D entre
+interpolar entre los planos correspondientes a los valores requeridos, ver
+Figura~\ref{fig:interp_bilineal}.
 
-\begin{algorithm}\caption{Interpolación Lineal}\label{algo:interpolacion_lineal}
-  \KwIn{\\
-    $(x_{0},y_{0})$, $(x_{1},y_{1})$, son los puntos conocidos\;\\
-    $x$, es el punto donde se quiere conocer el valor de $y$\;\\
-  }
-  \KwOut{\\
-    $y$, el valor interpolado para x\;
-  }
-  \BlankLine
-  \If{$x\leq x0$}{
-    $y=y_{0}$\;
-    \Return{$y$}\;
-  }
-  \If{$x\geq x1$}{
-    $y=y_{1}$\;
-    \Return{$y$}\;
-  }
-  $y = y_{0}+\frac{y_{1}-y_{0}}{x_{1}-x_{0}}(x-x_{0})$\;
-  \Return{$y$}\;
-\end{algorithm}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{interpolacion_bilineal.png}
+    %
+    \caption{Interpolación bilineal\protect\footnotemark}\label{fig:interp_bilineal}
+    % \footnote{A}}
+\end{figure}
 
-
-\begin{algorithm}\caption{Interpolación Bi lineal}\label{algo:interpolacion_bilineal}
-  \KwIn{\\
-    $\mathbf{X},\mathbf{Y},\mathbf{Z}$, es la malla rectangular de puntos conocidos\;\\
-    $(x,y)$, es el punto donde se quiere conocer el valor de $z$\;\\
-  }
-  \KwOut{\\
-    $z$, el valor interpolado para $(x,y)$\;
-  }
-  \SetKwFunction{IL}{Iterp1D}
-  \BlankLine
-  Falta\;
-\end{algorithm}
+\footnotetext{\url{https://stackoverflow.com/questions/8808996/bilinear-interpolation-to-enlarge-bitmap-images}}
 
 Si bien hay otros métodos de interpolación para estimar el valor de $C_D$ a
 partir de una nube de puntos, este método es sencillo y da resultados
 satisfactorios.
 %
-En la figura~\ref{fig:bilineal} se muestra un ejemplo del error obtenido con
+En la Figura~\ref{fig:bilineal} se muestra un ejemplo del error obtenido con
 este método para interpolar una función de prueba $f=\sin\left(\sqrt(x^2 + y^2)\right)$.
 
 \begin{figure}
@@ -116,10 +98,10 @@ La malla rectangular requerida para la interpolación bilineal del mapa de
 $C_{D}$ se realizará a partir de los valores conocidos de $C_D$ resultantes de
 las flujometrías con \emph{OpenFOAM}~\parencite{openfoam}.
 %
-Debido al costo computacional que requieren la flujometría, solo una cantidad
-reducida de puntos se obtendrá con este método, esto  significa que se tiene
-como punto de partida una malla no rectangular por lo que se utiliza un método
-intermedio para obtener una matriz de puntos que pueda ser leído por la
+Debido al costo computacional que requieren las flujometrías, solo una cantidad
+reducida de puntos se obtendrá con este método, lo cual significa que se tiene
+como punto de partida una malla no rectangular, por lo que se utiliza un método
+intermedio para obtener una matriz de puntos que pueda ser leída por la
 interpolación bilineal.
 
 Se probaron dos métodos para realizar la interpolación, el método del punto más
@@ -139,11 +121,11 @@ algoritmo~\ref{algo:mas_cercano}.
         $V_x, V_y$: valores de $x, y$ en los que se conoce el valor en $z$.\\
         $V_z$: valores conocidos de $z$.\\
         $I_x$: $n$ puntos de $x$ donde se quiere interpolar\\
-        $I_Y$: $m$ puntos de $y$ donde se quiere interpolar\\
+        $I_y$: $m$ puntos de $y$ donde se quiere interpolar\\
         }
 
     \KwResult{Devuelve una matriz $I_{[n,m]}$ con los valores interpolados,
-      donde cada punto $I(x,y)$ se le asigna al valor de $V_Z$ más cercano
+      donde a cada punto $I(x,y)$ se le asigna al valor de $V_z$ más cercano
       conocido. Da como resultado superficies escalonadas.}
 
     \BlankLine
@@ -161,10 +143,12 @@ promedio de los valores cercanos al punto en cuestión, ponderado por la
 distancia elevado a un exponente arbitrario $p$.
 %
 Cuanto más grande el valor de $p$, más sensible es el método a los valores
-cercanos, la formulación de este método se ve en la ecuación~\ref{eq:idw} y el
+cercanos.
+%
+La formulación de este método se ve en la ecuación~(\ref{eq:idw}) y el
 algoritmo~\ref{algo:IDW}.
 %
-En la figura~\ref{fig:mapas_interpolados} se muestra una comparación de ambos
+En la Figura~\ref{fig:mapas_interpolados} se muestra una comparación de ambos
 métodos, para una malla de $C_{D}=f(\Delta_{P}, l_{v})$ generada al azar.
 
 \begin{equation} \label{eq:idw}
@@ -178,12 +162,12 @@ métodos, para una malla de $C_{D}=f(\Delta_{P}, l_{v})$ generada al azar.
         $V_x, V_y$: valores de $x, y$ en los que se conoce el valor en $z$.\\
         $V_z$: valores conocidos de $z$.\\
         $I_x$: $n$ puntos de $x$ donde se quiere interpolar\\
-        $I_Y$: $m$ puntos de $y$ donde se quiere interpolar\\
+        $I_y$: $m$ puntos de $y$ donde se quiere interpolar\\
         $p$: potencia a la que se eleva cada peso\\
         }
 
     \KwResult{Interpolación ponderada por inverso de la distancia. Dependiendo
-      del valor de p, se obtienen valores más o menos suavizados.}
+      del valor de $p$, se obtienen valores más o menos suavizados.}
 
     \BlankLine
     $I=zeros_{[n,m]}$\;
@@ -229,28 +213,27 @@ métodos, para una malla de $C_{D}=f(\Delta_{P}, l_{v})$ generada al azar.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Área de referencia}
+\subsection{Área de Referencia}
 %
-El área de referencia utilizada por ICESym ese el área de
-cortina~\ref{eq:area_cortina} y se expresa en el código del programa como el
+El área de referencia utilizada por ICESym es el área de
+cortina~(\ref{eq:area_cortina}) y se expresa en el código del programa como el
 área efectiva $F_{V}=A_{R}\cdot C_{D}$.
 %
-Cómo se indico en el apartado~\ref{sec:cap2_cd}, para el  MRCVC el área de
+Como se indicó en el apartado~\ref{sec:cap2_cd}, para el  MRCVC el área de
 referencia es el área frontal del puerto expuesta a la cámara, calculada como la
-altura de la ranura $h_{p}=\lua{tex.print{myData.hp}}\text{ mm}$ multiplicada
-por la distancia entre el borde del puerto y la paleta que delimita la cámara,
-denominado como $l_{v}$.
+altura de la ranura $h_{p}$ multiplicada por la distancia entre el borde del
+puerto y la paleta que delimita la cámara, denominada como $l_{v}$.
 
 %
-% En la figura~\ref{fig:area_referencia} se ilustran las áreas de referencia para
+% En la Figura~\ref{fig:area_referencia} se ilustran las áreas de referencia para
 % una posición del rotor en la que hay solape de cámaras con $\theta = 55^\circ$.
 %
 Este valor se afecta por el coeficiente de descarga intermedio $C_{D,int}$, que
 puede ser un valor fijo o el resultado de interpolar de un mapa de $C_D$ para un
-valor de cuerda y $\Delta_P$ dado, como se indica en la ecuación~\ref{eq:fv}.
+valor de cuerda y $\Delta_P$ dado, como se indica en la ecuación~(\ref{eq:fv}).
 
 \begin{equation}\label{eq:fv}
-    F_v = C_{D,int}\cdot h_{p}\cdot l_{v} = 0.0294\cdot C_{D,int}\cdot l_{v}
+    F_v = C_{D,int}\cdot h_{p}\cdot l_{v} = 0,0294\cdot C_{D,int}\cdot l_{v}
 \end{equation}
 
 % \begin{figure}
@@ -266,7 +249,7 @@ Este se calcula con el flujo másico que atraviesa los parches correspondientes
 a cada cámara y el área de puerto expuesta por cada cámara.
 % TODO: ver nota 8
 
-\subsection{Interfaz con optimizador}
+\subsection{Interfaz con Optimizador}
 %
 Para lograr ejecutar el simulador automáticamente, se creó una librería de
 funciones capaz de tomar como dato de entrada un archivo de configuración que
@@ -277,10 +260,11 @@ Para ejecutar una instancia de ICESym se puede utilizar la interfaz gráfica de
 usuario (GUI) ó ejecutarlo por línea de comando desde una consola.
 %
 La simulación se realiza de manera automática aprovechando la cualidad de ``caja
-negra'' de ICESym y se utiliza la interfaz de línea de comandos, el simulador de
-motores se ejecuta como un archivo de Python ``>> python main.py'', este archivo
-contiene las instrucciones que lanzan la simulación del motor con una
-configuración dada.
+negra'' de ICESym y se utiliza la interfaz de línea de comandos.
+%
+El simulador de motores se ejecuta como un archivo de Python ``>> python
+main.py'', este archivo contiene las instrucciones que lanzan la simulación del
+motor con una configuración dada.
 %
 
 ICESym requiere de un archivo de configuración con los datos de la simulación a
@@ -311,20 +295,21 @@ datos de $C_{D}$, tubo y conectado.
   \item Junctions: contiene información de las uniones entre elementos (tubos,
 tanques, cilindros y atmósfera)
   \item Simulator: configuración de la simulación, velocidades a simular,
-propiedades de gasl, combustible, directorios y demás
+propiedades de gas, combustible, directorios y demás
   \item Tanks: volumen, masa y temperatura de pared de tanques
-  \item Tubes: geometría, cantidad de nodods y conexiones
+  \item Tubes: geometría, cantidad de nodos y conexiones
 \end{itemize}
 
 Los elementos de configuración intervenidos son Cylinders, Valves y Simulator;
-donde se puede modificar seǵun necesidad los siguientes valores:
+donde se pueden modificar según necesidad los siguientes valores:
 
 \begin{itemize}
   \item Simulator:
         \begin{itemize}
-          \item RPMS: Velocidades a simular (por ejemplo una lista de [1000, 2000, \ldots 9000)
-          \item NCYCLES: cantidad de iteraciones por velocidad (un entero mayor o igual a 1)
-          \item FOLDER NAME: nombre de la carpeta donde se guardan los resultados de simulación
+          \item RPMS: Velocidades a simular (por ejemplo una lista de [1000; 2000; \ldots 9000)
+          \item NCYCLES: cantidad de ciclos por velocidad (un entero mayor o igual a 1)
+          \item FOLDER NAME: nombre de la carpeta donde se guardan los
+resultados de la simulación
           \item SHOW INFO: selector para mostrar o no información (0: no, 1:sí)
           \item CONFIG DATA: archivo donde se guardan los datos de configuración
         \end{itemize}
@@ -345,7 +330,7 @@ $C_{D}$, en caso de que se use el modelo de 2 variables.
                   \item $C_{D}$ valores de $C_{D}$ relacionados con alzada, en
 caso de que se use el modelo de 1 variable.
                 \end{itemize}
-          \item $D_{v}$: diámetro del cabezal de la válvula (un real positivo)
+          \item $D_{v}$: diámetro de la cabeza de la válvula (un real positivo)
         \end{itemize}
   \item Tubes
         \begin{itemize}

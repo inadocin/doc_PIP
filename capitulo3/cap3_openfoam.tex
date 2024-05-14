@@ -64,28 +64,30 @@ simulación a partir de los datos obtenidos de las simulaciones con el
 optimizador e ICESym.
 %
 Con los resultados del simulador se grafica la diferencia de presión entre el
-puerto de admisión o escape y la cámara de combustión en función de la apertura
+puerto de admisión o escape y la cámara correspondiente en función de la apertura
 del puerto, para un rango de velocidades de 1000 a 9000 RPM, con el fin de
 identificar las zonas en las condiciones operativas en las que evaluar el puerto.
 %
-En la figura figura~\ref{fig:puntos_interes} se muestra una gráfica de
-$\Delta_{P}$ y alzada para los puertos de admisión y escape del motor resultante
-de la primer iteración (con un $C_{D}$ constante).
+En la Figura~\ref{fig:puntos_interes} se muestra una gráfica de $\Delta P$ y
+alzada para los puertos de admisión y escape del motor resultante de la primera
+iteración (con un $C_{D}$ constante).
 
 Como es de esperarse se tienen mayores diferenciales de presión a menores
 aperturas del puerto porque se está próximo a los eventos de apertura o cierre
-del puerto.
+del mismo.
 %
 A diferencia del puerto de admisión, en el puerto de escape se ve una banda
 bastante definida de operación que se hace más ``llena'' a medida que aumenta el
 área del puerto expuesta a la cámara (alzada).
 %
 Durante la apertura del puerto se ven las mayores diferencias de presión en las
-que hay dos bandas bien definidas, se toman algunos puntos arriba en la zona con
-mayor $\Delta P$ y una cantidad menor para velocidades con $\Delta P = 0$.
+que hay dos bandas bien definidas.
+%
+Se toman algunos puntos arriba en la zona con mayor $\Delta P$ y una cantidad
+menor para velocidades con $\Delta P \simeq 0$.
 %
 A medida que el puerto se abre la diferencia de presión con el gas en la cámara
-de combustión se equaliza y esta banda se afinaja.
+disminuye y esta banda se afina.
 
 \begin{figure}
     \centering
@@ -98,24 +100,24 @@ $\Delta P = f(l_{v})$}\label{fig:puntos_interes}
 % la optimización con el algoritmo genético del motor utilizando coeficientes
 % de descarga constantes para el flujo a través de los puertos.
 %
-El valor de alzada está directamente relacionado con el la posición angular del
+El valor de alzada está directamente relacionado con la posición angular del
 cigüeñal, por lo que una vez seleccionados los puntos de interés se puede
 extraer la geometría deseada de un modelo de CAD paramétrico del motor.
 %
-En este modelo se representó la mitad que contiene los puertos de admisión y
-escape, se obtuvo realizando operaciones geométricas con los volúmenes que
-representan diferentes componentes del motor como son el estator, rotor,
-paletas, etc.
+En este modelo se representó la mitad de la geometría que contiene los puertos
+de admisión y escape, y se obtuvo realizando operaciones geométricas con los
+volúmenes que representan diferentes componentes del motor como son el estator,
+rotor, paletas, etc.
 %
-En la figura~\ref{fig:admision_50} se muestra parte del proceso para obtener el
+En la Figura~\ref{fig:admision_50} se muestra parte del proceso para obtener el
 puerto de admisión a $\theta=50^{\circ}$, en donde se suma el volumen del mismo
-en gris y las figuras que se restan que corresponden al rotor, las paletas y un
+en gris y las Figuras que se restan que corresponden al rotor, las paletas y un
 paralelogramo para quitar una región que no se simuló.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{./CAD/freecad_pasos.png}
-    \caption{Puerto de admisión $\theta=50^{\circ}$Modelado con
+    \caption{Puerto de admisión para $\theta=50^{\circ}$ modelado con
 FreeCAD}\label{fig:admision_50}
 \end{figure}
 
@@ -127,9 +129,9 @@ que se utiliza para generar una malla cerrada, hermética, que puede ser
 procesada por los complementos de OpenFOAM utilizados para generar la malla de
 la simulación.
 %
-Es importante que la hermeticidad de la malla, esto significa que los nodos en
-la frontera entre superficies coincidan, como se ve en la
-figura~\ref{fig:salome_malla_hermetica}, en la que se ven dos superficies
+Es importante que se satisfaga la hermeticidad de la malla, lo cual significa
+que los nodos en la frontera entre superficies coincidan, como se puede observar
+en la Figura~\ref{fig:salome_malla_hermetica}, en la que se ven dos superficies
 "walls" y "outlet" y los nodos compartidos entre ambas superficies.
 %
 
@@ -141,13 +143,15 @@ figura~\ref{fig:salome_malla_hermetica}, en la que se ven dos superficies
 
 El proceso en Salome consta de importar la geometría generada por FreeCAD y
 separar la misma en superficies utilizadas para definir condiciones de contorno
-en OpenFOAM, las superficies diferenciadas son: puerto, cámara/s y pared, ver
-figura~\ref{fig:openfoam_parches}.
+en OpenFOAM.
+%
+Las superficies diferenciadas son: puerto, cámara/s y pared, ver
+Figura~\ref{fig:openfoam_parches}.
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\textwidth]{./flujometrias/openfoam_parches.png}
-    \caption{Nombres de Nombres de Parches}\label{fig:openfoam_parches}
+    \caption{Nombres de Parches}\label{fig:openfoam_parches}
 \end{figure}
 
 Luego de separadas estas superficies se procede a generar la malla en formato
@@ -157,7 +161,7 @@ Se utilizó el generador de mallas NETGEN 1D-2D para crear la superficie, en
 general se configuró el software de modo de tener un stl de buena calidad con
 elementos de menor tamaño en zonas de mayor curvatura.
 %
-En la figura~\ref{fig:salome_fina_gruesa} se ve la diferencia en cantidad de
+En la Figura~\ref{fig:salome_fina_gruesa} se ve la diferencia en cantidad de
 nodos de dos mallas, una malla fina a la izquierda y una malla gruesa a la
 derecha.
 %
@@ -184,35 +188,32 @@ parámetros básicos de configuración para las dos mallas.
 
 \begin{table}
     \centering
-    \begin{tabular}{lcc} \toprule
-        Parámetro                & Malla Fina    & Malla Gruesa \\ \midrule
-        Tamaño máximo            & 0.001         & 0.03 \\
-        Tamaño mínimo            & 1E-7          & 2.4E-5 \\
-        Limitado por curvatura   & Sí            & Sí \\
-        Optimizar                & No            & Sí \\
-        Cantidad de nodos        & 99311         & 49112 \\
-        Cantidad de elementos    & 204695        & 103163 \\ \bottomrule
+    \begin{tabular}{lccc} \toprule
+        Parámetro                & Malla Fina    & Malla Gruesa     & Unidades\\ \midrule
+        Tamaño máximo            & 0,001         & 0,03             & m \\
+        Tamaño mínimo            & 1E-7          & 2,4E-5           & m \\
+        Limitado por curvatura   & Sí            & Sí               & - \\
+        Optimizar                & No            & Sí               & - \\
+        Cantidad de nodos        & 99311         & 49112            & - \\
+        Cantidad de elementos    & 204695        & 103163           & - \\ \bottomrule
     \end{tabular}
-    \caption{Configuración de mallas mostradas en la figura~\ref{fig:salome_fina_gruesa}}
+    \caption{Configuración de mallas mostradas en la Figura~\ref{fig:salome_fina_gruesa}}
     \label{tab:salome_fina_gruesa}
 \end{table}
 
 
-
-
-
 \subsubsection{Configuración}
 %
-Para configurar una simulación de OpenFOAM se organiza el directorio de
-simiulación como se indica en la figura~\ref{fig:direc_pf} para las flujometrías
+Para conFigurar una simulación de OpenFOAM se organiza el directorio de
+simulación como se indica en la Figura~\ref{fig:direc_pf} para las flujometrías
 de aire considerado como incompresible  y~\ref{fig:direc_rpf} en los casos en
 los que se tiene en cuenta la compresibilidad del aire.
 %
 Cada directorio contiene una carpeta con condiciones iniciales ``0'', malla
-``constant'', configuraciones particulares de cada solver ``system'' y una
-caperta con los resultados del post-preprocesado el cual se puede realizar
+``constant'', conFiguraciones particulares de cada solver ``system'' y una
+caperta con los resultados del post-procesado el cual se puede realizar
 durante cada paso de simulación o al final del proceso dependiendo de la
-configuración que se haya utilziado.
+configuración que se haya utilizado.
 
 \begin{figure}[ht!]
   \centering
@@ -230,11 +231,13 @@ configuración que se haya utilziado.
 \end{figure}
 
 
-En el directorio ``0'' se dejan las condiciones iniciales y de borde de cada
+En el directorio ``0'' se indican las condiciones iniciales y de borde de cada
 simulación, utilizando una configuración genérica con parámetros definidos en un
-archivo separado, esto se realiza así para aprovechar las características
-paramétricas de OpenFOAM, permitiendo ejecutar una gran cantidad de simulaciones
-en serie variando solamente los parámetros definidos en un archivo externo
+archivo separado.
+%
+Esto se realiza de este modo para aprovechar las características paramétricas de
+OpenFOAM, permitiendo ejecutar una gran cantidad de simulaciones en serie
+variando solamente los parámetros definidos en un archivo externo
 ``inital\_conditions.cc''.
 
 Estos archivos de condiciones inciales se generan con un \emph{script} que toma
@@ -242,11 +245,61 @@ valores de las simulaciones de \emph{ICESym}, como se indicó en la
 sección~\ref{cap2:cond_iniciales}, en la que también se detallan las ecuaciones
 e hipótesis utilizadas para obtener dichos valores.
 %
-La ejecución de las simulaciones también se automatizan con scripts de
+La ejecución de las simulaciones también se automatiza con scripts de
 \emph{bash} con los pasos para ejecutar las corridas con \emph{ICESym}.
 %
 Con los resultados de las simulaciones se procede a calcular/leer la magnitud
 del caudal másico, necesario para el cálculo del coeficiente de descarga.
+
+% \subsubsection{Esquemas de discretización}
+% %
+% La configuración concreta de los esquemas de discretización utilizados se
+% definen en el archivo de configuración denominado ``fvSchemes''.
+
+% Para el solver de flujo compresible ``rhoPimpleFoam'' se utilizó:
+
+% \begin{itemize}
+%         \item ``ddtSchemes'': Euler
+%         \item ``gradSchemes'': cellLimited Gauss linear 1
+%         \item ``divSchemes'':
+%         \begin{itemize}
+%                 \item $\nabla \cdot (\phi,U)$: Gauss linearUpwind $\nabla U$
+%                 \item $\nabla \cdot (\phi,e)$: Gauss limitedLinear 1
+%                 \item $\nabla \cdot (\phi,h)$: Gauss linearUpwind $\nabla h$
+%                 \item $\nabla \cdot (\phi,p)$: Gauss limitedLinear 1;
+%                 \item $\nabla \cdot (\phi,K)$: Gauss linear;
+%                 \item $\nabla \cdot (\phi,p)$: Gauss limitedLinear 1;
+%                 \item $\nabla \cdot (\phi,k)$: Gauss upwind;
+%                 \item $\nabla \cdot (\phi,\epsilon)$: Gauss upwind;
+%                 \item $\nabla \cdot (((\rho*\nu_{Eff}) dev2((\nabla U)^{T})))$ Gauss linear;
+%         \end{itemize}
+%         \item ``laplacianSchemes'': Gauss linear limited corrected 0.33
+%         \item ``interpolationSchemes'': linear
+%         \item ``snGradSchemes'': limited corrected 0.33;
+% \end{itemize}
+
+% Para el solver ``pimpleFoam'':
+
+% \begin{itemize}
+%         \item ``ddtSchemes'': Euler
+%         \item ``gradSchemes'':
+%         \begin{itemize}
+%           \item $\nabla p$: Gauss linear
+%           \item $\nabla U$: Gauss linear
+%         \end{itemize}
+%         \begin{itemize}
+%                 \item ``divSchemes''
+%                     $\nabla \cdot (\phi,U)$: Gauss linearUpwind $\nabla U$
+%                     $\nabla \cdot (\phi,k)$: Gauss upwind
+%                     $\nabla \cdot (\phi,\epsilon)$: Gauss upwind
+%                     $\nabla \cdot (\phi,R)$: Gauss limitedLinear
+%                     $\nabla \cdot R$: Gauss linear
+%                     $\nabla \cdot (\nu_{EFf}*dev2((\nabla U)^{T}))$: Gauss linear
+%         \end{itemize}
+%         \item ``laplacianSchemes'': Gauss linear uncorrected
+%         \item ``interpolationSchemes'': linear
+%         \item ``snGradSchemes'': uncorrected
+% \end{itemize}
 
 \subsubsection{Malla}\label{sec:cap3_of_malla}
 %
@@ -254,14 +307,16 @@ Una vez obtenido el archivo STL se procede a la generación de la malla dentro d
 OpenFOAM con \emph{blockMesh} y \emph{snappyHexMesh}.
 %
 Primero se crea crea una malla con \emph{blockMesh} que  debe contener la
-totalidad del volumen del puerto a simular, como se ve en la
-figura~\ref{fig:paraview_blockMesh_stl}.
+totalidad del volumen del puerto a simular, como se puede en la
+Figura~\ref{fig:paraview_blockMesh_stl}.
 %
 En este paso se define el tamaño de base de la malla y el nivel general de
-refinamiento, a partir de estos cubos se produce el refinamiento por
-\emph{castelación} que consiste en dividir las celdas en cubos más pequeños y luego
-aplicar el \emph{snapping} para adaptarse a la superficie del volúmen que se está
-modelando, ver figura~\ref{fig:openfoam_shm_pasos}.
+refinamiento.
+%
+A partir de estos hexaedros se produce el refinamiento por \emph{castelación}
+que consiste en dividir las celdas en hexaedros más pequeños y luego aplicar el
+\emph{snapping} para adaptarse a la superficie del volumen que se está
+modelando, ver Figura~\ref{fig:openfoam_shm_pasos}.
 %
 
 \begin{figure}
@@ -293,19 +348,21 @@ modelando, ver figura~\ref{fig:openfoam_shm_pasos}.
 
 El complemento \emph{blockMesh} crea una malla paramétrica con bloques, con
 opciones para la creación de la malla con gradientes de tamaño de bloques y
-diferentes opciones para los bordes, estos se pueden construir por líneas
+diferentes opciones para los bordes, los cuales se pueden construir por líneas
 rectas, arcos o ``splines''.
 %
-La malla se genera o configura con un diccionario \emph{blockMeshDict} ubicado
+La malla se genera o conFigura con un diccionario \emph{blockMeshDict} ubicado
 en \emph{constant/polyMesh}.
 
-El complemento \emph{snappyHexMesh} es el segundo paso del mallado,  parte de
-una malla de bloques como la de openfoam y la \emph{talla} para acomodarse a la
-geometría dada, generando una malla 3D conformada por hexaedors y hexaedros
-partidos a partir de superficies de caras triangulares en formato de
-\emph{estereolitografía} (STL por sus siglas en inglés).
+El complemento \emph{snappyHexMesh} es el segundo paso del mallado.
 %
-Además permite refinar zonas particulares de la geometría y crear una un
+Parte de una malla de bloques como la generada con la utilidad \emph{blockmesh}
+y la \emph{talla} para acomodarse a la geometría dada, generando una malla 3D
+conformada por hexaedros y hexaedros partidos a partir de superficies de caras
+triangulares en formato de \emph{estereolitografía} (STL por sus siglas en
+inglés).
+%
+Además permite refinar zonas particulares de la geometría y crear un
 refinamiento mayor en la zona de la capa límite.
 
 
@@ -314,7 +371,7 @@ refinamiento mayor en la zona de la capa límite.
 % % Para las flujometrías en las que no hay solape de cámaras, se definen las
 % % propiedades de una entrada y una cámara de combustión, indicadas como
 % % \emph{port} y \emph{chamber} respectivamente como se ve en la
-% % figura~\ref{fig:ref_geom1}.
+% % Figura~\ref{fig:ref_geom1}.
 % % %
 % % (Figura aca)
 
@@ -362,7 +419,7 @@ refinamiento mayor en la zona de la capa límite.
 % Debido a que el MRCVC no tiene válvulas, en trabajos anteriores se confeccionó
 % un script para calcular la distancia $l_v$ en función del ángulo del ciclo.
 % %
-% En la figura~\ref{fig:area_referencia} se ilustran las áreas de referencia para
+% En la Figura~\ref{fig:area_referencia} se ilustran las áreas de referencia para
 % una posición del rotor en la que hay solape de cámaras con $\theta = 55^\circ$.
 
 % \begin{figure}
@@ -412,7 +469,7 @@ refinamiento mayor en la zona de la capa límite.
 % como de la posición del ciclo en la que se encuentre, para determinar las
 % condiciones iniciales se debe tener en cuenta el solape.
 % %
-% En la figura~\ref{fig:geom} se muestra un corte del puerto con un plano cuya
+% En la Figura~\ref{fig:geom} se muestra un corte del puerto con un plano cuya
 % normal está en $\vec{z}$, se denominará a la cámara que esté a la izquierda
 % como cámara 0 y a la que esté a la derecha cámara 1
 % %
@@ -434,7 +491,7 @@ refinamiento mayor en la zona de la capa límite.
 
 % Finalmente el caudal másico yse obtiene con OpenFOAM, en donde se simula el
 % tiempo suficiente para que los caudales másicos por entradas o salidas se
-% estabilice, como se ve en la figura~\ref{fig:caudalMasico}.
+% estabilice, como se ve en la Figura~\ref{fig:caudalMasico}.
 
 % \begin{figure}
 %     \centering
@@ -450,7 +507,7 @@ refinamiento mayor en la zona de la capa límite.
 % como de la posición del ciclo en la que se encuentre, para determinar las
 % condiciones iniciales se debe tener en cuenta el solape.
 % %
-% En la figura~\ref{fig:geom} se muestra un corte del puerto con un plano cuya
+% En la Figura~\ref{fig:geom} se muestra un corte del puerto con un plano cuya
 % normal está en $\vec{z}$, se denominará a la cámara que esté a la izquierda
 % como cámara 0 y a la que esté a la derecha cámara 1
 % %

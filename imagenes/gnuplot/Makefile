@@ -6,14 +6,12 @@
 # @file
 # @version 0.1
 #
-# gnuplot -c $(ifile).gp $(data).dat $(ifile).tex, esto es si tengo que pasarle
-# ifile o y ofile al script de gnuplot
+# cambiar los nombres de entreda y salida de abajo para que coincidan con lo que
+# esta en el script de gnuplot que se esta ejecutando. Tiene que coincidir el .tex
 
 clean: all
 	rm -f *.tex *.log *.aux
 
 all:
-	gnuplot -c $(ifile).gp
-	pdflatex $(ifile).tex
-
-# end
+	gnuplot -c bmep_vs_rendVol.gp
+	pdflatex bmep_vs_rendVol.tex

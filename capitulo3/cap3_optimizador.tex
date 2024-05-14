@@ -9,7 +9,7 @@
 Se seleccionó un algoritmo genético para realizar la optimización de la
 geometría del MRCVC por la simplicidad y facilidad de implementación del mismo.
 %
-Si bien este tipo de métodos no garantizan que se alcance un resultado óptimo,
+Si bien este tipo de métodos no garantiza que se alcance un resultado óptimo,
 en la práctica se ha observado que alcanzan soluciones muy cercanas a las
 óptimas tras pocas iteraciones del método~\parencite{goldberg}\parencite{shi}.
 
@@ -33,21 +33,21 @@ guiada.
   \item Los AG pueden operar sobre una representación de las variables estudiadas y
 no necesariamente sobre las variables de estudio.
   \item Cada iteración utiliza un conjunto de datos con cierto grado de
-aleatoreidad.
+aleatoriedad.
   \item Utilizan una función objetivo para evaluar cada punto sin necesidad de
 conocer la derivada de la función que se está evaluando.
   \item Los AG usan reglas probabilísticas de decisión.
 \end{enumerate}
 
 Otros métodos de optimización se mueven de un punto al siguiente en el espacio
-solución basándose en regla de decisión definida por el usuario, esto puede dar
-como resultado un máximo (o mínimo) local.
+solución basándose en alguna regla de decisión definida por el usuario, lo cual
+puede dar como resultado un máximo (o mínimo) local.
 
 % \subsection{Componentes básicos de un AG}
 %
-Los mecanismos básicos que hacen a un algoritmo genético son: 1) SELECCIÓN,
-2) CRUZA y 3) MUTACIÓN, el funcionamiento básico se sintetiza en el
-pseudocódigo~\ref{algo:genetico}.
+Los mecanismos básicos que hacen a un algoritmo genético son: 1) SELECCIÓN, 2) CRUZA y 3) MUTACIÓN.
+%
+El funcionamiento básico se sintetiza en el pseudocódigo~\ref{algo:genetico}.
 
 La SELECCIÓN consiste en crear individuos a partir del puntaje que devuelve
 una función objetivo, la cual es la encargada de guiar el proceso de
@@ -56,11 +56,12 @@ se quiere obtener.
 %
 Este paso significa que aquellos individuos a los cuales se les asignó un
 puntaje más elevado tienen más probabilidades de ser copiados o ``transmitir''
-sus parámetros a la iteración siguiente, este proceso imita en cierta forma la
-selección natural o evolución Darwiniana y de aquí viene el nombre de algoritmo
-genético o evolutivo.
+sus parámetros a la iteración siguiente.
+%
+Este proceso imita en cierta forma la selección natural o evolución Darwiniana y
+de aquí viene el nombre de algoritmo genético o evolutivo.
 
-El segundo operador es la CRUZA, consiste en combinar los parámetros de dos
+El segundo operador es la CRUZA, consistente en combinar los parámetros de dos
 individuos para obtener uno nuevo, esto se asemeja a la reproducción.
 
 Finalmente la MUTACIÓN es la encargada de modificar aleatoriamente uno o más
@@ -69,7 +70,7 @@ parámetros de cada nuevo individuo.
 Este operador juega un rol secundario pero muy importante en la simulación:
 \begin{enumerate}
   \item Secundario porque se pueden alcanzar soluciones satisfactorias sin incluir este
-        mecanismo
+        mecanismo.
   \item Importante porque utilizado con probabilidades pequeñas de ocurrencia
 permite evitar la pérdida temprana de información relevante.
         %
@@ -106,13 +107,14 @@ simulador y así poder ejecutar de manera automatica una simulación con una
 configuración particular del motor.
 %
 Otro aspecto del optimizador que se desarrolló es el de poder ejecutar múltiples
-instancias de ICESym en paralelo para reducir el tiempo de ejecución cada
+instancias de ICESym en paralelo para reducir el tiempo de ejecución de cada
 simulación, pudiendo evaluar varios motores (o individuos) al mismo tiempo.
 
-Para la primer iteración se programaron desde cero los algoritmos y funciones
-necesarias para llevar a cabo la optimización,  posteriormente se tomo la la
-librería DEAP~\parencite{DEAP_JMLR2012} y se modificaron los operadores a medida,
-para poder utilizarlos con ICESym.
+Para la primera iteración se programaron desde cero los algoritmos y funciones
+necesarias para llevar a cabo la optimización.
+%
+Posteriormente se tomó la librería DEAP~\parencite{DEAP_JMLR2012} y se
+modificaron los operadores a medida, para poder utilizarlos con ICESym.
 
 En los apartados siguientes se describe la implementación de cada uno de los
 operadores en el optimizador.
@@ -123,7 +125,7 @@ Se decidió representar cada motor como un vector con las dimensiones y reglaje
 que definen la geometría del sistema de intercambio de gases, los cuales se
 listan en la tabla~\ref{tab:param_motor}.
 %
-Se limitó los valores que puede tomar cada parámetro para que la geometría
+Se limitaron los valores que puede tomar cada parámetro para que la geometría
 resultante se asemeje a la geometría del motor utilizado en trabajos anteriores.
 
 
@@ -135,7 +137,7 @@ resultante se asemeje a la geometría del motor utilizado en trabajos anteriores
     2 & DTE & Diámetro de tubo & Escape & [60, 100] mm\\
     3 & LIT & Largo de tubo & Admisión & [300, 2000] mm\\
     4 & LET & Largo de tubo & Escape & [300, 2000] mm\\
-    5 & IIA & Ángulo de apertura & Admisión & [0,90]º \\
+    5 & IIA & Ángulo geométrico de apertura & Admisión & [0,90]º \\
     6 & IFA & Ángulo geométrico de cierre & Admisión & [IIA, 90]º \\
     7 & IIE & Ángulo geométrico de apertura & Escape & [0, 90]º \\
     8 & IFE & Ángulo geométrico de cierre & Escape & [IIA, 90]º \\ \bottomrule
@@ -152,12 +154,12 @@ Esto facilita la implementación de los operadores de selección, cruza y
 mutación, pudiendo aprovechar implementaciones de operadores existentes en
 librerías como DEAP.
 %
-Estos 8 números binarios luego se convierten una lista de enteros mediante un
-una transformación lineal $f(x)=a\cdot x+b$, en la que se ingresa con un entero
+Estos 8 números binarios luego se convierten una lista de enteros mediante una
+transformación lineal $f(x)=a\cdot x+b$, en la que se ingresa con un entero
 entre 0 y $2^{n}-1$ para ir del número binario a un decimal, siendo $n$ la
 cantidad de dígitos del binario (en este caso 5).
 %
-Los coeficientes $a$ y $b$ son tal que $f(0)=x_{0}$ y $f(2^{n}-1) = x_{1}$,
+Los coeficientes $a$ y $b$ son tales que $f(0)=x_{0}$ y $f(2^{n}-1) = x_{1}$,
 donde $x_{0}$ y $x_{1}$ son los extremos del rango para el que se quiere aplicar
 la transformación.
 %
@@ -168,8 +170,8 @@ De este modo se obtiene el valor de cada uno de los parámetros que hacen a la
 configuración particular de cada motor en ICESym.
 %
 El orden de los mismos se mantiene constante, por lo que cada sección del número
-representa una característica en particular del motor, como se muestra en la
-figura~\ref{fig:pop_bit}.
+representa una característica en particular del motor, como se muestra el
+ejemplo de la Figura~\ref{fig:pop_bit}.
 %
 
 \begin{figure}[ht]
@@ -182,16 +184,18 @@ figura~\ref{fig:pop_bit}.
 \subsection{Reproducción}
 
 Para crear la nueva población se debe elegir a los nuevos candidatos basándose
-en los puntajes de la población actual, hay varios métodos diferentes de
-selección, como son de ruleta, aleatoria, por puntaje y de tipo torneo.
+en los puntajes de la población actual.
+%
+Hay varios métodos diferentes de selección, como son de ruleta, aleatoria, por
+puntaje y de tipo torneo.
 %
 Para este trabajo se seleccionó el método de torneo, que consiste en comparar
 los puntajes de $n$ individuos seleccionados al azar y el que tenga el mejor
 puntaje es el seleccioando o ganador.
 %
 La cantidad de individuos comparados $n$ es el tamaño de muestreo o de torneo,
-cuanto más grande sea este número más posibilidades tiene de ganar los
-individuos con mayor puntaje y la cantidad de rondas del torneo determina la
+cuanto más grande sea este número más posibilidades tienen de ganar los
+individuos con mayor puntaje, y la cantidad de rondas del torneo determina la
 cantidad de individuos seleccionados para participar en la próxima iteración o
 generación de candidatos.
 
@@ -199,7 +203,7 @@ generación de candidatos.
 \subsection{Cruza}
 %
 El operador de cruza se encarga de combinar los genes de dos individuos para
-producir un individuo nuevo, la función es la de intercambiar los parámetros que
+producir un individuo nuevo; la función es la de intercambiar los parámetros que
 hacen a uno y otro para dar lugar a una nueva posible solución.
 %
 Para individuos representados por un vector se suelen usar operadores de tipo
@@ -210,8 +214,11 @@ se corta el vector que forma al individuo en dos puntos, la posición de estos
 puntos se selecciona al azar, manteniendo el largo original de los vectores.
 %
 Luego los individuos ``cruzados'' se combinan de forma complementaria, como se muestra
-la figura~\ref{fig:cr2puntos}, en el algoritmo~\ref{algo:cr2puntos} se esquematiza
+la Figura~\ref{fig:cr2puntos}.
+%
+En el algoritmo~\ref{algo:cr2puntos} se esquematiza
 el proceso.
+%
 % TODO: pongo pseudocódigo? o dejo el còdigo
 
 \begin{figure}[ht!]
@@ -254,7 +261,7 @@ el proceso.
 %
 La mutación juega un rol secundario pero importante, una pequeña probabilidad
 de que alguno de los genes se modifique en un valor aleatorio contribuye a que
-el algoritmo genético no se estanque en soluciones máximos o mínimos locales.
+el algoritmo genético no se estanque en soluciones de máximos o mínimos locales.
 
 Algunos de los métodos de mutación utilizados son:
 
@@ -270,22 +277,23 @@ Algunos de los métodos de mutación utilizados son:
 % $10101 \rightarrow 11101$.
 
 En este trabajo se utiliza el método de reordenado aleatorio en el cual se
-modfiica al azar el orden de los números que hacen al individuo, modificando los
+modifica al azar el orden de los números que hacen al individuo, modificando los
 índices de la lista que define el arreglo, por ejemplo:
 $12345 \rightarrow 12543$.
 
-\subsection{Función objetivo}\label{sec:funcion_objetivo}
+\subsection{Función Objetivo}\label{sec:funcion_objetivo}
 %
 La función objetivo es la encargada de dar puntaje a los individuos, en la
 analogía con la selección natural esta función es el ambiente.
 %
-Determina la aptitud de un motor con respecto a otro en lo que respecta
+Determina la aptitud de un motor con respecto a otro en lo que respecta a
 \emph{performance} del sistema de intercambio de gases.
 %
 Inicialmente se propuso que la función objetivo sea la suma de los rendimientos
-volumétricos a todas las velocidades simuladas $s=\sum \eta_{v}$, este tipo de
-funciones dió como resultado una curva de $\eta_{v}$ aserrada como se muestra en
-la figura~\ref{fig:curva_aserrada}.
+volumétricos a todas las velocidades simuladas $s=\sum \eta_{v}$.
+%
+Este tipo de funciones dió como resultado una curva de $\eta_{v}$ aserrada como
+se muestra en la Figura~\ref{fig:curva_aserrada}.
 
 \begin{figure}[ht]
   \centering
@@ -298,11 +306,11 @@ potencia dispar, por este motivo se modificó la función objetivo para favorece
 curvas suaves y preferentemente con un solo punto de inflexión.
 %
 Se implementó una suma ponderada para obtener un rendimiento volumétrico máximo
-en un valor de 6000 RPM aprovechando las características de balanceo de fuerzas
-y mayores velocidades de giro de los motores rotativos.
+en un valor cercano a 6000 RPM de modo de aprovechar las características de
+balanceo de fuerzas y mayores velocidades de giro de los motores rotativos.
 %
 La aptitud resulta de la suma del rendimiento volumétrico y el inverso de la
-fracción de gases residuales, esto provó ser la función objetivo que mejores
+fracción de gases residuales, lo cual probó ser la función objetivo que mejores
 resultados dió, la metodología utilizada se resume a continuación.
 
 \begin{enumerate}
@@ -313,13 +321,13 @@ simulada.
 $x_{r}=(x_{r,1},\ldots,x_{r,n})$ se hace una suma para cada velocidad
 $S_{i}=\eta_{v,i} + x_{r,i}^{-1}$.
         \item Cada motor tiene un vector o lista de valores
-$S = (S_{1},\ldots,S_{n})$ para cada velocidad evaluada, con esta lista se
-        calcula el puntaje del motor como:
+$S = (S_{1},\ldots,S_{n})$ para cada velocidad evaluada, con la cual se calcula
+el puntaje del motor como:
         \begin{equation}
         f = \sum_{i=1}^{n}{S_{i}} + S_{k}^{2}
       \end{equation}
 
-El valor $S_{k}$ es el puntaje para la $k-ésima$ velocidad de giro (6000 RPM en
+El valor $S_{k}$ es el puntaje para la $k$-\textit{ésima} velocidad de giro (6000 RPM en
 este caso) y se eleva al cuadrado para favorecer altos rendimientos en esta
 velocidad.
 \end{enumerate}
@@ -350,16 +358,18 @@ próxima, los puntajes se transforman de tal modo que
 $f'_{max}=C_{mult}f_{media}$.
 %
 El valor de $C_{mult}$ es la cantidad de copias que se espera obtener del mejor
-de los candidatos en la generación siguiente y se usa en 1.2 a 2 para
+de los candidatos en la generación siguiente y se usa en $1,2$ a $2$ para
 poblaciones de entre 50 y 100 individuos~\parencite{goldberg}.
 
 Hacia el final donde la diferencia entre puntajes de los individuos de la
 población tiende a achicarse, el parámetro $C_{mult}$ cumple la función de
-acrecentar las diferencias individuos.
+acrecentar las diferencias entre individuos.
 
 En caso de existir individuos con puntaje muy bajo o nulo se hace un
-pre-escalado del puntaje que fija el mínimo en $f'_{min}=0$, el procedimiento se
-lista en los algorimtos \ref{algo:pre-escala} y \ref{algo:pop_scale}.
+pre-escalado del puntaje que fija el mínimo en $f'_{min}=0$.
+%
+El procedimiento se lista en los algorimtos \ref{algo:pre-escala} y
+\ref{algo:pop_scale}.
 
 
 \begin{algorithm} \caption{Algoritmo de pre-escalado}\label{algo:pre-escala}
@@ -384,7 +394,7 @@ $f\in[1.2, 2]$\;\\ }
     $a = (C_{mult} - 1) \cdot u_{avg} / \Delta u$\;
     $b = u_{avg} \cdot (u_{max} - C_{mult} \cdot u_{avg}) \Delta_{u} $\;
   }{
-    \If{$\Delta \neq 0$}{
+    \eIf{$\Delta \neq 0$}{
       $a = u_{avg} \mathbin{/} \Delta_{u}$\;
       $b = -u_{min} \cdot u_{avg} \mathbin{/} \Delta_{u}$ \;
     }{

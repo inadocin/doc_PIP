@@ -1,7 +1,7 @@
-ifile = ARG1
-ofile = ARG2
+ifile = "rendimiento_aserrado.dat"
+ofile = "rendimiento_aserrado.tex"
 
-set terminal tikz standalone color size 8cm,5cm
+set terminal tikz standalone color size 13cm,8cm
 set termoption dash
 set output ofile
 

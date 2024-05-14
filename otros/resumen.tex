@@ -10,21 +10,23 @@
 \
  \hfill Autor: Nicolás Daniel Barrios
 
-\hfill Director: Ezequiel Jose López
+\hfill Director: Dr. Ing. Ezequiel José López
 
 
 \textbf{Resumen}
 
 
-En este trabajo se realizó una optimización de los sistemas  admisión y escape
+En este trabajo se realizó una optimización de los sistemas de admisión y escape
 del Motor Rotativo de Combustión a Volumen Constante (MRCVC), utilizando
-herramientas de simulación computacional como ICESym, un simulador de motores
-de combustión interna con modelos 0D/1D; OpenFOAM, la herramienta libre de CFD;
-un optimizador basado en un algoritmo genético (AG) desarrollado a base de la
-librería DEAP (Python) para funcionar en conjunto con ICESym; entre otros.
+herramientas de simulación computacional como ICESym, un simulador de motores de
+combustión interna con modelos cero-/uni-dimensionales (0D/1D);
+OpenFOAM, la herramienta libre de fluidodinámica computacional (CFD por sus
+siglas en inglés); un optimizador basado en un algoritmo genético (AG)
+desarrollado a base de la librería DEAP (Python) para funcionar en conjunto con
+ICESym; entre otros.
 
 Como primera instancia se desarrolló una librería de funciones que acoplaron al
-AG con ICESym, permitiendo: configurar, ejecutar y procesar los datos de salida
+AG con ICESym, permitiendo: conFigurar, ejecutar y procesar los datos de salida
 del simulador de motores.
 %
 % Además, se definió una curva objetivo de rendimiento volumétrico que se utilizó
@@ -39,12 +41,15 @@ Esto permitió agregar como dato de entrada un mapa de $C_D$ para tener un mejor
 modelado del funcionamiento de los puertos.
 
 
-Se realizó una primer optimización de la geometría de los puertos del MRCVC con
-valores de $C_D$ asumidos constantes, de aquí se obtuvo un diseño preliminar de
-los puertos que fue modelado en CAD con el programa FreeCAD, esto junto con el
-estado termodinámico del gas obtenido de los datos de salida de ICESym, se
-utilizó para realizar flujometrías con OpenFOAM de los puertos en diferentes
-regímenes de funcionamiento del motor y así obtener el mapa de $C_D$.
+Se realizó una primera optimización de la geometría de los puertos del MRCVC con
+valores de $C_D$ asumidos constantes, obteniéndose un diseño preliminar de los
+puertos cuya geometŕia fue modelada en un programa de diseño asistido por
+computadora (CAD por sus siglas en inglés) con el programa FreeCAD.
+%
+Este resultado, junto con el estado termodinámico del gas obtenido de los datos
+de salida de ICESym, se utilizó para realizar flujometrías con OpenFOAM de los
+puertos en diferentes regímenes de funcionamiento del motor y así obtener el
+mapa de $C_D$.
 %
 Este mapa se utilizó como retroalimentación del AG para una nueva optimización
 de los sistemas de intercambio de gases, obteniendo como resultado una
@@ -54,14 +59,14 @@ de desarrollo del motor.
 
 \noindent 
 
-\textit{Palabras clave:MRCVC, Rendimiento volumétrico, Sistemas de
-intercambio de gases, Flujometrías, Optimización, Algoritmo Genético.}
+\textit{Palabras clave: MRCVC, Rendimiento volumétrico, Sistemas de
+intercambio de gases, CFD, Optimización, Algoritmo Genético.}
 
 \newpage
 \thispagestyle{plain}
 % \setstretch{1.0}
 \begin{center}
-\large{\textbf{{Intake and Exhaust gas exchange systems design for the Constant Volume Rotary Engine}}}\\
+\large{\textbf{{Intake and Exhaust gas exchange systems design for the Constant-Volume Combustion Rotary Engine}}}\\
 \end{center}
 % \setstretch{1.5}
 
@@ -69,39 +74,40 @@ intercambio de gases, Flujometrías, Optimización, Algoritmo Genético.}
 
 \hfill Author: Nicolás Daniel Barrios
 
-\hfill Advisor: Ezequiel Jose López
+\hfill Advisor: Dr. Ing. Ezequiel José López
 
 \textbf{Summary}
 
-This document presents the optimization of the Constant Volume Combustion
-Rotary Engine gas exchange systems, this was achieved using free and open
-source tools such as ICESym, an Internal Combustion Engine Symulator with 0D/1D
-models; OpenFOAM, the open source CFD tool; a genetic optimization algorithm
-(GA) tailored to work with ICESym, based on the DEAP Python library, among
-others.
+This document presents the optimization of the Constant-Volume Combustion
+Rotary Engine gas exchange systems.
+%
+This was achieved using free and open source tools such as ICESym, an internal
+combustion engine symulator based on 0D/1D models; OpenFOAM, the open source CFD
+tool; a genetic optimization algorithm (GA) tailored to work with ICESym, based
+on the DEAP Python library, among others.
 
-A first step was developing a Python library to allow the GA to configure, run
-and read ICESym.
+A first step was developing a Python library to allow the GA to configure and
+run and post-process ICESym simulations.
 %
 Also, an objective function was defined to evaluate individual and specific
-engine configuration performance.
+engine conFiguration performance.
 
-To allow the GA to work with ICESym, some modifictations to the source code were
+To allow the GA to work with ICESym, some modifications to the source code were
 made for easier communication with the optimization functions.
 %
 A better modeling of the gas exchange process was made by adding functionality
-to ICESym that takes into account a discharge coefficient map dependant on
-pressure diferential across the port and port opening area.
+to ICESym that takes into account a discharge coefficient map dependant on the
+pressure diferential across the port and the port opening area.
 %
 Using constant value discharge coefficients for the intake and exahust ports, a
-first optimization run was made that resulted in a pre-optimized geometry that
+first optimization run was performed that resulted in a pre-optimized geometry that
 was modeled with FreeCAD.
 
-This 3D CAD model of the port geomrty was used with gas state data taken from
+This 3D CAD model of the port geometry was used with gas state data taken from
 ICESym results to make CFD runs. With this results the mass flow rate was
-obtained in a variety of engine position and states to build a DC map. This map
-was used as an ICESym input to have a better flow model of the gas through the
-ports.
+obtained in a variety of engine position and states to build up a discharge
+coefficient map. This map was used as an ICESym input to have a better flow
+model of the gas through the ports.
 
 Lastly this map was used in a second optimization run to obtain the final
 geometry.

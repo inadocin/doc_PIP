@@ -4,25 +4,27 @@ En este apartado se describen algunos de los aspectos geométricos del motor y
 ciclo operativo del MRCVC.
 
 Los componentes principales del motor son: rotor, estator, paletas, bieletas,
-rueda paralelizadoras, eje de motor, conducto de admisión y conducto de escape;
-el motor analizado en este trabajo tiene 3 paletas con ápices agudos, que
+rueda paralelizadora, eje de motor, conducto de admisión y conducto de escape.
+%
+El motor analizado en este trabajo tiene 3 paletas con ápices agudos, que
 corresponden a la geometría ideal del motor (ápices de paletas de radio nulo).
 %
-La forma de estos elementos se puede ver en la figura~\ref{fig:mrcvc} y en la
-tabla~\ref{tab:geom_mrcvc} se resume el valor de los parámetros geométricos que
+Estos elementos se esquematizan en la Figura~\ref{fig:geom_flor_mrcvc}, en la
+Tabla~\ref{tab:geom_mrcvc} se resume el valor de los parámetros geométricos
 utilizados en este trabajo.
 
 Uno de los aspectos más importantes de este motor es la geometría de la cámara
-de combustión, su forma es tal que el volumen mínimo del ciclo permanece
-constante por un período angular considerable, determinado por la geometría del
-motor.
+de combustión.
+%
+Su forma es tal que el volumen mínimo del ciclo permanece constante por un
+período angular considerable. % , determinado por la geometría del motor.
 %
 Este período es lo suficientemente grande para permitir que la combustión ocurra
-casi en su totalidad a volumen constante, como se observa en la
-figura~\ref{fig:mrcvc_vol_cte} y~\ref{fig:PV_mrcvc}.
+casi en su totalidad a volumen constante, como se observa en las
+Figura~\ref{fig:mrcvc_vol_cte} y~\ref{fig:PV_mrcvc}.
 %
-Este tipo de combustión brinda una mejora en el rendimiento energético del motor
-además, el balanceo de fuerzas que se obtiene por ser un motor rotativo permite
+Este tipo de combustión brinda una mejora en el rendimiento energético del motor,
+además el balanceo de fuerzas que se obtiene por ser un motor rotativo permite
 operar el motor a altas RPM y así alcanzar mayores potencias en comparación a
 motores de tamaño o cilindrada similar.
 %
@@ -30,6 +32,11 @@ Esta combinación de rendimiento y potencia que, en principio pueden ser
 relativamente altos, hace atractivo el desarrollo de este motor.
 %
 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{plano_mrcvc_flor.pdf}
+  \caption{Parámetros goemétricos del MRCVC}\label{fig:geom_flor_mrcvc}
+\end{figure}
 
 \begin{figure}[ht]
   \centering
@@ -44,13 +51,13 @@ relativamente altos, hace atractivo el desarrollo de este motor.
 \end{figure}
 
 
-El ciclo operativo del MRCVC es un ciclo Otto en el que las carreras de
-admisión, compresión, expansión y escape ocurren a medida que el fluido de
-trabajo rota con respecto al eje del cigüeñal.
+El ciclo operativo ideal del MRCVC es considerado un ciclo Otto en el que las
+carreras de admisión, compresión, expansión y escape ocurren a medida que el
+fluido de trabajo rota con respecto al eje del cigüeñal.
 %
-En la figura~\ref{fig:ciclo_mrcvc} se puede ver una progresiva del ciclo del
-MRCVC con estas carreras representadas en azul para la admisión, compresión en
-amarillo, expansión en rojo y escape o barrido en violeta.
+En la Figura~\ref{fig:ciclo_mrcvc} se puede ver una progresiva del ciclo del
+MRCVC con estas carreras representadas en AZUL para la admisión, compresión en
+AMARILLO, expansión en ROJO y escape o barrido en VIOLETA.
 
 Durante el ciclo se destaca un aspecto particular de este motor, siguiendo la
 paleta de color negro se ve que durante el proceso de compresión y combustión,
@@ -58,14 +65,18 @@ las paletas que forman la frontera aguas arriba y aguas abajo de la cámara de
 combustión cambian.
 %
 La paleta que delimita el frente de la cámara se retrasa con respecto a la
-cámara con la que inició el ciclo, produciendo que este dure más de 1 revolución
-resultando en aproximadamente $600^{\circ}$ de giro del cigüeñal.
+cámara con la que inició el ciclo, produciendo que este dure más de una
+revolución resultando en  en $600^{\circ}$ de giro del cigüeñal para el caso de
+3 paletas considerado en este trabajo.
 
 Para un motor de $R=\lua{tex.print(myData.R)}$ mm y
 $r=\lua{tex.print(myData.r)}$ mm  el volumen mínimo alcanzado permanece
-constante por un período de $44.65^\circ$, como se puede ver en la
-figura~\ref{fig:mrcvc_vol_cte} en donde se esquematiza la variación del volumen
+constante por un período de $44,65^\circ$, como se puede ver en la
+Figura~\ref{fig:mrcvc_vol_cte} en donde se representa la variación del volumen
 con respecto al ciclo.
+%
+En este gráfico se indica el ángulo de inicio de la combustión, el cual es una
+estimación basada en datos de otros motores como $\theta_{0}\simeq 267^{\circ}$.
 
 \begin{figure}[ht]
   \centering
@@ -75,17 +86,25 @@ con respecto al ciclo.
 
 \begin{table}
     \centering
-    \begin{tabular}{rcccccccc} \toprule
-     Parámetro & n & R & r & $h_c$ & rc & V0 & $R_i$ & $R_e$ \\ \midrule
-     Valor & \lua{tex.print(myData.n)} & \lua{tex.print(myData.R)} & \lua{tex.print(myData.r)} & \lua{tex.print(myData.hc)} & \lua{tex.print(myData.rc)} & \lua{tex.print(myData.V0)} & \lua{tex.print(trunc(myData.Ri))} & \lua{tex.print(trunc(myData.Re))} \\
-     Unidades & --- & mm & mm & mm & --- & $cm^3$ & mm & mm \\ \bottomrule
+    \begin{tabular}{rccccccccc} \toprule
+     Parámetro & n & R & r & $h_{c}$ & $h_{p}$ & rc & V0 & $R_i$ & $R_e$ \\ \midrule
+     Valor & \lua{tex.print(myData.n)} & \lua{tex.print(myData.R)} & \lua{tex.print(myData.r)} & \lua{tex.print(myData.hc)} & \lua{tex.print(myData.hp)} & \lua{tex.print(myData.rc)} & \lua{tex.print(myData.V0)} & \lua{tex.print(trunc(myData.Ri))} & \lua{tex.print(trunc(myData.Re))} \\
+     Unidades & --- & mm & mm & mm & mm & --- & $cm^3$ & mm & mm \\ \bottomrule
     \end{tabular}
     \caption{Geometría del MRCVC}\label{tab:geom_mrcvc}
 \end{table}
 
+\nomenclature[G]{\(R\)}{Radio de referencia del MRCVC, ver Figura \ref{fig:mrcvc_vol_cte}}
+\nomenclature[G]{\(R_{i}\)}{Radio de cara interna del MRCVC, ver Figura \ref{fig:mrcvc_vol_cte}}
+\nomenclature[G]{\(R_{e}\)}{Radio de cara externa del MRCVC, ver Figura \ref{fig:mrcvc_vol_cte}}
+\nomenclature[G]{\(r\)}{Radio de trayectoria de paletas, ver Figura \ref{fig:mrcvc_vol_cte}}
+\nomenclature[G]{\(n\)}{Número de paletas del MRCVC}
+\nomenclature[G]{\(h_c\)}{Altura de cámara}
+\nomenclature[G]{\(h_p\)}{Altura de puerto}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Sistemas de intercambio de gases}
+\subsection{Sistemas de Intercambio de Gases}
 %
 En un motor típico de combustión interna el sistema de intecambio de gases se
 compone de una toma de aire, filtro, cuerpo de mariposa, puerto y conducto de
@@ -100,7 +119,7 @@ admisión y escape junto con puertos de admisión y escape.
 El eje de los conductos coincide con el eje del puerto, estos últimos hacen una
 transición desde el diámetro del conducto hasta la altura de la ranura del
 puerto en la cámara de combustión, en la
-figura~\ref{fig:sistema_intercambio_gases} se esquematiza la geometría
+Figura~\ref{fig:sistema_intercambio_gases} se esquematiza la geometría
 mencionada.
 
 \begin{figure}
@@ -111,7 +130,8 @@ mencionada.
 
 
 En trabajos anteriores~\parencite{lopez13} se demostró que se tiene una mejor
-\emph{performance} del motor si se ubican los puertos en el cuerpo central del
+\emph{performance} del motor si se ubican los puertos en el cuerpo central, esto
+comparado al rendimiento obtenido con los puertos ubicados en las tapas del
 estator.
 %
 En dicho trabajo se realizó una optimización de la geometría mediante un barrido
@@ -122,14 +142,17 @@ duración de los procesos de admisión y escape.
 % Los ángulos que determinan el reglaje de los puertos de admisión y escape son
 % los de apertura y de cierre del puerto.
 %
-Los puertos de admisión y escape están fijos en en la periferia del estator y su
-posición se indica con los ángulos \emph{IIA}, e \emph{IFA} para la admisíon y
-\emph{EIA} y \emph{EFA} para el escape.
-%
-En la figura~\ref{fig:angulos_escape} se indican estos para el puerto de escape.
+Los puertos están fijos en la periferia del estator y su posición se define con
+los ángulos \emph{IIA}, e \emph{IFA} para la admisión y \emph{EIA} y \emph{EFA}
+para el escape, ver Figura~\ref{fig:angulos_puertos}.
+
+\nomenclature[G]{\(IIA\)}{Ángulo de apertura del puerto de admisión, ver Figura \ref{fig:angulos_puertos}}
+\nomenclature[G]{\(IFA\)}{Ángulo de cierre del puerto de admisión, ver Figura \ref{fig:angulos_puertos}}
+\nomenclature[G]{\(EIA\)}{Ángulo de apertura del puerto de escape, ver Figura \ref{fig:angulos_puertos}}
+\nomenclature[G]{\(EFA\)}{Ángulo de cierre del puerto de escape, ver Figura \ref{fig:angulos_puertos}}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.5\textwidth]{angulos_escape.png}
-    \caption{Puerto de escape}\label{fig:angulos_escape}
+    \includegraphics[width=0.8\textwidth]{/CAD/angulos.pdf}
+    \caption{Puerto de admisión y escape}\label{fig:angulos_puertos}
 \end{figure}
