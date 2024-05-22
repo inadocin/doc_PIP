@@ -1,7 +1,7 @@
 \section{Flujometrías y CFD}
 %
-Se realizó una serie de flujometrías para obtener valores de $C_{D}$ en función
-de la diferencia de presión a través del puerto y la apertura del
+Se realizaron una serie de flujometrías para obtener valores de $C_{D}$ en
+función de la diferencia de presión a través del puerto y la apertura del
 mismo\footnote{ICESym utiliza alzada, por lo que se traduce área de pasaje de
 puerto en alzada de válvula equivalente.}, con el fin de obtener un mapa del
 coeficiente de descarga en función de la presión y apertura del puerto
@@ -17,6 +17,12 @@ localizada para un rango de operación del motor.
 \nomenclature[PO]{\(\Delta P\)}{Diferencia de Presión entre puerto y cámara}
 \nomenclature[PO]{\(l_v\)}{Alzada de válvula o apertura de puerto}
 
+Para las flujometrías se utilizó el software OpenFOAM seleccionando el algoritmo
+PIMPLE, con sus implementaciones ``pimpleFoam'' y ``rhoPimpleFoam'' para los
+casos en los que se considera un fluido de trabajo incompresible y compresible
+respectivamente.
+%
+La configuración del software se detalla en la Sección~\ref{sec:3_openfoam}.
 
 \subsection{Modelos de Turbulencia}
 %
@@ -46,10 +52,10 @@ Las ecuaciones del modelo son:
 donde
 
 \begin{itemize}
-  \item[-] $\kappa$ es la energía cinética turbulenta en $m^{2}s^{-2}$.
+  \item[-] $\kappa$ es la energía cinética turbulenta.
   \item[-] $D_{\kappa}$ es la difusividad efectiva para $\kappa$.
-  \item[-] $P_{\kappa}$ es la tasa de producción de energía cinética turbulenta en $m^{2}s^{-3}$.
-  \item[-] $\epsilon$ es la tasa de disipación de energía cinética turbulenta en $m^{2}s^{-3}$.
+  \item[-] $P_{\kappa}$ es la tasa de producción de energía cinética turbulenta.
+  \item[-] $\epsilon$ es la tasa de disipación de energía cinética turbulenta.
 \end{itemize}
 
 
@@ -129,6 +135,9 @@ valor inicial al problema.
 La longitud de mezcla $l_m$ determina el tamaño que pueden tener los torbellinos
 turbulentos, su valor inicial se aproximó como la altura de cámara $l_m = h_c$.
 %
+Esta estimación de $l_{m}$ a priori parece algo elevado, es un valor que se
+utilizó para inicializar la simulación.
+
 
 \subsection{Condiciones Iniciales}\label{cap2:cond_iniciales}
 %
@@ -166,40 +175,62 @@ Independientemente del tipo de flujo que se esté simulando, de ICESym se toman
 los valores de presión, temperatura, densidad y velocidad para calcular los
 valores iniciales.
 
-Debido a la cantidad de flujometrías a realizar, se utilizó un \emph{script} para leer
-los datos de salida de ICESym y calcular los valores requeridos en función del
-tipo de flujo a simular.
+Debido a la cantidad de flujometrías a realizar, se utilizó un \emph{script}
+para leer los datos de salida de ICESym y calcular los valores requeridos en
+función del tipo de flujo a simular.
 %
 Este \emph{script} toma el estado del gas del simulador tanto en la cámara de
 combustión como del puerto que se esté analizando, para la posición de alzada y
 RPM requeridas.
 %
-Con estos valores se calculan las propiedades termodinámicas del gas con las
-siguientes relaciones para cada cámara analizada, los valores leídos son:
+De la simulación con ICESym se leen los valores listados en la
+Tabla~\ref{tab:valores_iniciales} a partir de los cuales se pueden calcular las
+propiedades termodinámicas de la mezcla de gases frescos o quemados,
+dependiendo si se está evaluando un puerto de admisión o escape.
 
-\begin{itemize}
-    \item $\rho_{c,i}$, es la densidad del gas en la cámara $i$.
-    \item $P_{c,i}$, es la presión del gas en la cámara $i$.
-    \item $T_{c,i}$, es la temperatura del gas en la cámara $i$.
-    \item $\rho_{p,i}$, es la densidad del puerto $i$.
-    \item $v_{p,i}$, es la velocidad del gas en el puerto $i$.
-    \item $P_{p,i}$, es la presión del gas en el puerto $i$.
-\end{itemize}
 
-Con estos valores iniciales se pueden calcular o estimar las propiedades
-termodinámicas de la mezcla de gases frescos o quemados, dependiendo si se está
-evaluando un puerto de admisión o escape, los valores calculados son:
+Para simplificar el análisis no se tuvo en cuenta la fracción de gases
+residuales, el gas ``flujado'' es siempre aire limpio en el caso de los puertos
+de admisión o el gas quemado de una mezcla estequiométrica de aire-combustible
+en caso de los puertos de escape, siendo isooctano $C_{8}H_{18}$ el combustible
+seleccionado.
 %
-\begin{itemize}
-    \item $M_{M}$, masa molar, ec.(\ref{eq:mw})
-    \item $C_{p}$, calor específico a presión constante
-    \item $\gamma$, relación $C_{p}/C_{v}$ del gas
-    \item $\mu$, viscosidad dinámica, ec.(\ref{eq:mu})
-    \item $\nu$, viscosidad cinemática
-    \item $P_{R}$, número de Prandtl, ec.(\ref{eq:pr})
-    \item $k_{est}$, energía cinética turbulenta, ec.(\ref{eq:kappa_est})
-    \item $\epsilon_{est}$, disipación de la energía cinética turbulenta, ec.(\ref{eq:epsilon_est})
-\end{itemize}
+Las ecuaciones utilizadas para modelar las propiedades termodinámicas de las
+mezclas aire-combustible fueron descritas brevemente en la
+sección~\ref{subsec:prop_mezcla}.
+%
+Los valores calculados son los indicados en la
+Tabla~\ref{tab:valores_calculados}.
+
+\begin{table}
+  \centering
+  \begin{tabular}{cl}\toprule
+    Símbolo & Descripción \\ \midrule
+    $\rho_{c,i}$ & es la densidad del gas en la cámara $i$ \\
+    $P_{c,i}$ & es la presión del gas en la cámara $i$ \\
+    $T_{c,i}$ & es la temperatura del gas en la cámara $i$ \\
+    $\rho_{p,i}$ & es la densidad del puerto $i$ \\
+    $v_{p,i}$ & es la velocidad del gas en el puerto $i$ \\
+    $P_{p,i}$ & es la presión del gas en el puerto $i$ \\ \bottomrule
+  \end{tabular}
+\caption{Valores iniciales}\label{tab:valores_iniciales}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{cll}\toprule
+    Símbolo & Descripción & Ecuación\\ \midrule
+    $M_{M}$ & masa molar & \ref{eq:mw} \\
+    $C_{p}$ & calor específico a presión constante & - \\
+    $\gamma$ & relación $C_{p}/C_{v}$ del gas & - \\
+    $\mu$ & viscosidad dinámica & \ref{eq:mu} \\
+    $\nu$ & viscosidad cinemática & - \\
+    $P_{R}$ & número de Prandtl & \ref{eq:pr} \\
+    $k_{est}$ & energía cinética turbulenta & \ref{eq:kappa_est} \\
+    $\epsilon_{est}$ & disipación de la energía cinética turbulenta & \ref{eq:epsilon_est} \\ \bottomrule
+  \end{tabular}
+  \caption{Valores calculados}\label{tab:valores_calculados}
+\end{table}
 
 \nomenclature[F]{\(M_{M}\)}{Masa molar}
 \nomenclature[F]{\(C_{p}\)}{Calor específico a presión constante}
@@ -211,18 +242,6 @@ evaluando un puerto de admisión o escape, los valores calculados son:
 \nomenclature[F]{\(\epsilon_{est}\)}{Disipación de la energía cinética turbulenta}
 
 
-Para simplificar el análisis no se tuvo en cuenta la fracción de gases
-residuales.
-%
-El gas ``flujado'' es siempre aire limpio en el caso de los puertos
-de admisión o el gas quemado de una mezcla estequiométrica de aire-combustible
-en caso de los puertos de escape, siendo isooctano $C_{8}H_{18}$ el combustible
-seleccionado.
-%
-Las ecuaciones utilizadas para modelar las propiedades termodinámicas de las
-mezclas aire-combustible fueron descritas brevemente en la
-sección~\ref{subsec:prop_mezcla}.
-
 \subsection{Malla}
 
 La malla se construyó a partir del modelo de CAD generado con los resultados
@@ -232,44 +251,96 @@ La implementación de las diferentes herramientas requeridas para generar una
 malla apta para realizar las flujometrías se describe en el
 apartado~\ref{sec:cap3_of_malla}.
 
-El grado de refinamiento de la misma se determinó luego de realizar una serie de
-flujometrías con tamaños decrecientes de celda y viendo la variabilidad de los
-resultados.
+El grado de refinamiento de la malla utilizada para modelar el dominio de la
+flujometría tiene un impacto directo en la calidad de los resultados ya que esta
+relacionado con el error de discretización.
 %
-El objetivo de las flujometrías es obtener el flujo másico $\dot{m}$ del puerto
-para un estado del gas dado.
-%
-Se redujo el tamaño inicial de celda hasta que el valor de $\dot{m}$ no se
-modificó en más de un 5\% del valor anterior, con un nivel de refinamiento
-mayor.
-%
-En algunos casos se utilizaron los resultados de flujometrías con mallas menos
-refinadas como valor inicial de una malla de mayor refinamiento con el propósito
-de reducir el tiempo total de simulación.
-%
-Por ejemplo, con una malla inicial de cubos de 15mm de lado se obtiene una
-solución que se usa como valor inicial para una malla de 10mm, a su vez este
-resultado se utiliza como valor inicial de la simulación final con una malla de
-cubos de 5mm de lado para obtener el valor de $\dot{m}$ utilizado para calcular
-el $C_{D}$.
+Por otro lado, mallas con un alto nivel de refinamiento son, en términos de
+tiempo más costosas de realizar y dado la cantidad de flujometrías que requiere
+el trabajo se optó por determinar un nivel de refinamiento que devuleva un error
+relativo entre iteraciones no mayor al $5\%$.
 
-Este proceso se representa para el caso del puerto de admisión a $0^{\circ}$ y
-$120^{\circ}$ con el motor girando a 2000 RPM.
+Para los puertos de admisión se seleccionó la geometría representada en la
+Figura~\ref{fig:refinamiento_admision}, en esta posición hay dos cámaras de
+combustión activas una con el ciclo en $0^{\circ}$ y otra a $120^{\circ}$.
 %
-Se simuló el puerto con tamaños de malla iniciales de 20, 10, 5 y 2,5 mm,
+Las condiciones iniciales se determinan a partir de datos del simulador con el
+motor girando a 2000 RPM.
+
+Para los puertos de escape se seleccionó la geometría representada en la
+Figura~\ref{fig:refinamiento_escape}, esta posición corresponde a un período de
+solape de los puertos con dos cámaras activas ubicadas en $420^{\circ}$ y
+$540^{\circ}$.
+%
+Las condiciones inciiales se determinan de los datos de ICESym con el motor
+girando a 4000 RPM.
+
+
+Ambos puertos se simularon con tamaños de malla iniciales de 20, 10, 5 y 2,5 mm,
 evaluando la variación del caudal con la cantidad de celdas de la malla, ver
-Figuras~\ref{fig:refinamiento} y~\ref{fig:conv_malla}.
+Figura~\ref{fig:refinamiento_admision} para el puerto de admisión y
+Figuras~\ref{fig:refinamiento_escape} para el puerto de escape.
+%
+En las Tablas~\ref{tab:convergencia_malla_admision}
+y~\ref{tab:convergencia_malla_escape} se presentan los resultados de los
+refinamientos junto con el error relativo entre refinamientos sucesivos.
+
+No se observa gran diferencia entre los casos de 20mm a 2,5mm pese a que la
+cantidad de celdas es más de 18 veces mayor, esto se debe a que el software
+utilizado para realizar el mallado se configuró para realizar un refinamiento de
+todas las superficies y bordes, para captar la geometría de los puertos.
+%
+En la Figura~\ref{fig:conv_malla_admision} o~\ref{fig:conv_malla_escape} se
+puede apreciar la diferencia de tamaño entre las celdas cercanas a las paredes
+del puerto y las celdas pertenecientes al interior del volumen para la malla con
+tamaño inicial de 20mm.
+
+\begin{table}
+  \centering
+  \begin{tabular}{cccccc}\toprule
+    Tamaño de celda & $N^{\circ}$ Celdas & $Q_{0^{\circ}} [dm^{3}/seg]$ & $\varepsilon_{r,0^{\circ}}$ & $Q_{120^{\circ}} [m^{3}/seg]$ & $\varepsilon_{r,120^{\circ}}$ \\ \midrule
+    20mm  & 20680  & 16,335 & -        & -22,216 & - \\
+    10mm  & 53948  & 15,855 & $3,03\%$ & -22,649 & $1,91\%$ \\
+    5mm   & 172853 & 15,58  & $1,76\%$ & -23,323 & $2,89\%$ \\
+    2,5mm & 389980 & 15,395 & $1,20\%$ & -23,401 & $0,34\%$ \\ \bottomrule
+  \end{tabular}
+  \caption{Figura~\ref{fig:conv_malla_admision} tabulada}\label{tab:convergencia_malla_admision}
+\end{table}
+
+\begin{table}
+  \centering
+  \begin{tabular}{cccccc}\toprule
+    Tamaño de celda & $N^{\circ}$ Celdas & $\dot{m}_{420^{\circ}} [g/seg]$ & $\varepsilon_{r,420^{\circ}}$ & $\dot{m}_{540^{\circ}} [g/seg]$ & $\varepsilon_{r,540^{\circ}}$ \\ \midrule
+    20mm  & 31933  & -78,325 & - & -70,43 & - \\
+    10mm  & 83817  & -82,048 & 4,54\% & -75,075 & 6,19\% \\
+    5mm   & 234487 & -84,44  & 2,83\% & -78,626 & 4,52\% \\
+    2,5mm & 676850 & -83,897 & 0,65\% & -76,766 & 2,42\% \\ \bottomrule
+  \end{tabular}
+  \caption{Figura~\ref{fig:conv_malla_escape} tabulada}\label{tab:convergencia_malla_escape}
+\end{table}
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.8\textwidth]{./flujometrias/refinamiento_malla.png}
-  \caption{Refinamiento de malla}\label{fig:refinamiento}
+  \includegraphics[width=0.8\textwidth]{./flujometrias/refinamiento_malla_admision.png}
+  \caption{Refinamiento de malla para puerto de admisión}\label{fig:refinamiento_admision}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{./flujometrias/refinamiento_malla_escape.png}
+  \caption{Refinamiento de malla para puerto de escape}\label{fig:refinamiento_escape}
 \end{figure}
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.9\textwidth]{./flujometrias/convergencia_admision_2000rpm.pdf}
-  \caption{Convergencia de malla de puerto de admisión}\label{fig:conv_malla}
+  \caption{Convergencia de malla de puerto de admisión}\label{fig:conv_malla_admision}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./flujometrias/convergencia_escape_4000rpm.pdf}
+  \caption{Convergencia de malla de puerto de escape}\label{fig:conv_malla_escape}
 \end{figure}
 
 
@@ -278,49 +349,62 @@ Figuras~\ref{fig:refinamiento} y~\ref{fig:conv_malla}.
 La pérdida de carga localizada en los puertos de admisión y escape se puede
 representar a través del coeficiente de descarga, $C_{D}$.
 %
-El valor de $C_{D}$ varía con la geometría y condiciones de operación del
-puerto, siendo $C_{D}=1$ el caso ideal sin pérdida de carga localizada.
+Este coeficiente varía con la geometría y condiciones de operación del puerto,
+siendo $C_{D}=1$ el caso ideal sin pérdida de carga localizada.
 %
-El $C_{D}$ es un parámetro importante porque permite obtener una mejor estimación
-del flujo másico real en el puerto, se define como:
+Es un parámetro importante porque permite obtener una mejor estimación del flujo
+másico real en el puerto, se define como:
 
 \begin{equation}
   C_{D} = \frac{\text{flujo másico real}}{\text{flujo másico ideal}}
 \end{equation}
 
-El valor de $C_{D}$ de un puerto se puede obtener experimentalmente con un
-flujómetro, el ensayo consiste en medir el caudal que circula por un puerto con
-una presión de descarga fija que, dependiendo del fabricante del equpo varía
-entre 250-700 mm.c.a.
+El $C_{D}$ de un puerto se puede obtener experimentalmente en un banco de prueba
+mediante un ensayo que consiste en medir el caudal que circula por un puerto con
+una presión de descarga fija que, en equipos comerciales varía entre $250-700$
+mm.c.a.
 %
 Comúnmente estos ensayos se realizan en un banco que incluye solamente la tapa
-de cilindros, dejando de lado otros elementos del sistema como el pistón y los
-conductos de admisión.
-%
-Durante el ensayo se mide el caudal de aire atmosférico para diferentes grados
-de apertura de la válvula y así se obtienen datos de (alzada, flujo) con los
-cuales comparar entre diferentes geometrías del puertos de admisión o escape.
+de cilindros y una camisa que simula el cilindro de la cámara de combustión,
+dejando de lado otros elementos del sistema como pistón, los conductos de
+admisión y otros.
 %
 En la imagen~\ref{fig:banco_flujometrias} se muestra un banco de pruebas
 comercial.
-
 
 \begin{figure} \centering
 \includegraphics[width=0.7\textwidth]{./flujometrias/banco_flujometrias.png}
   \caption{Banco de flujometrías Super-Flow SF-750}\label{fig:banco_flujometrias}
 \end{figure}
 
-Otra forma de obtener un coeficiente de descarga es por medio de flujometrías
+Durante el ensayo se mide el caudal de aire atmosférico para diferentes grados
+de apertura de la válvula y así se obtienen datos de (alzada, flujo) con los
+cuales comparar entre diferentes geometrías del puertos de admisión o escape.
+%
+En la Figura~\ref{fig:flow-1} se muestra el resultado del ensayo de un
+flujómetro en el que se compara la capacidad de flujo de dos tapas de cilindro
+diferentes de un BMW S14
+\footnote{\url{http://e30sport.net/tech_articles/engine-tech/flow-1/chart-1.htm}}.
+
+\begin{figure} \centering
+\includegraphics[width=\textwidth]{./flujometrias/flow-1.png}
+  \caption{Comparación entre flujometrías de dos tapas de cilindro de un BMW S14}\label{fig:flow-1}
+\end{figure}
+
+Otra forma de aproximar un coeficiente de descarga es por medio de flujometrías
 computacionales, el uso de CFD permite modelar el puerto en condiciones
 operativas, incluyendo la interacción con elementos como por ejemplo el pistón,
 o en el caso del MRCVC, estator y conjunto rotante.
 %
 Además, se puede modelar las propiedades del fluido de trabajo para una
 viscosidad, presión y temperatura representativas de las condiciones operativas
-del motor.
+del motor que se está modelando.
+%
+En este trabajo se optó por esta metodología, a partir de las flujometrías se
+obtuvo un valor de caudal másico el cual es utilizado para calcular un
+coeficiente de descarga.
 
-El valor de $C_{D}$ se obtiene de las ecuaciones de flujo másico $\dot{m}$ que
-circula a través del puerto, el cual se calcula a partir de las ecuaciones de
+A partir de $\dot{m}$, el valor de $C_{D}$  se calcula con de las ecuaciones de
 flujo compresible a través de una restricción, habiendo dos casos distintivos:
 flujo bloqueado y no bloqueado.
 
@@ -377,20 +461,15 @@ coeficiente de descarga $C_{D}$ es el área de referencia $A_{R}$ que define el
 % la circunferencia de la válvula con la alzada, es decir:
 
 La elección del área de referencia utilizada para el cálculo es arbitraria, sin
-embargo en un motor con válvulas se suele utilizar el área de cortina
-(ver~\ref{fig:area_cortina}), que se calcula con el producto del diámetro
-$D_{v}$ y alzada de válvula $l_{v}$:
+embargo en un motor con válvulas se suele utilizar el área de cortina (ver
+Figura~\ref{fig:area_cortina}) la cual es el producto de la circunferencia y la
+alzada de válvula.
 
 \begin{equation} \label{eq:area_cortina}
   A_R = A_C = \pi D_v l_v
 \end{equation}
 
-\begin{equation}\label{eq:ar_cortina}
-  A_{R}=\pi D_{v} \cdot h_{v}
-\end{equation}
-
 \nomenclature[G]{\(A_R\)}{Área de pasaje de flujo o de referencia}
-\nomenclature[G]{\(h_v\)}{Alzada de válvula}
 \nomenclature[G]{\(A_C\)}{Área de cortina}
 \nomenclature[G]{\(D_v\)}{Diámetro de válvula}
 \nomenclature[G]{\(l_v\)}{Alzada de válvula}
@@ -404,7 +483,7 @@ El área de referencia utilizada en ICESym es el área frontal del puerto expues
 a la cámara que se esté analizando, calculada como:
 
 \begin{equation}\label{eq:ar_mrcvc}
-  A_{R} = h_{p} \cdot l_{v}
+  A_{R,i} = h_{p} \cdot l_{v,i}
 \end{equation}
 
 El área de cortina se ilustra en la Figura~\ref{fig:area_cortina} y el área
@@ -432,9 +511,6 @@ la restricción $P_T$.
 
 El valor de $\gamma$ se obtiene de las propiedades de la mezcla con las rutinas
 computacionales descritas en el apartado~\ref{subsec:prop_mezcla}.
-
-De las flujometrías se obtiene el caudal másico que fluja el puerto, con este
-dato y las ecuaciones anteriores se puede determinar el valor de $C_{D}$.
 
 \subsection{Esquemas de Discretización}
 
@@ -646,87 +722,3 @@ Para los casos de \textbf{flujo compresible}:
 
 Donde $\phi$ es el flujo másico en la cara de la celda.
 
-% Otros
-%
-% Para inicializar el campo de presión y densidades, se usa la media entre las
-% cámaras que se estén simulando y se establece un campo uniforme.
-
-% La velocidad se inicializa con un campo nulo de velocidades, que en la
-% configuración de OpenFOAM se designa como \emph{internalField uniform (0 0 0)}.
-
-% En resumen, los valores iniciales de los campos de presión, temperatura y velocidad
-% son los indicados en la tabla~\ref{tab:cc}.
-
-% % \begin{table}
-% % \centering
-% %     \begin{tabular}{cccc} \toprule
-% %         Var & Campo         & Parche                      & Pared \\
-% %         T   & uniforme T0   & inletOutlet                 & uniforme T9\\ \midrule
-% %         P   & uniform Pavg  & uniformTotalPressure        & Pi \\
-% %         U   & uniform (0 0 0) & pressureInletOutletVelocity & valor fijo (0 0 0)\\
-% %         rho & uniform rhoAvg \\ \bottomrule
-% %     \end{tabular}
-% %     \caption{Condiciones de Borde}\label{tab:cc}
-% % \end{table}
-
-% En todos los casos se tomará como velocidad de referencia a la media entre la
-% velocidad en la punta del tubo de las cámaras solapadas.
-% %
-% Del mismo modo, la temperatura será la temperatura de cámara media.
-
-% Si hay o no solape de cámaras va a depender tanto de la geometría del puerto
-% como de la posición del ciclo en la que se encuentre, para determinar las
-% condiciones iniciales se debe tener en cuenta el solape.
-% %
-% En la Figura~\ref{fig:geom} se muestra un corte del puerto con un plano cuya
-% normal está en $\vec{z}$, se denominará a la cámara que esté a la izquierda
-% como cámara 0 y a la que esté a la derecha cámara 1.
-% %
-% Al haber solape de cámaras, para definir la presión del puerto y estimar las
-% condiciones iniciales de los parámetros viscosos que requiere el modelo
-% $k-\epsilon$ se utilizan valores medios de presión, velocidad y temperatura de
-% ambas cámaras.
-% %
-% Además, las condiciones iniciales que se aplican al parche denominado
-% \emph{puerto} es igual a la media aritmética de la velocidad de las velocidades
-% de los puertos de ambas cámaras, Lo mismo sucede con la presión, densidad y
-% temperatura.
-
-% A partir de estos datos se calculan varias propiedades termodinámicas del gas,
-% incluyendo la constante del gas, masa molar, viscosidad cinemática y demás.
-% %
-% Para calcular estas propiedades se asume que el gas no contiene gases
-% residuales.
-
-% Finalmente el caudal másico yse obtiene con OpenFOAM, en donde se simula el
-% tiempo suficiente para que los caudales másicos por entradas o salidas se
-% estabilice, como se ve en la Figura~\ref{fig:caudalMasico}.
-
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=0.6\textwidth]{surfaceFieldValue_405.0.png}
-%     \caption{Flujometrías para el puerto de Admisión}\label{fig:caudalMasico}
-% \end{figure}
-
-% En todos los casos se tomará como velocidad de referencia a la media entre la
-% velocidad en la punta del tubo de las cámaras que se estén solapando.
-% %
-% Del mismo modo, la temperatura será la temperatura de cámara media.
-
-% Si hay o no solape de cámaras va a depender tanto de la geometría del puerto
-% como de la posición del ciclo en la que se encuentre, para determinar las
-% condiciones iniciales se debe tener en cuenta el solape.
-% %
-% En la Figura~\ref{fig:geom} se muestra un corte del puerto con un plano cuya
-% normal está en $\vec{z}$, se denominará a la cámara que esté a la izquierda
-% como cámara 0 y a la que esté a la derecha cámara 1
-% %
-% Al haber solape de cámaras, para definir la presión del puerto y estimar las
-% condiciones iniciales de los parámetros viscosos que requiere el modelo
-% $k-\epsilon$ se utilizan valores medios de presión, velocidad y temperatura de
-% ambas cámaras.
-% %
-% Además, las condiciones iniciales de que se aplican al parche denominado
-% \emph{puerto} es igual a la media aritmética de la velocidad de las velocidades
-% de los puertos de ambas cámaras, Lo mismo sucede con la presión, densidad y
-% temperatura.

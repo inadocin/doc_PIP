@@ -541,94 +541,41 @@ antes del cierre de la válvula, el sistema está sintonizado.
 Esta sobrepresión permite que ingrese una mayor cantidad de masa fresca al
 cilindro, aumentando la cantidad de trabajo que se puede realizar.
 
-% En la Figura~\ref{fig:sintonia1} se muestra el diagrama de presión vs ángulo de
-% cigüeñal para una simulación del MRCVC a 6000 RPM.
+En la Figuras~\ref{fig:sintonia_heywood} se muestan las curvas presentan  de
+presión en función del ángulo de cigüeñal para $1200$ y $4800$ RPM, en donde se
+indican los períodos en los que se encuentran abiertas las válvulas de admisión
+(IO) y de escape (EO).
 %
-% 1200 y 4800 RPM, en donde se indican los períodos en los que se
-% encuentran abiertos las válvulas de admisión (IO) y de escape (EO).
-
-Las Figuras~\ref{fig:sintonia_adm} y~\ref{fig:no_sintonia_adm} presentan curvas
-de presión en el puerto y cilindro, en función del ángulo de cigüeñal de una
-simulación del MRCVC a $6000$ y $9000$ RPM respectivamente.
+Los valores $p_{1}$,$p_{2}$ y $p_{3}$ hacen referencia a diferentes posiciones
+a lo largo de los conductos de admisión y escape.
 %
-Además, se grafica la apertura del puerto de admisión para el mismo intervalo
-angular.
+Se puede ver que para $p_{1}$ a $4800$ RPM hay un claro pico de presión justo al
+cierre del puerto de admisión, l puerto está sintonizado para esta velocidad.
+
+Debido a que la onda de presión debe viajar dos veces la longitud del conducto
+de admisión desde el momento que abre el puerto de admisión, para sintonizar el
+sistema a bajas velocidades, se requieren longitudes mayores, lo que hace más
+grande el sistema de admisión.
 %
-% A $6000$ RPM, desde la apertura del puerto hasta aproximadamente
-% $\sim 40^{\circ}$ la presión en el puerto es menor a la presión en la cámara.
-% %
-% Durante este período angular, hay un reflujo de gases remanentes de la
-% combustión hacia el puerto de admisión.
-%
-A $6000$ RPM, a partir de aproximadamente $\sim 40^{\circ}$, la presión en el
-puerto es mayor o igual a la presión del cilindro hasta unos pocos grados antes
-del cierre del puerto.
-%
-Esta sobrepresión
-
-%
-Del mismo modo, para el puerto de escape (Fig.~\ref{fig:sintonia_esc}), la
-presión cerca del cierre del puerto $\sim 550^{\circ}$ es menor a la preisón
-
-
-El puerto de admisión
-En la figura del puerto de admisión se observa que la presión del puerto es
-mayor a la presión en la cámara a partir de aproximadamente $50^{\circ}$ hasta
-casi $175^{\circ}$.
-%
-Del mismo modo para el puerto de escape se observa que la presión en el puerto
-
-
-
-
-
-
-Se ve que para a 6000 RPM se tiene $\eta_{v,\max}$ y la preisón en el puerto de admisikjobservando las curvas de
-presión del puerto de admisión y escape
-
-
-se nota una sintonía en el puerto de
-admisión y otra en el puerto de escape. Este motor tiene un rendimiento
-volumétrico un 20% menor para 1500 rpm, observando las curvas de presión en l
-
-
-los valores $p_1$, $p_2$ y $p_3$ hacen referencia a diferentes posiciones a lo
-largo de los conductos de admisión y escape.
-%
-Se puede ver que para $p_1$ a 4800 RPM hay un claro pico de presión justo al
-cierre del puerto de admisión, con esto el puerto está sintonizado para esta
-velocidad.
-
-\begin{figure} \centering
-\includegraphics[width=\textwidth]{ciclo/delta_p_i_48_6000.png}
-    \caption{Diagrama de presión vs ángulo de cigüeñal para un puerto de admisión}\label{fig:sintonia_adm}
-\end{figure}
-%
-\begin{figure} \centering
-\includegraphics[width=\textwidth]{ciclo/delta_p_i_48_9000.png}
-    \caption{Diagrama de presión vs ángulo de cigüeñal para un puerto de admisión}\label{fig:no_sintonia_adm}
-\end{figure}
-
-Debido a que la onda de presión debe viajar dos veces la longitud del conducto de
-admisión desde el momento que abre el puerto de admisión, para sintonizar el
-sistema de admisión a bajas velocidades, se requieren longitudes mayores, lo que
-hace más grande el sistema de admisión.
-%
-La sintonía a mayores velocidades de admisión es preferida, porque usualmente
-se tiene el máximo de torque y de potencia a mayores RPM, además reduce la
-necesidad de conductos de mayor longitud.
+La sintonía a mayores velocidades de admisión es preferida, porque usualmente se
+tiene el máximo de torque y de potencia a mayores RPM, además reduce la
+necesidad de conductos más largos.
 %
 En motores multi-cilíndricos se utiliza un pleno de admisión, este dispositivo
 proporciona un volumen grande de aire que sirve el propósito de cámara de
 resonancia.
 %
 Se puede ajustar la resonancia de modo que las oscilaciones de presión internas
-produzcan ondas de sobre presión que alcancen cada puerto en el momento preciso
+produzcan ondas de sobre presión que alcance cada puerto en el momento preciso
 en el que se aproxima el cierre del mismo.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure} \centering
+\includegraphics[width=\textwidth]{sintonia_heywood.jpg}
+    \caption{Diagrama de presión vs ángulo de cigüeñal~\parencite{heywood}}\label{fig:sintonia_adm}
+\end{figure}
 
-\subsection{Sincronización del Sistema de Escape}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Sintonización del Sistema de Escape}
 
 De forma análoga al puerto de admisión, al momento de la apertura del puerto o
 válvula de escape los gases residuales de la combustión se encuentran a  mayor
@@ -647,16 +594,6 @@ RPM.
 Es notorio el contraste con el mismo puerto a 1200 RPM, en donde se ve un pico de
 presión cerca del cierre del puerto.
 %
-\begin{figure} \centering
-\includegraphics[width=\textwidth]{ciclo/delta_p_e_48_6000.png}
-    \caption{Diagrama de presión vs ángulo de cigüeñal para un puerto de escape}\label{fig:sintonia_esc}
-\end{figure}
-%
-\begin{figure} \centering
-\includegraphics[width=\textwidth]{ciclo/delta_p_e_48_9000.png}
-    \caption{Diagrama de presión vs ángulo de cigüeñal para un puerto de escape}\label{fig:no_sintonia_esc}
-\end{figure}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Combustión}
@@ -698,38 +635,29 @@ auto-encendido de la mezcla y el inicio del proceso de combustión.
 
 \begin{figure}[ht]
   \centering
-  \begin{subfigure}{0.33\textwidth}
+  \begin{subfigure}{0.3\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{combustion_vol_cte.jpg}
+    \includegraphics[width=\textwidth]{combustion_vol_cte.png}
     \caption{Volumen Constante}\label{fig:comb_vcte}
   \end{subfigure}%
-  \begin{subfigure}{0.33\textwidth}
+  \begin{subfigure}{0.3\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{combustion_presion_cte.jpg}
+    \includegraphics[width=\textwidth]{combustion_presion_cte.png}
     \caption{Presión Constante}\label{fig:comb_pcte}
   \end{subfigure}%
-  \begin{subfigure}{0.4\textwidth}
+  \begin{subfigure}{0.3\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{combustion_presion_limitada.jpg}
+    \includegraphics[width=\textwidth]{combustion_presion_limitada.png}
     \caption{Presión Limitada}\label{fig:comb_plim}
   \end{subfigure}
   \caption{Diagramas P-V para ciclos ideales\parencite{heywood}}\label{fig:ciclos_ideales}
 \end{figure}
 
-El MRCVC es un motor de combustión interna encendido por chispa en el que,
-debido a su geometría, gran parte de la combustión ocurre a volumen constante,
-esto se puede apreciar en la Figura~\ref{fig:mrcvc_vol_cte}, en la cual se
-grafica la variación volumen en función del ángulo del cigüeñal.
+El MRCVC es un motor de combustión interna en el que debido a su geometría, gran
+parte de la combustión ocurre a volumen constante.
 %
-% En este trabajo no se estudia el proceso de combustión del MRCVC, sin embargo se
-% describe el motivo por el que la combustión a volumen constante es una
-% característica atractiva de este motor.
-%
-% es más eficiente que la combustión a presión constante.
-
-% En \parencite{heywood} se hace un análisis de los modelos operativos de gas
-% ideal, en los cuales se asume que el volum
-
+Esto se puede apreciar en la Figura~\ref{fig:mrcvc_vol_cte}, en la cual se
+representa la variación volumen en función del ángulo del cigüeñal.
 %
 Para visualizar el mayor renidmiento de la combustión a volumen constante  se
 debe analizar los modelos ideales de ciclos oeprativos~\parencite{heywood},
@@ -800,10 +728,10 @@ Además, mayores presiones están asociadas con mayores temperaturas en la cáma
 de combustión.
 
 \begin{figure} \centering
-\includegraphics[width=.7\textwidth]{rendimiento_conv_comb.png}
-    \caption{Rendimiento de conversión de combustible en función de $r_c$ para
-ciclos de gas ideal de volumen constante, presión constante y presión
-limitada} \label{fig:rendimientos}
+\includegraphics[width=.7\textwidth]{ciclo/comparativa_rendimientos_ciclos.png}
+    \caption{Rendimiento de conversión del combustible en función de $r_c$ para
+ciclos de gas ideal de combustión a volumen constante, a presión constante y a
+presión limitada~\parencite{heywood}} \label{fig:rendimientos}
     %
 \end{figure}
 
@@ -841,8 +769,8 @@ ecuación~(\ref{eq:rel_as}):
 \end{equation}
 
 Otro parámetro importante es la relación de equivalencia $\phi$, que se calcula
-con el cociente entre la relación molar real y estequiométrica de una mezcla,
-ver ecuación~(\ref{eq:phi}):
+con el cociente entre la relación combustible/aire real y estequiométrica de una
+mezcla, ver ecuación~(\ref{eq:phi}):
 
 \begin{equation}\label{eq:phi}
   \phi = \frac{{(F/A)}_{real}}{{(F/A)}_{s}}
@@ -851,14 +779,6 @@ ver ecuación~(\ref{eq:phi}):
 Las rutinas computacionales utilizadas para calcular las propiedades
 termodinámicas de las mezclas aire-combustible aproximan las propiedades
 químicas de cada especie en la mezcla con curvas polinómicas.
-
-% La composición de la mezcla no cambia significativamente durante los procesos de
-% admisión y compresión, por lo que se asume que la mezcla está congelada.
-%
-% Durante la combustión y parte del proceso de expansión se asume que la mezcla de
-% gases quemados está cerca del equilibrio termodinámico, a medida que los gases
-% se enfrían durante la expansión y se asume que la composición química se
-% congela.
 
 Para cada compuesto $i$ de la mezcla a temperatura estándar $T(K)$ y 1 atmósfera
 de presión se aproxima el calor específico a presión constante
@@ -902,7 +822,7 @@ de equivalencia con la ecuación~(\ref{eq:mu}).
 %
 Del mismo modo, el número de Prantl de productos de la combustión de
 hidrocarburos y aire se puede estimar en función del $\gamma$ de la mezcla, para
-$\phi\leq 1$ con la ecuación~(\ref{eq:pr})\parencite{heywood}:
+$\phi\leq 1$ con la ecuación~(\ref{eq:pr})~\parencite{heywood}:
 
 \nomenclature[PO]{\(x_{i}\)}{Fracción molar de una especie química ``i''}
 

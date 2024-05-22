@@ -6,7 +6,7 @@
 % se tiene certeza sobra la suavidad de la función a evaluar.
 %
 
-Se seleccionó un algoritmo genético para realizar la optimización de la
+Se seleccionó un algoritmo genético (AG) para realizar la optimización de la
 geometría del MRCVC por la simplicidad y facilidad de implementación del mismo.
 %
 Si bien este tipo de métodos no garantiza que se alcance un resultado óptimo,
@@ -19,10 +19,10 @@ la existencia de la derivada de la función en todo el dominio ó cuando se tien
 una función con más de un máximo o mínimo local.
 %
 Además, el punto de partida de la optimización es una población generada al
-azar, de modo que se tiene un muestreo aleatorio del dominio que se está
-evaluando.
+azar, se tiene un muestreo aleatorio del dominio que se está evaluando.
 %
-Esto hace que el método sea poco susceptible a óptimos locales.
+Esto hace que el método sea poco susceptible a dar como resultado óptimos
+locales.
 
 Se puede decir que un algoritmo genético es un método de búsqueda aleatoria
 guiada.
@@ -39,9 +39,6 @@ conocer la derivada de la función que se está evaluando.
   \item Los AG usan reglas probabilísticas de decisión.
 \end{enumerate}
 
-Otros métodos de optimización se mueven de un punto al siguiente en el espacio
-solución basándose en alguna regla de decisión definida por el usuario, lo cual
-puede dar como resultado un máximo (o mínimo) local.
 
 % \subsection{Componentes básicos de un AG}
 %
@@ -54,9 +51,9 @@ una función objetivo, la cual es la encargada de guiar el proceso de
 optimización dando mayor o menor puntaje a un candidato según el resultado que
 se quiere obtener.
 %
-Este paso significa que aquellos individuos a los cuales se les asignó un
-puntaje más elevado tienen más probabilidades de ser copiados o ``transmitir''
-sus parámetros a la iteración siguiente.
+Este paso significa que, aquellos individuos a los cuales se les asignó un
+puntaje más elevado tienen más probabilidades de ser copiados o de
+``transmitir'' sus parámetros a la iteración siguiente.
 %
 Este proceso imita en cierta forma la selección natural o evolución Darwiniana y
 de aquí viene el nombre de algoritmo genético o evolutivo.
@@ -67,27 +64,29 @@ individuos para obtener uno nuevo, esto se asemeja a la reproducción.
 Finalmente la MUTACIÓN es la encargada de modificar aleatoriamente uno o más
 parámetros de cada nuevo individuo.
 %
-Este operador juega un rol secundario pero muy importante en la simulación:
-\begin{enumerate}
-  \item Secundario porque se pueden alcanzar soluciones satisfactorias sin incluir este
-        mecanismo.
-  \item Importante porque utilizado con probabilidades pequeñas de ocurrencia
-permite evitar la pérdida temprana de información relevante.
-        %
-        Si la probabilidad de mutación es muy alta, el AG se convierte en un
-algoritmo de búsqueda aleatoria.
-\end{enumerate}
-
+Este operador juega un rol secundario pero muy importante en la simulación, es
+secundario porque se pueden alcanzar soluciones satisfactorias sin que exista la
+mutación de la población.
+%
+Importante porque utilizado con probabilidades pequeñas de ocurrencia, permite
+evitar la pérdida temprana de información relevante o convergencia temprana.
+%
+Por otro lado, en caso de que la probabilidad de mutación sea muy alta, el AG se
+convierte en un método de búsqueda aleatoria.
 
 \begin{algorithm} \caption{Algoritmo de optimización}\label{algo:genetico}
-  generación = 0;
-  Inicializar población.\;
-  \While{No se cumpla condición de parada}{
-    SELECCIÓN se crean y seleccionan los individuos más aptos.\;
-    CRUZA los candidatos seleccionados (creación de la nueva población)\;
-    MUTACIÓN algunos individuos de la nueva población\;
-    generación = generación + 1\;
-    \If{Verifica condición de parada}{
+  Inicializar población, al azar o a partir de una población ``semilla''.\;
+  %
+  \While{no se cumpla condición de parada}{
+    %
+    SELECCIONAR a los individuos más aptos, evaluandolos según la función objetivo.\;
+    %
+    CRUZAR los candidatos seleccionados para crear la nueva población (la
+próxima iteración del método)\;
+    %
+    MUTAR algunos individuos de la nueva población\;
+    %
+    \If{se cumple la condición de parada}{
       Parar\;
     }
   }
@@ -97,21 +96,22 @@ algoritmo de búsqueda aleatoria.
 %
 % \subsection{Implementación}
 %
-Gran parte de este trabajo consistió en implementar y utilizar a ICESym como
-parte de la función objetivo, aprovechando la cualidad de ``caja negra'' que se
-le puede dar al simulador.
+Gran parte de este trabajo consistió en implementar y utilizar a ICESym como LA
+función objetivo, aprovechando la cualidad de ``caja negra'' con la que se puede
+implementar el simulador.
 %
 Para lograr esto se modificó parte del código de ICESym con el objetivo de
 facilitar la configuración, ejecución y lectura de los resultados que arroja el
-simulador y así poder ejecutar de manera automatica una simulación con una
+simulador y así poder ejecutar de manera automática una simulación con una
 configuración particular del motor.
 %
-Otro aspecto del optimizador que se desarrolló es el de poder ejecutar múltiples
-instancias de ICESym en paralelo para reducir el tiempo de ejecución de cada
-simulación, pudiendo evaluar varios motores (o individuos) al mismo tiempo.
+Otro aspecto del optimizador que se desarrolló, es el de poder ejecutar
+múltiples instancias de ICESym en paralelo con el fin de reducir el tiempo de
+ejecución de cada simulación, pudiendo evaluar varios motores (o individuos) al
+mismo tiempo.
 
 Para la primera iteración se programaron desde cero los algoritmos y funciones
-necesarias para llevar a cabo la optimización.
+necesarias para llevar a cabo la optimización con el AG.
 %
 Posteriormente se tomó la librería DEAP~\parencite{DEAP_JMLR2012} y se
 modificaron los operadores a medida, para poder utilizarlos con ICESym.
@@ -123,10 +123,11 @@ operadores en el optimizador.
 %
 Se decidió representar cada motor como un vector con las dimensiones y reglaje
 que definen la geometría del sistema de intercambio de gases, los cuales se
-listan en la tabla~\ref{tab:param_motor}.
+listan en la Tabla~\ref{tab:param_motor}.
 %
 Se limitaron los valores que puede tomar cada parámetro para que la geometría
-resultante se asemeje a la geometría del motor utilizado en trabajos anteriores.
+resultante se asemeje a la geometría del motor utilizado en trabajos anteriores,
+aprovechando así los resultados obtenidos en el primer barrido paramétrico.
 
 
 \begin{table}[ht]
@@ -170,7 +171,7 @@ De este modo se obtiene el valor de cada uno de los parámetros que hacen a la
 configuración particular de cada motor en ICESym.
 %
 El orden de los mismos se mantiene constante, por lo que cada sección del número
-representa una característica en particular del motor, como se muestra el
+representa una característica en particular del motor, como se muestra en el
 ejemplo de la Figura~\ref{fig:pop_bit}.
 %
 
