@@ -14,7 +14,7 @@ set grid lw 1.5
 # set label 4 at 8.8, 0.23 "0.2" center font ',8'
 
 set autoscale xfixmax
-set key
+set key right center
 set tics font ",8"
 set xlabel "RPM$\\times$1000" font ",11"
 set ylabel "" font ",11"

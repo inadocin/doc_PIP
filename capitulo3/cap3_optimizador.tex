@@ -147,18 +147,18 @@ aprovechando así los resultados obtenidos en el primer barrido paramétrico.
 \end{table}
 
 
-Se decidió representar los vectores que hacen a cada motor como un número
-binario de 40 dígitos, ocupando 5 dígitos para representar cada uno de los 8
-parámetros que hacen a cada motor.
+Los vectores que hacen a cada motor se representan como un número binario de 40
+dígitos, ocupando 5 dígitos para representar cada uno de los 8 parámetros que
+hacen a cada motor.
 %
 Esto facilita la implementación de los operadores de selección, cruza y
 mutación, pudiendo aprovechar implementaciones de operadores existentes en
 librerías como DEAP.
 %
-Estos 8 números binarios luego se convierten una lista de enteros mediante una
-transformación lineal $f(x)=a\cdot x+b$, en la que se ingresa con un entero
+Estos 8 números binarios luego se convierten en una lista de enteros mediante
+una transformación lineal $f(x)=a\cdot x+b$, en la que se ingresa con un entero
 entre 0 y $2^{n}-1$ para ir del número binario a un decimal, siendo $n$ la
-cantidad de dígitos del binario (en este caso 5).
+cantidad de dígitos del número binario (en este caso 5).
 %
 Los coeficientes $a$ y $b$ son tales que $f(0)=x_{0}$ y $f(2^{n}-1) = x_{1}$,
 donde $x_{0}$ y $x_{1}$ son los extremos del rango para el que se quiere aplicar
@@ -171,68 +171,103 @@ De este modo se obtiene el valor de cada uno de los parámetros que hacen a la
 configuración particular de cada motor en ICESym.
 %
 El orden de los mismos se mantiene constante, por lo que cada sección del número
-representa una característica en particular del motor, como se muestra en el
-ejemplo de la Figura~\ref{fig:pop_bit}.
+representa una característica en particular del motor.
+
+A modo de ejemplo, en la Figura~\ref{fig:pop_bit} se muestra un número generado
+aleatoriamente, la transformada para los primeros 5 dígitos que corresponden al
+diámetro del tubo de admisión, 001111.
 %
+Si se desea que el diámetro del tubo de admisión varíe entre 60 y 100 mm, se
+deben obtener los coeficientes $a$ y $b$ para la transformación lineal  a partir
+del largo del número binario que se va a utilizar, {\tt{binLen}} y los valores
+mínimos y máximos del rango sobre el que se quiere transformar el valor de
+entrada: $vMin=60$ y $vMax=100$.
+
+Los coeficientes $a$ y $b$ se obtienen con a partir de:
+\begin{align*}
+  a &= \frac{vMax-vMin}{2^{binLen} - 1} =\frac{100-60}{2^{5}-1} = 1,2903\\
+  b &= vMin=60
+\end{align*}
+
+Luego binario transformado a entero vale:
+\begin{equation*}
+  00111 \longrightarrow 0\cdot 2^{4} + 0\cdot 2^{3} + 1\cdot 2^{2} + 1\cdot 2^{1} + 1\cdot 2^{0} = 7
+\end{equation*}
+
+Finalmente, con los coeficientes ($a$, $b$) y el binario transformado en entero,
+se tiene que DTA vale
+
+\begin{equation*}
+  DTA = a\cdot x + b = (1,2903\cdot 7 + 60) = 69 mm = 0,069 m
+\end{equation*}
+
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[]{genetico/representacion_bits.png}
+  \includegraphics[]{genetico/map_to_engine.pdf}
   \caption{Representación del individuo}\label{fig:pop_bit}
 \end{figure}
 
 
-\subsection{Reproducción}
+\subsection{Selección}
 
 Para crear la nueva población se debe elegir a los nuevos candidatos basándose
 en los puntajes de la población actual.
 %
-Hay varios métodos diferentes de selección, como son de ruleta, aleatoria, por
-puntaje y de tipo torneo.
+Hay varios métodos diferentes de selección, como lo son de ruleta, aleatoria,
+por puntaje y de tipo torneo.
 %
-Para este trabajo se seleccionó el método de torneo, que consiste en comparar
-los puntajes de $n$ individuos seleccionados al azar y el que tenga el mejor
-puntaje es el seleccioando o ganador.
-%
-La cantidad de individuos comparados $n$ es el tamaño de muestreo o de torneo,
-cuanto más grande sea este número más posibilidades tienen de ganar los
-individuos con mayor puntaje, y la cantidad de rondas del torneo determina la
-cantidad de individuos seleccionados para participar en la próxima iteración o
-generación de candidatos.
+Para este trabajo se seleccionó el método de torneo, es uno de los métodos más
+populares para los procesos de selección de AG.
 
+El método consiste en seleccionar $k$ individuos de la población al azar, se
+comparan los puntajes de estos individuos y resulta ``ganador'' aquel que tenga
+más puntaje.
+%
+El proceso se repite $N$ veces hasta generar la nueva población.
+
+El parámetro $k$ es el tamaño de torneo y comúnmente se utiliza
+2\parencite{oladele}, a mayores valores para $k$ se tiene una mayor pérdida de
+diversidad en los resultados\parencite{blickle} porque reduce la posibilidad de
+que candidatos con menor puntaje sean seleccionados para la nueva generación
+(convergencia temprana).
+
+Para este torneo se utilizó además un \emph{salón de la
+fama}~\parencite{wirsansky} de 1 individuo, esto significa que el mejor
+individuo de la población actual es automáticamente seleccionado para la
+iteración siguiente y la selección por torneo se realiza $N-1$ veces.
 
 \subsection{Cruza}
 %
-El operador de cruza se encarga de combinar los genes de dos individuos para
-producir un individuo nuevo; la función es la de intercambiar los parámetros que
-hacen a uno y otro para dar lugar a una nueva posible solución.
+El operador de cruza se encarga de combinar los genes  de dos individuos para
+producir uno nuevo.
+%
+Se encarga de combinar/intercambiar los parámetros de los individuos
+``cruzados'' para generar uno nuevo.
 %
 Para individuos representados por un vector se suelen usar operadores de tipo
-cruza de uno o múltiples puntos como también cruza uniforme.
+cruza de uno o múltiples puntos, también se utilizan mecanismos de cruza
+uniforme.
 %
-El método seleccionado es \emph{cruza de dos puntos}, en este método
-se corta el vector que forma al individuo en dos puntos, la posición de estos
-puntos se selecciona al azar, manteniendo el largo original de los vectores.
+El método seleccionado es \emph{cruza de dos puntos}, en este método se corta el
+vector que forma al individuo en dos puntos, la posición de estos puntos se
+selecciona al azar, manteniendo el largo original de los vectores.
 %
-Luego los individuos ``cruzados'' se combinan de forma complementaria, como se muestra
-la Figura~\ref{fig:cr2puntos}.
-%
-En el algoritmo~\ref{algo:cr2puntos} se esquematiza
+Los individuos ``cruzados'' se combinan de forma complementaria como se indica
+en la Figura~\ref{fig:cr2puntos}, el algoritmo~\ref{algo:cr2puntos} esquematiza
 el proceso.
-%
-% TODO: pongo pseudocódigo? o dejo el còdigo
 
 \begin{figure}[ht!]
   \centering
   \includegraphics[width=0.5\textwidth]{cruza2puntos.png}
-  \caption{Cruza de dos puntos}\label{fig:cr2puntos}
+  \caption{Cruza de dos puntos~\parencite{wirsansky}}\label{fig:cr2puntos}
 \end{figure}
 
 
-\begin{algorithm}[]
+\begin{algorithm}[h!]
   \KwIn{\\
-    $ind_{1}, ind_{2}$: dos individuos de entrada [101\ldots011], [110\ldots100]\\
-    EA(a, b): devuelve un Entero al Azar entre los enteros a y b.\\
+    $ind_{1}, ind_{2}$: dos individuos de entrada, por ej. [101\ldots011], [110\ldots100].\\
+    EA(a, b): devuelve un entero al azar entre los enteros a y b.\\
     L(a): devuelve la cantidad de elementos en a.}
   \KwOut{\\
     $ind_{1}, ind_{2}$: individuos de entrada modificados}
@@ -254,16 +289,21 @@ el proceso.
   $ind_{1}[CX_{1}:CX_{2}] = ind_{2}[CX_{1}:CX_{2}]$\;
   $ind_{2}[CX_{1}:CX_{2}] = aux[CX_{1}:CX_{2}]$\;
   \Return{$ind_{1}, ind_{2}$}\;
-  Terminar el programa;
   \caption{Cruza de dos puntos}\label{algo:cr2puntos}
 \end{algorithm}
 
 \subsection{Mutación}
 %
-La mutación juega un rol secundario pero importante, una pequeña probabilidad
-de que alguno de los genes se modifique en un valor aleatorio contribuye a que
-el algoritmo genético no se estanque en soluciones de máximos o mínimos locales.
-
+La mutación juega un rol secundario pero importante en los AG, consiste en
+modificar aleatoriamente alguno de los parámetros que definen a un individuo.
+%
+Este mecanismo contribuye a la diversidad de soluciones y por ende reduce la posibilidad de
+convergencia temprana.
+%
+Se utilizan probabilidades bajas de mutación, en el caso extremo si la
+probabilidad de mutación es del $100\%$ el AG se convierte en un método de
+búsqueda aleatoria.
+%
 Algunos de los métodos de mutación utilizados son:
 
 \begin{enumerate}
@@ -273,14 +313,29 @@ Algunos de los métodos de mutación utilizados son:
   \item REORDENADO ALEATORIO
 \end{enumerate}
 
-% FLIP BIT se utiliza para números binarios y el método consiste en intercambiar
-% ceros y unos con una probabilidad al azar en ubicaciones al azar, por ejemplo
-% $10101 \rightarrow 11101$.
-
 En este trabajo se utiliza el método de reordenado aleatorio en el cual se
 modifica al azar el orden de los números que hacen al individuo, modificando los
-índices de la lista que define el arreglo, por ejemplo:
-$12345 \rightarrow 12543$.
+índices de la lista que define el arreglo, por ejemplo: $11100 \rightarrow 10011$.
+%
+El pseudocódigo de este proceso se indica en el algoritmo~\ref{algo:flipbit}.
+
+\begin{algorithm}
+  \caption{Flip Bit}\label{algo:flipbit}
+  \DontPrintSemicolon
+  \KwIn{
+    $A = (a_{1}, a_{2}, \ldots, a_{n})$ es un vector compuesto de unos y ceros.\\
+    $R$, es una función aleatoria que devuelve un número real entre 0 y 1.\\
+    $p$, es un número real entre 0 y 1 que representa la probabilidad de mutación.
+  }
+
+  \For{i=1 \KwTo n}{
+    \If{$R < p$}{
+      \lIf{$A_{i}=1$}{$A_{i}=0$}
+      \lElse{$A_{i}=1$}
+      }
+  }
+    \Return A\;
+\end{algorithm}
 
 \subsection{Función Objetivo}\label{sec:funcion_objetivo}
 %
@@ -346,7 +401,7 @@ geométricas a las iteraciones siguientes y es algo especialmente problemático 
 optimizaciones con poblaciones de alrededor de 100 individuos.
 
 Para reducir la posibilidad de una convergencia temprana se utiliza un método de
-escalado de puntajes, que consiste en una transfomración lineal en la que se
+escalado de puntajes, que consiste en una transformación lineal en la que se
 define el puntaje bruto de un individuo como $f$ y el puntaje escalado como
 $f'$, la relación entre ambos es $f' = a\cdot f + b$.
 %

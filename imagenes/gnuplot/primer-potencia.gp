@@ -5,13 +5,13 @@ set terminal tikz standalone color size 13cm,8cm
 set termoption dash
 set output ofile
 
-set label 1 at 2, 190 "Torque" right
+set label 1 at 2, 150 "Torque" right
 set label 2 at 1.7, 53 "Potencia" center rotate by 30
 
-set label 3 at 6.7, 135 '142 CV' center font ',8'
-set label 4 at 5.1, 200 '194 Nm' right font ',8'
-set label 5 at 6.5, 142 '' point pt 13 lc -1 ps 1.5
-set label 6 at 4, 194 '' point pt 13 lc -1 ps 1.5
+set label 3 at 7.5, 185 '177 CV' center font ',8'
+set label 4 at 2.0, 200 '191 Nm' right font ',8'
+set label 5 at 7.5, 177.8 '' point pt 13 lc -1 ps 1.5
+set label 6 at 2.5, 191 '' point pt 13 lc -1 ps 1.5
 
 set grid lw 1.5
 set key bottom right

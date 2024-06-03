@@ -89,17 +89,13 @@ menor para velocidades con $\Delta P \simeq 0$.
 A medida que el puerto se abre la diferencia de presión con el gas en la cámara
 disminuye y esta banda se afina.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{flujometrias/puntos_de_interes.png}
-    \caption{Presión en función de la apertura el puerto,
-$\Delta P = f(l_{v})$}\label{fig:puntos_interes}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=\textwidth]{flujometrias/puntos_de_interes.png}
+%     \caption{Presión en función de la apertura el puerto,
+% $\Delta P = f(l_{v})$}\label{fig:puntos_interes}
+% \end{figure}
 
-% Se definió el dominio de la simulación a partir de la geometría obtenida de
-% la optimización con el algoritmo genético del motor utilizando coeficientes
-% de descarga constantes para el flujo a través de los puertos.
-%
 El valor de alzada está directamente relacionado con la posición angular del
 cigüeñal, por lo que una vez seleccionados los puntos de interés se puede
 extraer la geometría deseada de un modelo de CAD paramétrico del motor.
@@ -109,10 +105,10 @@ de admisión y escape, y se obtuvo realizando operaciones geométricas con los
 volúmenes que representan diferentes componentes del motor como son el estator,
 rotor, paletas, etc.
 %
-En la Figura~\ref{fig:admision_50} se muestra parte del proceso para obtener el
-puerto de admisión a $\theta=50^{\circ}$, en donde se suma el volumen del mismo
-en gris y las Figuras que se restan que corresponden al rotor, las paletas y un
-paralelogramo para quitar una región que no se simuló.
+% En la Figura~\ref{fig:admision_50} se muestra parte del proceso para obtener el
+% puerto de admisión a $\theta=50^{\circ}$, en donde se suma el volumen del mismo
+% en gris y las Figuras que se restan que corresponden al rotor, las paletas y un
+% paralelogramo para quitar una región que no se simuló.
 
 \begin{figure}
     \centering
@@ -132,7 +128,7 @@ la simulación.
 Es importante que se satisfaga la hermeticidad de la malla, lo cual significa
 que los nodos en la frontera entre superficies coincidan, como se puede observar
 en la Figura~\ref{fig:salome_malla_hermetica}, en la que se ven dos superficies
-"walls" y "outlet" y los nodos compartidos entre ambas superficies.
+``walls'' y ``outlet'' y los nodos compartidos entre ambas superficies.
 %
 
 \begin{figure}[ht]
@@ -165,7 +161,7 @@ En la Figura~\ref{fig:salome_fina_gruesa} se ve la diferencia en cantidad de
 nodos de dos mallas, una malla fina a la izquierda y una malla gruesa a la
 derecha.
 %
-En la tabla \ref{tab:salome_fina_gruesa} se muestra la diferencia entre algunos
+En la Tabla~\ref{tab:salome_fina_gruesa} se muestra la diferencia entre algunos
 parámetros básicos de configuración para las dos mallas.
 %
 % Esto sin requerir de una gran cantidad de elementos para no ralentizar el
@@ -307,7 +303,7 @@ en \emph{constant/polyMesh}.
 
 El complemento \emph{snappyHexMesh} es el segundo paso del mallado.
 %
-Parte de una malla de bloques como la generada con la utilidad \emph{blockmesh}
+Parte de una malla de bloques como la generada con la utilidad \emph{blockMesh}
 y la \emph{talla} para acomodarse a la geometría dada, generando una malla 3D
 conformada por hexaedros y hexaedros partidos a partir de superficies de caras
 triangulares en formato de \emph{estereolitografía} (STL por sus siglas en

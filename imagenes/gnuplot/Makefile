@@ -13,5 +13,5 @@ clean: all
 	rm -f *.tex *.log *.aux
 
 all:
-	gnuplot -c bmep_vs_rendVol.gp
-	pdflatex bmep_vs_rendVol.tex
+	gnuplot -c cd_vs_alzada_esc.gp
+	pdflatex cd_vs_alzada_esc.tex
