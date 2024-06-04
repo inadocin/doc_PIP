@@ -13,13 +13,13 @@ detallan en las Figuras~\ref{fig:delta_p_admision} y~\ref{fig:delta_p_escape}.
 Inicialmente se propusieron 51 flujometrías pudiendo realizar un total de 36
 simulaciones que devoliveron 56 valores de $C_{D}$.
 
-\begin{figure}[h]
+\begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{flujometrias/admision_delta_p_anot.png}
   \caption{Flujometrías puerto de admisión}\label{fig:delta_p_admision}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{flujometrias/escape_delta_p_anot.png}
   \caption{Flujometrías puerto de escape}\label{fig:delta_p_escape}
@@ -81,12 +81,10 @@ de $C_{D}$ y $\dot{m}$ obtenidos para los puertos de admisión y escape.
   \centering
   \begin{tabular}{cccccccc}\toprule
     Puerto & $l_{v} [mm]$ & $\Delta P [kPa]$ & $C_{D}$ & $\dot{m} [g/seg]$ & Nota & Figura\\ \midrule
-    Admisión & 62,95 & -7,37 & 0,59 & -122,09 & $C_{D,\max}$ &\ref{fig:adm_cd_max} \\
-    Admisión & 144,3 & -6,57 & 0,12 &      -5 & $\overline{C_{D}}$ &\ref{fig:adm_cd_med} \\
-    Admisión & 81,94 &  4,95 & 0,33 &   70,09 & $\dot{m}_{\max}$ &\ref{fig:adm_m_max} \\
-    Escape   & 87,76 & -10,7 & 0,58 &     145 & $C_{D,\max}$ &\ref{fig:esc_cd_max}\\
-    Escape   & 16,83 &-652,9 &  0,1 &    38,6 & $\overline{C_{D}}$ &\ref{fig:esc_cd_min}\\
-    Escape   & 87,76 &    -1 & 0,58 &     145 & $\dot{m}_{\max}$ &\ref{fig:esc_cd_max}\\
+    Admisión & 62,95 &  -7,4 & 0,59  & -122 & $C_{D,\max}$ &\ref{fig:adm_cd_max} \\
+    Admisión & 81,94 &  4,95 & 0,33 &   70 & $\dot{m}_{\max}$ &\ref{fig:adm_cd_max} \\
+    Escape   & 87,76 & -10,7 & 0,58 &  145 & $C_{D,\max}$ &\ref{fig:esc_cd_max}\\
+    Escape   & 87,76 & -33,4 & 0,45 &  176 & $\dot{m}_{\max}$ &\ref{fig:esc_m_max}\\
   \end{tabular}
   \caption{Valores máximos y mínimos de $C_{D}$ y $\dot{m}$ para puertos}\label{tab:resumen_puertos}
 \end{table}
@@ -94,12 +92,23 @@ de $C_{D}$ y $\dot{m}$ obtenidos para los puertos de admisión y escape.
 
 \subsection{Puerto de Admisión}
 %
-En el mapa del coeficiente de descarga para el puerto de admisión se puede
-observar en rojo las zonas de menor eficiencia del escurrimiento.
+En el mapa del coeficiente de descarga  para el puerto de admisión
+(Fig.\ref{fig:mapa_cd_admision}) se puede observar en rojo las zonas de menor
+eficiencia del escurrimiento.
 %
 Esto ocurre para posiciones relacionadas con la apertura y cierre del puerto
 donde las presiones y velocidades de flujo involucradas son mayores aumentando
 las pérdidas de carga.
+%
+La misma tendencia se observa si se representa el $C_{D}$ en función de la
+apertura del puerto $l_{v}$ o del gradiente de presión $\Delta P$, ver
+Figura~\ref{fig:cd_admision}.
+%
+Los mayores valores de $C_{D}$ ocurren para la mayor apertura o (en general)
+para el menor gradiente de presión en términos absolutos.
+%
+También se observa que el coeficiente de descarga medio para el puerto es
+aproximadamente 0,3.
 
 \begin{figure}[h]
     \centering
@@ -110,7 +119,7 @@ las pérdidas de carga.
 \begin{figure}[h]
     \centering
     \includegraphics{gnuplot/cd_vs_alzada_adm.pdf}
-    \caption{$C_{D}$ del puerto de admisión}\label{fig:mapa_cd_admision}
+    \caption{$C_{D}$ del puerto de admisión}\label{fig:cd_admision}
 \end{figure}
 
 El máximo coeficiente de descarga vale $C_{D,\max}\simeq 0,6$ para
@@ -122,24 +131,20 @@ de admisión, correspondiendo a un ángulo de cigüeñal de $10^{\circ}$ a $7000
 RPM.
 
 La flujometría correspondiente al último instante de la simulación se muestra en
-la Figura~\ref{fig:adm_cd_max}.
+la Figura~\ref{fig:adm_cd_max}, en la cual las líneas de corriente están
+coloreadas según el módulo de la velocidad y las flechas indican el sentido de
+flujo.
 %
-Las líneas de corriente están coloreadas según el módulo de la velocidad y las
-flechas indican el sentido de flujo.
+La mayor velocidad del flujo se da en el gas que sale de la cámara,
+correspondiente a masa residual atrapada luego del barrido del puerto de escape.
+
+
+El flujo másico máximo hacia adetro de la cámara ($\Delta P>0$) ocurre para la
+misma geometría indicada en la Figura~\ref{fig:adm_cd_max}.
 %
-La mayor velocidad del flujo se da en el gas que sale de la cámara, que
-corresponde a masa residual que queda atrapada luego del barrido del puerto de
-escape.
-
-El menor valor de $C_{D}$ se obtiene para el puerto de admisión en una posición
-muy próxima a la apertura, $C_{D,\min}\simeq 0,12$ con un flujo hacia el puerto
-de $\dot{m}\simeq 5 g/seg$, $l_{v}=144,3 mm$ y $\Delta P=-6,57 KPa$ para el
-puerto a $590^{\circ}$ y $1000$ RPM, ver Figura~\ref{fig:adm_cd_min}.
-
-El flujo másico máximo hacia adetro de la cámara ($\Delta P>0$) es
-$\dot{m}_{\max}\simeq 70 g/seg$ y ocurre durante un período de máxima apertura
-del puerto con $l_{v}=81,94 mm$ y $\Delta P=4,95 KPa$ siendo $C_{D}\simeq 0,33$,
-ver Figura~\ref{fig:adm_m_max}.
+Se alcanza $\dot{m}_{\max}\simeq 70 g/seg$ para la cámara que se encuentra más
+avanzada en el proceso de admisión y con máxima apertura del puerto con
+$l_{v}=81,94 mm$ y $\Delta P=4,95 KPa$ siendo $C_{D}\simeq 0,33$.
 
 \begin{figure}[h]
     \centering
@@ -147,29 +152,25 @@ ver Figura~\ref{fig:adm_m_max}.
     \caption{Admisión - Máximo $C_{D}$}\label{fig:adm_cd_max}
 \end{figure}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\textwidth]{flujometrias/adm_cd_min.png}
-    \caption{Admisión - Valor mínimo de $C_{D}$}\label{fig:adm_cd_min}
-\end{figure}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\textwidth]{flujometrias/adm_cd_max.png}
-    \caption{Admisión - Valor máximo de $\dot{m}$}\label{fig:adm_m_max}
-\end{figure}
+
 
 \subsection{Puerto de Escape}
 %
 En la Figura~\ref{fig:mapa_cd_escape} se ilustra el mapa obtenido para el puerto
 de escape.
 %
-La tendencia es similar al puerto de admisión con la diferencia de que no hay
-gradientes positivos de presión.
+La tendencia es similar al puerto de admisión, en la Figura~\ref{fig:cd_escape}
+se observa que el coeficiente de descarga es mayor para aperturas mayores del
+puerto y menores gradientes de presión ($|\Delta P|\sim 0$).
 %
-La zona con mayores valores de $C_{D}$ corresponde a la máxima apertura del
-puerto y valores de presión intermedios.
+El máximo coeficiente de descarga obtenido vale $C_{D,\max}\simeq 0,58$ y ocurre
+para $l_{v}=87,76 mm$, $\Delta P=-10,7 KPa$ con un flujo másico de $145 g/s$
+hacia afuera para $440^{\circ}$ a $9000$ RPM, ver Figura~\ref{fig:esc_cd_max}.
 %
+Por otro lado el máximo caudal másico es $\dot{m}=176,1 g/seg$ y ocurre para
+$l_{v}=87,76 mm$ y $\Delta P=-334 KPa$, correspondiendo a $440^{\circ}$ y 7000
+RPM, ver Figura~\ref{fig:esc_m_max}.
 
 \begin{figure}[h]
     \centering
@@ -180,38 +181,15 @@ puerto y valores de presión intermedios.
 \begin{figure}[h]
     \centering
     \includegraphics{gnuplot/cd_vs_alzada_esc.pdf}
-    \caption{$C_{D}$ del puerto de escape}\label{fig:mapa_cd_escape}
+    \caption{$C_{D}$ del puerto de escape}\label{fig:cd_escape}
 \end{figure}
 
-\subsubsection{$C_{D}$ máximo}
-%
-Para el puerto de escape se observa el máximo $C_{D,\max}\simeq 0,58$ para
-$l_{v}=87,76 mm$, $\Delta P=-10,7 KPa$ con un flujo másico de $145 g/s$ hacia
-afuera para $440^{\circ}$ a $9000$ RPM, ver Figura~\ref{fig:esc_cd_max}.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{flujometrias/esc_cd_max.png}
     \caption{Escape - Valor máximo de $C_{D}$}\label{fig:esc_cd_max}
 \end{figure}
-
-\subsubsection{$C_{D}$ mínimo}
-%
-Para $l_{v}=16,83 mm$ y $\Delta P=-652,9 KPa$ se obtiene $C_{D, \min}\simeq 0,1$,
-donde el flujo se encuentra bloqueado por la alta diferencia de presión,
-alcanzando $\dot{m}=38,6 g/seg$, ver Figura~\ref{fig:esc_cd_min}.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\textwidth]{flujometrias/esc_cd_max.png}
-    \caption{Escape - (CAMBIAR POR CD MIN) Valor mínimo de $C_{D}$}\label{fig:esc_cd_min}
-\end{figure}
-
-\subsubsection{$\dot{m}$ máximo}
-%
-El flujo másico máximo es $\dot{m}=176,1 g/seg$ para $l_{v}=87,76 mm$ y
-$\Delta P=-334 KPa$, correspondiendo a $440^{\circ}$ y 7000 RPM,
-ver Figura~\ref{fig:esc_m_max}.
 
 \begin{figure}[h]
     \centering

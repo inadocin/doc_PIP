@@ -17,7 +17,9 @@ unset key
 set multiplot layout 1,2
 set tics font ",8"
 set ylabel "$C_{D}$ Admisión"
+set xlabel "$l_v [mm]$"
 plot ifile u ($4*1000):6  w p lc "blue" t "Admisión"
 unset ylabel
+set xlabel "$\\Delta P [kPa]$"
 plot ifile u ($5/1000):6  w p lc "blue" t "Admisión"
 unset multiplot
