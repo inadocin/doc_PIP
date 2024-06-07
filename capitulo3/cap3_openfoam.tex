@@ -69,16 +69,16 @@ del puerto, para un rango de velocidades de 1000 a 9000 RPM, con el fin de
 identificar las zonas en las condiciones operativas en las que evaluar el puerto.
 %
 En la Figura~\ref{fig:puntos_interes} se muestra una gráfica de $\Delta P$ y
-alzada para los puertos de admisión y escape del motor resultante de la primera
-iteración (con un $C_{D}$ constante).
+alzada para los puertos de admisión y escape de 1000 a 2000 RPM de un motor
+resultante de una de las simulaciones.
 
 Como es de esperarse se tienen mayores diferenciales de presión a menores
 aperturas del puerto porque se está próximo a los eventos de apertura o cierre
 del mismo.
 %
 A diferencia del puerto de admisión, en el puerto de escape se ve una banda
-bastante definida de operación que se hace más ``llena'' a medida que aumenta el
-área del puerto expuesta a la cámara (alzada).
+bastante definida de operación que se hace más ``llena'' a medida que aumenta la
+apertura del puerto.
 %
 Durante la apertura del puerto se ven las mayores diferencias de presión en las
 que hay dos bandas bien definidas.
@@ -89,12 +89,12 @@ menor para velocidades con $\Delta P \simeq 0$.
 A medida que el puerto se abre la diferencia de presión con el gas en la cámara
 disminuye y esta banda se afina.
 
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=\textwidth]{flujometrias/puntos_de_interes.png}
-%     \caption{Presión en función de la apertura el puerto,
-% $\Delta P = f(l_{v})$}\label{fig:puntos_interes}
-% \end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{gnuplot/puntos_interes.pdf}
+    \caption{Presión en función de la apertura el puerto,
+$\Delta P = f(l_{v})$}\label{fig:puntos_interes}
+\end{figure}
 
 El valor de alzada está directamente relacionado con la posición angular del
 cigüeñal, por lo que una vez seleccionados los puntos de interés se puede
@@ -133,7 +133,7 @@ en la Figura~\ref{fig:salome_malla_hermetica}, en la que se ven dos superficies
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.5\textwidth]{./flujometrias/salome_malla_hermetica.png}
+    \includegraphics[width=0.4\textwidth]{./flujometrias/salome_malla_hermetica.png}
     \caption{Malla hermética}\label{fig:salome_malla_hermetica}
 \end{figure}
 
@@ -146,7 +146,7 @@ Figura~\ref{fig:openfoam_parches}.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\textwidth]{./flujometrias/openfoam_parches.png}
+    \includegraphics[width=0.5\textwidth]{./flujometrias/openfoam_parches.png}
     \caption{Nombres de Parches}\label{fig:openfoam_parches}
 \end{figure}
 
@@ -198,7 +198,7 @@ parámetros básicos de configuración para las dos mallas.
 \end{table}
 
 
-\subsubsection{Configuración}
+\subsection{Configuración}
 %
 Para conFigurar una simulación de OpenFOAM se organiza el directorio de
 simulación como se indica en la Figura~\ref{fig:direc_pf} para las flujometrías
@@ -248,7 +248,7 @@ Con los resultados de las simulaciones se procede a calcular/leer la magnitud
 del caudal másico, necesario para el cálculo del coeficiente de descarga.
 
 
-\subsubsection{Malla}\label{sec:cap3_of_malla}
+\subsection{Malla}\label{sec:cap3_of_malla}
 %
 Una vez obtenido el archivo STL se procede a la generación de la malla dentro de
 OpenFOAM con \emph{blockMesh} y \emph{snappyHexMesh}.
@@ -292,16 +292,19 @@ modelando, ver Figura~\ref{fig:openfoam_shm_pasos}.
     \caption{Pasos de SnappyHexMesh\parencite{shm_steps}}\label{fig:openfoam_shm_pasos}
 \end{figure}
 
-
 El complemento \emph{blockMesh} crea una malla paramétrica con bloques, con
 opciones para la creación de la malla con gradientes de tamaño de bloques y
 diferentes opciones para los bordes, los cuales se pueden construir por líneas
-rectas, arcos o ``splines''.
+rectas, arcos o
+``splines''.\footnote{\url{https://doc.cfd.direct/openfoam/user-guide-v11/blockmesh}}
 %
-La malla se genera o conFigura con un diccionario \emph{blockMeshDict} ubicado
-en \emph{constant/polyMesh}.
+La malla se genera o configura con un diccionario \emph{blockMeshDict} ubicado
+en \emph{constant/polyMesh}, con el cual se construye un cubo capaz de contener
+la geometría del puerto a simular.
 
-El complemento \emph{snappyHexMesh} es el segundo paso del mallado.
+El complemento \emph{snappyHexMesh}
+\footnote{\url{https://doc.cfd.direct/openfoam/user-guide-v11/snappyhexmesh}} es
+el segundo paso del mallado.
 %
 Parte de una malla de bloques como la generada con la utilidad \emph{blockMesh}
 y la \emph{talla} para acomodarse a la geometría dada, generando una malla 3D

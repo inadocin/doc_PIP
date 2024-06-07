@@ -25,7 +25,7 @@ el tamaño de los archivos de salida, facilitar la lectura y el procesamiento de
 datos.
     \item Incluir una opción para elegir entre un modelo de $C_D$ de una o dos
 variables.
-    \item Modificar el área de referencia, ver ec.\ref{ec:fv}
+    \item Modificar el área de referencia, ver ec.\ref{eq:fv}
     \item Agregar un esquema de interpolación bilineal que permita tabajar con
 el modelo de $C_{D}$ de dos variables.
 \end{enumerate}
@@ -186,30 +186,8 @@ métodos, para una malla de $C_{D}=f(\Delta_{P}, l_{v})$ generada al azar.
 
 \begin{figure}
     \centering
-    \begin{subfigure}{0.4\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{mapa_cd/mc_mapa_adm.png}
-        \caption{Punto Más Cercano sin suavizar}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.4\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{mapa_cd/mc_s2_mapa_adm.png}
-        \caption{Más Cercano ($S=2$)}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.4\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{mapa_cd/idw8_mapa_adm.png}
-        \caption{IDW ($p=8$)}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.4\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{mapa_cd/idw16_mapa_adm.png}
-        \caption{IDW ($p=16$)}
-    \end{subfigure}
-    \caption{Comparación de interpolaciones}\label{fig:mapas_interpolados}
+    \includegraphics[width=.7\textwidth]{mapa_cd/mapa_cd.pdf}
+    \caption{Comparación de métodos de interpolación}\label{fig:mapas_interpolados}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
