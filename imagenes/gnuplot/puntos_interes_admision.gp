@@ -15,11 +15,13 @@ set tics font ",8"
 set xlabel "$l_v$ [mm]"
 set ylabel "$\\Delta P$ [KPa]"
 
+set title "Puerto de Admisión"
 plot ifile1 using 1:2 lt 1 lc 1 w p t '1000 RPM', \
      ifile1 using 1:3 lt 2 lc 2 w p t '2000 RPM', \
      ifile1 using 1:4 lt 3 lc 3 w p t '3000 RPM', \
      ifile1 using 1:5 lt 4 lc 4 w p t '4000 RPM', \
 
+set title "Puerto de Escape"
 plot ifile2 using 1:2 lt 1 lc 1 w p t '1000 RPM', \
      ifile2 using 1:3 lt 2 lc 2 w p t '2000 RPM', \
      ifile2 using 1:4 lt 3 lc 3 w p t '3000 RPM', \
