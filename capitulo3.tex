@@ -21,8 +21,7 @@ el optimizador, algunas de estas modificaciones fueron:
 %
 \begin{enumerate}
     \item Modificar el formato de los archivos de salida, con el fin de reducir
-el tamaño de los archivos de salida, facilitar la lectura y el procesamiento de
-datos.
+el tamaño de los mismos, facilitar la lectura y el procesamiento de datos.
     \item Incluir una opción para elegir entre un modelo de $C_D$ de una o dos
 variables.
     \item Modificar el área de referencia, ver Ecuación~\ref{eq:fv}.
@@ -59,17 +58,7 @@ rectangular.
 Se reutilizó el código existente para el caso 1D y se realiza una interpolación
 lineal entre dos valores en planos con datos conocidos, como se ve en la
 Figura~\ref{fig:interp_bilineal}.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.7\textwidth]{interpolacion_bilineal.png}
-    %
-    \caption{Interpolación bilineal\protect\footnotemark}\label{fig:interp_bilineal}
-    % \footnote{A}}
-\end{figure}
-
-\footnotetext{\url{https://stackoverflow.com/questions/8808996/bilinear-interpolation-to-enlarge-bitmap-images}}
-
+%
 Si bien hay otros métodos de interpolación para estimar el valor de $C_D$ a
 partir de una nube de puntos, este método es sencillo y da resultados
 satisfactorios.
@@ -80,7 +69,16 @@ $f=\sin\left(\sqrt{x^2 + y^2}\right)$.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.7\textwidth]{bilineal.png}
+    \includegraphics[width=0.7\textwidth]{interpolacion_bilineal.png}
+    %
+    \caption{Interpolación bilineal\protect\footnotemark}\label{fig:interp_bilineal}
+    % \footnote{A}}
+\end{figure}
+\footnotetext{\url{https://stackoverflow.com/questions/8808996/bilinear-interpolation-to-enlarge-bitmap-images}}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{bilineal.png}
     \caption{Interpolación bilineal de $\sin(\sqrt{x^2 + y^2})$}\label{fig:bilineal}
 \end{figure}
 
@@ -108,7 +106,7 @@ aritmético de los valores a una distancia $S$ de cada celda evaluada.
 En la Figura~\ref{fig:suavizado_promedio} se muestra este proceso para una
 matriz de $5\times5$.
 
-\begin{figure}
+\begin{figure}[h!]
     \centering
     \includegraphics[]{/mapa_cd/suavizado.pdf}
     \caption{Suavizado por promedio con celdas vecinas, S=1}\label{fig:suavizado_promedio}
@@ -187,6 +185,14 @@ métodos, para una malla de $C_{D}=f(\Delta P, l_{v})$ generada al azar.
      }
 \end{algorithm}
 
+% TODO:
+% Modificar esto para mostrar la comparación entre métodos de interpolación con
+% una función más convencional, como la que se ve en estas páginas:
+
+% http://matlab.izmiran.ru/help/techdoc/math/poly_interp16.html
+% https://medium.com/productive-data-science/how-to-interpolate-data-with-scipy-d314143285bc
+% https://www.alglib.net/inverse-distance-weighting/
+% https://www.mathworks.com/help/matlab/ref/peaks.html (peaks function)
 
 \begin{figure}
     \centering
@@ -207,10 +213,6 @@ referencia es el área frontal del puerto expuesta a la cámara, calculada como 
 altura de la ranura $h_{p}$ multiplicada por la distancia entre el borde del
 puerto y la paleta que delimita la cámara, denominada como $l_{v}$.
 
-%
-% En la Figura~\ref{fig:area_referencia} se ilustran las áreas de referencia para
-% una posición del rotor en la que hay solape de cámaras con $\theta = 55^\circ$.
-%
 Este valor se afecta por el coeficiente de descarga intermedio $C_{D,int}$, que
 puede ser un valor fijo o el resultado de interpolar de un mapa de $C_D$ para un
 valor de cuerda y $\Delta P$ dado, como se indica en la ecuación~(\ref{eq:fv}).
@@ -219,49 +221,11 @@ valor de cuerda y $\Delta P$ dado, como se indica en la ecuación~(\ref{eq:fv}).
     F_v = C_{D,int}\cdot h_{p}\cdot l_{v}
 \end{equation}
 
-% \begin{figure}
-%     \centering
-%     \includegraphics[]{area_referencia.png}
-%     \caption{Área de referencia}\label{fig:area_referencia}
-% \end{figure}
-
 Tanto al inicio como al cierre del puerto ocurre solape de cámaras, por lo que
 en estos intervalos angulares hay un valor de $C_D$ para cada cámara.
 %
 Cada valor se calcula con el flujo másico que atraviesa las secciones de entrada
 correspondientes y el área de puerto expuesta por cada cámara.
-
-\subsection{Pérdidas por fricción}
-
-Se incorporaron las pérdidas por rozamiento los sellos de las paletas y sellos
-estatóricos del MRCVC utilizando valores obtenidos en trabajos
-anteriores~\parencite{roldan}.
-%
-El trabajo de fricción para diferentes velocidades se consideró en la etapa de
-post-procesamiento de las simulaciones de ICESym.
-
-La presión media efectiva de fricción (\textit{fmep}) se obtiene a partir del
-trabajo de fricción y el volumen desplazado.
-
-\begin{equation}
-  fmep_{cilindro} = \frac{W_{f}}{V_{d}}
-\end{equation}
-
-En la Tabla~\ref{tab:trabajo_fricción} se presentan los valores de trabajo de
-fricción correspondientes a diferentes regímenes velocidad.
-
-\begin{table}[h!]
-  \centering
-  \begin{tabular}{cccccccccc}
-    \toprule
-    \textbf{RPM} & 1000 & 2000 & 3000 & 4000 & 5000 & 6000 & 7000 & 8000 & 9000 \\
-    \midrule
-    \textbf{$W_{f}$ [J]} & 25.204 & 26.19 & 26.619 & 27.755 & 28.781 & 31.392 & 28.449 & 31.975 & 32.263 \\
-    \bottomrule
-  \end{tabular}
-  \caption{Pérdidas por fricción en sellos de paletas y sellos estatóricos}\label{tab:trabajo_fricción}
-\end{table}
-
 
 \subsection{Interfaz con Optimizador}
 %
@@ -786,7 +750,7 @@ acrecentar las diferencias entre individuos.
 En caso de existir individuos con puntaje muy bajo o nulo se hace un
 pre-escalado del puntaje que fija el mínimo en $f'_{min}=0$.
 %
-El procedimiento se lista en los algorimtos \ref{algo:pre-escala} y
+El procedimiento se lista en los algoritmos \ref{algo:pre-escala} y
 \ref{algo:pop_scale}.
 
 
@@ -887,7 +851,9 @@ $C_{mult}\in[1.2, 2]$\;\\ }
 %
 Las flujometrías se realizaron con \emph{OpenFOAM}, un software de
 Fluidodinámica Computacional, o CFD por sus siglas en inglés, de código libre y
-abierto escrito en ``C++''.
+abierto e
+
+scrito en ``C++''.
 %
 % La herramienta seleccionada para realizar las flujometrías es OpenFOAM, por ser
 % una herramienta libre y de código abierto.
@@ -906,7 +872,8 @@ El esquema de trabajo para realizar las simulaciones consistió en:
                 %
             \item Definir la geometría a analizar.
               %
-            \item Generar una malla con un tamaño de elemento adecuado (la
+
+          \item Generar una malla con un tamaño de elemento adecuado (la
 solución a problemas de CFD depende fuertemente de la cantidad y tamaño de
 celdas utilizadas).
               %
@@ -940,363 +907,9 @@ celdas utilizadas).
         %
 \end{enumerate}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
-\subsection{Configuración}
-%
-Para configurar una simulación de OpenFOAM se organiza el directorio de
-simulación como se indica en la Figura~\ref{fig:direc_pf} para las flujometrías
-de gas considerado como incompresible  y~\ref{fig:direc_rpf} en los casos en
-los que se tiene en cuenta la compresibilidad del gas.
-%
-Cada directorio contiene una carpeta con condiciones iniciales ``0'', malla
-``constant'', configuraciones particulares de cada solver ``system'' y una
-carpeta con los resultados del post-procesado el cual se puede realizar
-durante cada paso de simulación o al final del proceso dependiendo de la
-configuración que se haya utilizado.
-
-\begin{figure}[h!]
-  \centering
-  \begin{subfigure}[b]{0.4\textwidth}
-    \centering
-    \includegraphics{flujometrias/direct_pimplefoam.pdf}
-    \caption{\emph{pimpleFoam}\label{fig:direc_pf} }
-  \end{subfigure}%
-  \begin{subfigure}[b]{0.4\textwidth}
-    \centering
-    \includegraphics{flujometrias/direct_rhopimplefoam.pdf}
-    \caption{\emph{rhoPimpleFoam}\label{fig:direc_rpf} }
-  \end{subfigure}
-  \caption{Esquema de directorios OpenFOAM}
-\end{figure}
-
-
-En el directorio ``0'' se indican las condiciones iniciales y de borde de cada
-simulación, utilizando una configuración genérica con parámetros definidos en un
-archivo separado.
-%
-Esto se realiza de este modo para aprovechar las características paramétricas de
-OpenFOAM, permitiendo ejecutar una gran cantidad de simulaciones en serie
-variando solamente los parámetros definidos en un archivo externo
-``inital\_conditions.cc''.
-
-Estos archivos de condiciones inciales se generan con un \emph{script} que toma
-valores de las simulaciones de \emph{ICESym}, como se indicó en la
-sección~\ref{cap2:cond_iniciales}, en la que también se detallan las ecuaciones
-e hipótesis utilizadas para obtener dichos valores.
-%
-La ejecución de las simulaciones también se automatiza con scripts de
-\emph{bash} con los pasos para ejecutar las corridas con \emph{ICESym}.
-%
-Con los resultados de las simulaciones se procede a calcular/leer la magnitud
-del caudal másico, necesario para el cálculo del coeficiente de descarga.
-
-
-\subsection{Malla}\label{sec:cap3_of_malla}
-%
-Una vez obtenido el archivo STL se procede a la generación de la malla dentro de
-OpenFOAM con \emph{blockMesh} y \emph{snappyHexMesh}.
-%
-Primero se crea crea una malla con \emph{blockMesh} que  debe contener la
-totalidad del volumen del puerto a simular, como se puede en la
-Figura~\ref{fig:paraview_blockMesh_stl}.
-%
-En este paso se define el tamaño de base de la malla y el nivel general de
-refinamiento.
-%
-A partir de estos hexaedros se produce el refinamiento por \emph{castelación}
-que consiste en dividir las celdas en hexaedros más pequeños y luego aplicar el
-\emph{snapping} para adaptarse a la superficie del volumen que se está
-modelando, ver Figura~\ref{fig:openfoam_shm_pasos}.
-%
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\textwidth]{flujometrias/paraview_blockMesh_stl.png}
-    \caption{Malla de blockMesh y stl de Salome}\label{fig:paraview_blockMesh_stl}
-\end{figure}
-
-\begin{figure}[t!]
-    \centering
-    \begin{subfigure}[t]{0.5\textwidth}
-        \centering
-        \includegraphics{flujometrias/shm_fondo.png}
-        \caption{Malla de fondo y geometría}
-    \end{subfigure}%
-    \begin{subfigure}[t]{0.5\textwidth}
-        \centering
-        \includegraphics{flujometrias/shm_castelacion.png}
-        \caption{Castelación}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.5\textwidth}
-        \centering
-        \includegraphics{flujometrias/shm_snapping.png}
-        \caption{Snapping}
-    \end{subfigure}
-    \caption{Pasos de SnappyHexMesh\parencite{shm_steps}}\label{fig:openfoam_shm_pasos}
-\end{figure}
-
-El complemento \emph{blockMesh} crea una malla paramétrica con bloques, con
-opciones para la creación de la malla con gradientes de tamaño de bloques y
-diferentes opciones para los bordes, los cuales se pueden construir por líneas
-rectas, arcos o
-``splines''.\footnote{\url{https://doc.cfd.direct/openfoam/user-guide-v11/blockmesh}}
-%
-La malla se genera o configura con un diccionario \emph{blockMeshDict} ubicado
-en \emph{constant/polyMesh}, con el cual se construye un cubo capaz de contener
-la geometría del puerto a simular.
-
-El complemento \emph{snappyHexMesh}
-\footnote{\url{https://doc.cfd.direct/openfoam/user-guide-v11/snappyhexmesh}} es
-el segundo paso del mallado.
-%
-Parte de una malla de bloques como la generada con la utilidad \emph{blockMesh}
-y la \emph{talla} para acomodarse a la geometría dada, generando una malla 3D
-conformada por hexaedros y hexaedros partidos a partir de superficies de caras
-triangulares en formato de \emph{estereolitografía} (STL por sus siglas en
-inglés).
-%
-Además permite refinar zonas particulares de la geometría y crear un
-refinamiento mayor en la zona de la capa límite.
-
-
-
-
-
-
-
-
-
-
-
-Una vez obtenido el archivo STL se procede a la generación de la malla dentro de
-OpenFOAM con \emph{blockMesh} y \emph{snappyHexMesh}.
-%
-Primero se crea crea una malla con \emph{blockMesh} que  debe contener la
-totalidad del volumen del puerto a simular, como se puede en la
-Figura~\ref{fig:paraview_blockMesh_stl}.
-%
-En este paso se define el tamaño de base de la malla y el nivel general de
-refinamiento.
-%
-A partir de estos hexaedros se produce el refinamiento por \emph{castelación}
-que consiste en dividir las celdas en hexaedros más pequeños y luego aplicar el
-\emph{snapping} para adaptarse a la superficie del volumen que se está
-modelando, ver Figura~\ref{fig:openfoam_shm_pasos}.
-%
-
-El complemento \emph{blockMesh} crea una malla paramétrica con bloques, con
-opciones para la creación de la malla con gradientes de tamaño de bloques y
-diferentes opciones para los bordes, los cuales se pueden construir por líneas
-rectas, arcos o
-``splines''.\footnote{\url{https://doc.cfd.direct/openfoam/user-guide-v11/blockmesh}}
-%
-La malla se genera o configura con un diccionario \emph{blockMeshDict} ubicado
-en \emph{constant/polyMesh}, con el cual se construye un cubo capaz de contener
-la geometría del puerto a simular.
-
-El complemento \emph{snappyHexMesh}
-\footnote{\url{https://doc.cfd.direct/openfoam/user-guide-v11/snappyhexmesh}} es
-el segundo paso del mallado.
-%
-Parte de una malla de bloques como la generada con la utilidad \emph{blockMesh}
-y la \emph{talla} para acomodarse a la geometría dada, generando una malla 3D
-conformada por hexaedros y hexaedros partidos a partir de superficies de caras
-triangulares en formato de \emph{estereolitografía} (STL por sus siglas en
-inglés).
-%
-Además permite refinar zonas particulares de la geometría y crear un
-refinamiento mayor en la zona de la capa límite.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-% \subsection{Coeficiente de Descarga $C_{D}$}\label{sec:cap3_cd}
-%
-% La pérdida de carga localizada en los puertos de admisión y escape se puede
-% representar a través del coeficiente de descarga, $C_{D}$.
-% %
-% Este coeficiente varía con la geometría y condiciones de operación del puerto,
-% siendo $C_{D}=1$ el caso ideal sin pérdida de carga localizada.
-% %
-% Es un parámetro importante porque permite obtener una mejor estimación del flujo
-% másico real en el puerto, se define como:
-%
-% \begin{equation}
-%   C_{D} = \frac{\text{flujo másico real}}{\text{flujo másico ideal}}
-% \end{equation}
-%
-% El $C_{D}$ de un puerto se puede obtener experimentalmente en un banco de prueba
-% mediante un ensayo que consiste en medir el caudal que circula por un puerto con
-% una presión de descarga fija que, en equipos comerciales varía entre $250-700$
-% mm.c.a.
-% %
-% Comúnmente estos ensayos se realizan en un banco que incluye solamente la tapa
-% de cilindros y una camisa que simula el cilindro de la cámara de combustión,
-% dejando de lado otros elementos del sistema como pistón, los conductos de
-% admisión y otros.
-% %
-% En la imagen~\ref{fig:superflow} se muestra un banco de pruebas
-% comercial.
-%
-% \begin{figure} \centering
-% \includegraphics[width=0.5\textwidth]{./flujometrias/banco_flujometrias.png}
-%   \caption{Banco de flujometrías Super-Flow SF-750}\label{fig:superflow}
-% \end{figure}
-%
-% Durante el ensayo se mide el caudal de aire atmosférico para diferentes grados
-% de apertura de la válvula y así se obtienen datos de (alzada, flujo) con los
-% cuales comparar entre diferentes geometrías del puertos de admisión o escape.
-% %
-% En la Figura~\ref{fig:flow-1} se muestra el resultado del ensayo de un
-% flujómetro en el que se compara la capacidad de flujo de dos tapas de cilindro
-% diferentes de un BMW S14
-% \footnote{\url{http://e30sport.net/tech_articles/engine-tech/flow-1/chart-1.htm}}.
-%
-% \begin{figure} \centering
-% \includegraphics[width=0.8\textwidth]{./flujometrias/flow-1.png}
-%   \caption{Comparación entre flujometrías de dos tapas de cilindro de un BMW S14}\label{fig:flow-1}
-% \end{figure}
-%
-% Otra forma de aproximar un coeficiente de descarga es por medio de flujometrías
-% computacionales, el uso de CFD permite modelar el puerto en condiciones
-% operativas, incluyendo la interacción con elementos como por ejemplo el pistón,
-% o en el caso del MRCVC, estator y conjunto rotante.
-% %
-% Además, se puede modelar las propiedades del fluido de trabajo para una
-% viscosidad, presión y temperatura representativas de las condiciones operativas
-% del motor que se está modelando.
-% %
-% En este trabajo se optó por esta metodología, a partir de las flujometrías se
-% obtuvo un valor de caudal másico el cual es utilizado para calcular un
-% coeficiente de descarga.
-%
-% A partir de $\dot{m}$, el valor de $C_{D}$  se calcula con de las ecuaciones de
-% flujo compresible a través de una restricción, habiendo dos casos distintivos:
-% flujo bloqueado y no bloqueado.
-%
-% Para el caso en que el flujo no esté bloqueado la ecuación de $\dot{m}$ es
-% la~(\ref{eq:m_no_bloqueado}) y en caso de que se cumpla la
-% desigualdad~(\ref{eq:cond_bloqueo}) el flujo está bloqueado y se utiliza la
-% ecuación~(\ref{eq:m_bloqueado}):
-% %
-%
-% \begin{equation}\label{eq:m_no_bloqueado}
-%   \dot{m} = \frac{C_D A_R p_0}{\sqrt{R T_0}} {\left(\frac{p_T}{p_0} \right)}^{1/\gamma} {\left( \frac{2\gamma}{\gamma-1} \left[1- {(\frac{p_T}{p_0})}^{{\gamma-1}/\gamma} \right] \right)}^{1/2}
-% \end{equation}
-%
-% \begin{equation}\label{eq:cond_bloqueo}
-%   \frac{p_T}{p_0} \le {[\frac{2}{\gamma+1}]}^{\gamma/(\gamma - 1)}
-% \end{equation}
-%
-% \begin{equation}\label{eq:m_bloqueado}
-%   \dot{m}=  \frac {C_D A_R p_0} {{(R T_0)}^{1/2}} \gamma^{1/2} {\left( \frac{2\gamma}{\gamma+1} \right)}^{(\gamma+1)/(2(\gamma-1))}
-% \end{equation}
-%
-% donde
-% \begin{itemize}
-%     \item $p_0$, es la presión de estancamiento antes de la restricción.
-%     \item $T_0$, es la temperatura de estancamiento antes de la restricción.
-%     \item $p_T$, es la presión estática justo después de la restricción.
-%     \item $A_R$, es el área de pasaje de flujo o de referencia.
-%     \item $\dot{m}$, es el caudal másico.
-%   \item $\gamma$, es el cociente de capacidades térmicas del gas.
-% \end{itemize}
-%
-% \nomenclature[PO]{\(p_0\)}{Presión de estancamiento antes de la restricción}
-% \nomenclature[PO]{\(T_0\)}{Temperatura de estancamiento antes de la restricción}
-% \nomenclature[PO]{\(p_T\)}{Presión estática justo después de la restricción}
-% % \nomenclature[G]{\(A_R\)}{Área de pasaje de flujo o de referencia}
-%
-% El flujo está bloqueado si la velocidad en la garganta de la restricción alcanza
-% la velocidad sónica, dada esta condición $\dot{m}$ alcanza un límite y reducir
-% la presión aguas abajo de la restricción no produce un aumento del caudal.
-% %
-% % La condición de flujo bloqueado se puede expresar en términos de la relación de
-% % presiones aguas arriba $p_{0}$ y aguas abajo de la restricción $p_{T}$.
-% %
-% Las presiones y temperaturas involucradas en el cálculo de $\dot{m}$ se pueden
-% medir u obtener de una simulación computacional del ciclo del motor.
-% %
-% \nomenclature[PO]{\(p,P\)}{Presión}
-%
-% Un parámetro importante en las ecuaciones utilizadas para el cálculo del
-% coeficiente de descarga $C_{D}$ es el área de referencia $A_{R}$ que define el
-% área utilizada para calcular el caudal másico que circula por el puerto.
-% %
-% % En un motor con válvulas se suele tomar el área de cortina como el producto de
-% % la circunferencia de la válvula con la alzada, es decir:
-%
-% La elección del área de referencia utilizada para el cálculo es arbitraria, sin
-% embargo en un motor con válvulas se suele utilizar el área de cortina (ver
-% Figura~\ref{fig:area_cortina}) la cual es el producto de la circunferencia y la
-% alzada de válvula.
-%
-% \begin{equation} \label{eq:area_cortina}
-%   A_R = A_C = \pi D_v l_v
-% \end{equation}
-%
-% % \nomenclature[G]{\(A_R\)}{Área de pasaje de flujo o de referencia}
-% \nomenclature[G]{\(A_C\)}{Área de cortina}
-% \nomenclature[G]{\(D_v\)}{Diámetro de válvula}
-% % \nomenclature[G]{\(l_v\)}{Alzada de válvula}
-%
-% \begin{figure} \centering
-% \includegraphics[width=0.5\textwidth]{valve_curtain.pdf}
-%   \caption{Área de cortina}\label{fig:area_cortina}
-% \end{figure}
-%
-% El área de referencia utilizada en ICESym es el área frontal del puerto expuesta
-% a la cámara que se esté analizando, calculada como:
-%
-% \begin{equation}\label{eq:ar_mrcvc}
-%   A_{R,i} = h_{p} \cdot l_{v,i}
-% \end{equation}
-%
-% El área de cortina se ilustra en la Figura~\ref{fig:area_cortina} y el área
-% utilizada en ICESym para el MRCVC en la Figura~\ref{fig:area_referencia}.
-% %
-% En esta última figura se observan dos zonas coloreadas, que hacen referencia al
-% área de dos cámaras durante el solape que ocurre por la geometría del motor.
-%
-% \begin{figure}
-%   \centering
-%   \includegraphics[width=.6\textwidth]{area_referencia.png}
-%   \caption{Área de referencia MRCVC}\label{fig:area_referencia}
-% \end{figure}
-%
-% Los valores de densidad, velocidad, presión y temperatura se obtienen de los
-% datos de salida de ICESym para un puerto, ángulo y velocidad dada.
-% %
-% Para la temperatura se utiliza la temperatura de la cámara, $T_0 = T_C$, la
-% presión antes y después del puerto se selecciona de acuerdo al sentido de flujo,
-% en caso de ser hacia la cámara de combustión la presión en el puerto se utiliza
-% como inicial $P_0$ y la presión en la cámara es la aproximación a la presión en
-% la restricción $P_T$.
-% \nomenclature[PO]{\(T\)}{Temperatura}
-% \nomenclature[SU]{\(0\)}{Valor inicial}
-%
-% El valor de $\gamma$ se obtiene de las propiedades de la mezcla con las rutinas
-% computacionales descritas en el apartado~\ref{subsec:prop_mezcla}.
-
-
-\subsection{Esquemas de Discretización}
+\section{Esquemas de Discretización}
 
 Se utilizan para resolver ecuaciones de variables continuas con funciones
 discretas en tiempo y espacio.
@@ -1313,7 +926,7 @@ Se deben seleccionar esquemas para resolver:
 \end{itemize}
 
 
-\paragraph{Derivadas temporales, $\delta / \delta t$}
+\subsection{Derivadas temporales, $\delta / \delta t$}
 %
 Estas derivadas se discretizan con el método de Euler\parencite{burden}, que
 aproxima la integración de un paso $n$ a $n+1$ con $y_{n+1}-y_{n}\simeq hf_{n}$
@@ -1332,7 +945,7 @@ Con $\gamma=1/2$ el esquema es equivalente a Crank-Nicolson estándar.
 %
 Se puede convertir al esquema de Euler hacia adelante con $\gamma=0$.
 
-\paragraph{Gradientes}
+\subsection{Gradientes}
 %
 Se discretiza utilizando integración Gaussiana con interpolación lineal entre
 valores de celdas.
@@ -1365,16 +978,14 @@ Un método de interpolación entre celdas puede ser:
 \end{align}
 
 Donde $\alpha$ es un factor de ponderación geométrico entre las celdas
-\textbf{P} y \textbf{N} y $\vec{r}$ es el vector de posición del centroide de
-las celdas.
+\textbf{P}, \textbf{N} y $\vec{r}$ es el vector posición del centroide de las
+celdas.
 
 La interpolación se puede limitar para que los valores obtenidos se encuentren
 entre el mínimo y máximo de las celdas vecinas, este método se denomina
 ``limitado''.
 
-
-%Gradiente normal a la superficie
-\paragraph{Gradiente normal a una superficie}
+\subsection{Gradiente normal a una superficie}
 %
 Este gradiente es evaluado en la cara de la celda.
 %
@@ -1384,17 +995,19 @@ centroides de 2 celdas conectadas por la cara evaluada.
 En general las mallas utilizadas para modelar geometrías reales no son
 ortogonales.
 %
-Esto implica que un vector $\vec{S_{f}}$ normal a una superficie no
-necesariamente sea colineal con el vector que une el centroide de dos celdas
-contiguas.
+Esto implica que el vector $\vec{CF}$ que une el centroide de dos celdas
+contiguas (\textbf{C} y \textbf{F}) no necesariamente es colineal con el vector
+$\vec{S_{f}}$ normal a la superficie.
 %
-El gradiente en la cara en la dirección que une los centroides (C y F) de las
-celdas $\vec{e}$ es
+El gradiente  evaluado en la cara de una celda $(\nabla\cdot\vec{e})_{f}$, en la
+dirección del vector unitario que une los centroides de C y F ($\vec{e}$), se
+puede expresar como se indica en la Ecuación~\ref{eq:gradiente_normal}
 
-\begin{equation}
-  \label{eq:gradiente_normal}
-  (\nabla \phi \cdot \vec{e_{f}}) = \frac{\nabla\phi}{\delta n} = \frac{\phi_{F} - \phi_{C}}{||\vec{r_{C}}-\vec{r_{F}}||} = \frac{\phi_{F} - \phi_{C}}{d_{CF}}
-\end{equation}
+\begin{align}
+    \label{eq:gradiente_normal}
+  \vec{e} &= \frac{\vec{r}_{F}-\vec{r}_{C}}{||\vec{r}_{F}-\vec{r}_{C}||} = \frac{\vec{d}_{CF}}{d_{CF}} \\
+  (\nabla \phi \cdot \vec{e})_{f} &= \frac{\partial \phi}{\partial n} = \frac{\phi_{F} - \phi_{C}}{||\vec{r_{C}}-\vec{r_{F}}||} = \frac{\phi_{F} - \phi_{C}}{d_{CF}}
+\end{align}
 
 Donde el subíndice $f$ indica que se evalúa en la cara de una celda.
 %
@@ -1402,46 +1015,45 @@ El vector de superficie $\vec{S_{f}}$ se puede escribir en términos de sus
 componentes normal y tangente a la cara $f$ en la que es evaluado:
 
 \begin{equation}
-  \vec{S_{f}}= \vec{E_{f}} + \vec{T_{f}}
+    \vec{S_{f}}= \vec{E_{f}} + \vec{T_{f}}
 \end{equation}
 
-De esta forma, el gradiente del flujo de una variable $\phi$ en mallas no
-ortogonales se puede expresar en términos de las componentes normal y tangente a
-la cara de la celda~\parencite{moukalled}.
+De esta forma, el gradiente de la variable $\phi$ en mallas no ortogonales se
+puede expresar en términos de las componentes normal y tangente a la cara de la
+celda~\parencite{moukalled}.
 %
-El término \textbf{E} indica el flujo de $\phi$ normal a la cara y \textbf{T} el
-flujo tangente.
+El término \textbf{E} indica la componente del gradiente normal a la cara y
+\textbf{T} la componente tangente.
 
 \begin{align}
-  \label{eq:gradiente}
-  %
-  {(\nabla \phi)}_{f}\cdot \vec{S_{f}} &= {(\nabla \phi)}_{f}\cdot E_{f} + {(\nabla \phi)}_{f}\cdot \vec{T_{f}} \\
-  %
-  &= \vec{E_{f}}\frac{\phi_{F}-\phi_{C}}{d_{FC}}+ {(\nabla \phi)}_{f}\cdot \vec{T_{f}}
+\label{eq
+}
+%
+{(\nabla \phi)}{f}\cdot \vec{S{f}} &= {(\nabla \phi)}{f}\cdot \vec{E{f}} + {(\nabla \phi)}{f}\cdot \vec{T{f}} \
+%
+&= \vec{E_{f}}\frac{\phi_{F}-\phi_{C}}{d_{CF}}+ {(\nabla \phi)}{f}\cdot \vec{T{f}}
 \end{align}
 
 %
 Algunos esquemas de discretización de este tipo de gradientes son:
 \begin{itemize}
-  \item No corregido
-  \item Ortogonal
-  \item Corregido y limitado
+\item No corregido
+\item Ortogonal
+\item Corregido y limitado
 \end{itemize}
 
-La corrección ortogonal rota el vector $S_{f}$ hasta que sea normal a la superficie.
+La corrección ortogonal ajusta el vector $\vec{d_{CF}}$ para que sea colineal con el vector $\vec{S_{f}}$, asegurando que el cálculo del gradiente se haga en la dirección normal a la superficie.
 %
-La corrección limitada aplica la corrección ortogonal, sumando
-$\cos^{-1}{\theta}$, donde $\theta$ es el ángulo entre la normal a la cara y el
-vector $S_{f}$.
+La corrección limitada aplica la corrección ortogonal, sumando un término adicional para tener en cuenta la desviación entre $\vec{d_{CF}}$ y $\vec{S_{f}}$ debido a la no ortogonalidad, generalmente en términos de $\cos^{-1}{\theta}$, donde $\theta$ es el ángulo entre el vector normal a la cara y el vector $\vec{d_{CF}}$.
 
 % Divergencia
-\paragraph{Divergencia}
+\subsection{Divergencia}
 %
 Se utiliza un esquema de integración Gaussiana con interpolación lineal para
 la discretización de la divergencia.
 
 Dependiendo de los tipos de variable, se utilizan diferentes esquemas de
-interpolación disponibles, los cuales son:
+interpolación disponibles son:
 %
 \begin{itemize}
         \item centrada
@@ -1450,149 +1062,7 @@ interpolación disponibles, los cuales son:
         \item limitada
 \end{itemize}
 
-\paragraph{Laplacianos}
+\subsection{Laplacianos}
 %
 Los términos Laplacianos se discretizan utilizando integración Gaussiana con
 interpolación lineal.
-
-
-
-\subsection{Pre-procesado}
-%
-El preprocesado consiste en definir geometría y condiciones iniciales de la
-simulación a partir de los datos obtenidos de las simulaciones con el
-optimizador e ICESym.
-%
-Con los resultados del simulador se grafica la diferencia de presión entre el
-puerto de admisión o escape y la cámara correspondiente en función de la apertura
-del puerto, para un rango de velocidades de 1000 a 9000 RPM, con el fin de
-identificar las zonas en las condiciones operativas en las que evaluar el puerto.
-%
-En la Figura~\ref{fig:puntos_interes} se muestra una gráfica de $\Delta P$ y
-alzada para los puertos de admisión y escape de 1000 a 4000 RPM de un motor
-resultante de una de las simulaciones.
-
-Como es de esperarse se tienen mayores diferenciales de presión a menores
-aperturas del puerto porque se está próximo a los eventos de apertura o cierre
-del mismo.
-%
-A diferencia del puerto de admisión, en el puerto de escape se ve una banda
-bastante definida de operación que se hace más ``llena'' a medida que aumenta la
-apertura del puerto.
-%
-Durante la apertura del puerto se ven las mayores diferencias de presión en las
-que hay dos bandas bien definidas.
-%
-Se toman algunos puntos arriba en la zona con mayor $\Delta P$ y una cantidad
-menor para velocidades con $\Delta P \simeq 0$.
-%
-A medida que el puerto se abre la diferencia de presión con el gas en la cámara
-disminuye y esta banda se afina.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{gnuplot/puntos_interes.pdf}
-    \caption{Presión en función de la apertura el puerto,
-$\Delta P = f(l_{v})$}\label{fig:puntos_interes}
-\end{figure}
-
-El valor de alzada está directamente relacionado con la posición angular del
-cigüeñal, por lo que una vez seleccionados los puntos de interés se puede
-extraer la geometría deseada de un modelo de CAD paramétrico del motor.
-%
-En este modelo se representó la mitad de la geometría que contiene los puertos
-de admisión y escape, y se obtuvo realizando operaciones geométricas con los
-volúmenes que representan diferentes componentes del motor como son el estator,
-rotor, paletas, etc.
-%
-% En la Figura~\ref{fig:admision_50} se muestra parte del proceso para obtener el
-% puerto de admisión a $\theta=50^{\circ}$, en donde se suma el volumen del mismo
-% en gris y las Figuras que se restan que corresponden al rotor, las paletas y un
-% paralelogramo para quitar una región que no se simuló.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.7\textwidth]{./CAD/freecad_pasos.png}
-    \caption{Puerto de admisión para $\theta=50^{\circ}$ modelado con
-FreeCAD}\label{fig:admision_50}
-\end{figure}
-
-Esta geometría fue generada por el programa FreeCAD~\parencite{freecad},
-exportada a un archivo
-``.BREP''\footnote{\href{https://dev.opencascade.org/doc/overview/html/specification\_\_brep\_format.html}{Formato
-BREP, opencascade.org}} para luego ser importada en Salome\parencite{salome},
-que se utiliza para generar una malla cerrada, hermética, que puede ser
-procesada por los complementos de OpenFOAM utilizados para generar la malla de
-la simulación.
-%
-Es importante que se satisfaga la hermeticidad de la malla, lo cual significa
-que los nodos en la frontera entre superficies coincidan, como se puede observar
-en la Figura~\ref{fig:salome_malla_hermetica}, en la que se ven dos superficies
-``walls'' y ``outlet'' y los nodos compartidos entre ambas superficies.
-%
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.4\textwidth]{./flujometrias/salome_malla_hermetica.png}
-    \caption{Malla hermética}\label{fig:salome_malla_hermetica}
-\end{figure}
-
-El proceso en Salome consta de importar la geometría generada por FreeCAD y
-separar la misma en superficies utilizadas para definir condiciones de contorno
-en OpenFOAM.
-%
-Las superficies diferenciadas son: puerto, cámara/s y pared, ver
-Figura~\ref{fig:openfoam_parches}.
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.5\textwidth]{./flujometrias/openfoam_parches.png}
-    \caption{Nombres de Parches}\label{fig:openfoam_parches}
-\end{figure}
-
-Luego de separadas estas superficies se procede a generar la malla en formato
-ASCII STL con el complemento de mallado de Salome.
-%
-Se utilizó el generador de mallas NETGEN 1D-2D para crear la superficie, en
-general se configuró el software de modo de tener un stl de buena calidad con
-elementos de menor tamaño en zonas de mayor curvatura.
-%
-En la Figura~\ref{fig:salome_fina_gruesa} se ve la diferencia en cantidad de
-nodos de dos mallas, una malla fina a la izquierda y una malla gruesa a la
-derecha.
-%
-En la Tabla~\ref{tab:salome_fina_gruesa} se muestra la diferencia entre algunos
-parámetros básicos de configuración para las dos mallas.
-%
-% Esto sin requerir de una gran cantidad de elementos para no ralentizar el
-% procesado con SnappyHexMesh.
-
-\begin{figure}[t!]
-    \centering
-    \begin{subfigure}[t]{0.5\textwidth}
-        \centering
-        \includegraphics{/flujometrias/salome3_fina.png}
-        \caption{Malla fina sin optimizar}
-    \end{subfigure}%
-    \begin{subfigure}[t]{0.5\textwidth}
-        \centering
-        \includegraphics{/flujometrias/salome3_gruesa.png}
-        \caption{Malla gruesa optimizada}
-    \end{subfigure}
-    \caption{Diferentes mallas para flujometrías}\label{fig:salome_fina_gruesa}
-\end{figure}
-
-\begin{table}
-    \centering
-    \begin{tabular}{lccc} \toprule
-        Parámetro                & Malla Fina    & Malla Gruesa     & Unidades\\ \midrule
-        Tamaño máximo            & 0,001         & 0,03             & m \\
-        Tamaño mínimo            & 1E-7          & 2,4E-5           & m \\
-        Limitado por curvatura   & Sí            & Sí               & - \\
-        Optimizar                & No            & Sí               & - \\
-        Cantidad de nodos        & 99311         & 49112            & - \\
-        Cantidad de elementos    & 204695        & 103163           & - \\ \bottomrule
-    \end{tabular}
-    \caption{Configuración de mallas mostradas en la Figura~\ref{fig:salome_fina_gruesa}}
-    \label{tab:salome_fina_gruesa}
-\end{table}

@@ -1,11 +1,11 @@
 Este trabajo tiene la finalidad de obtener un diseño preliminar de la geometría
 de los sistemas de intercambio de gases del Motor Rotativo de Combustión a
-Volumen Constante~\parencite{toth}, con el objetivo general de maximizar la
-eficiencia del sistema en un rango de velocidades del motor.
+Volumen Constante (MRCVC,~\parencite{toth}), con el objetivo general de
+maximizar la eficiencia del sistema en un rango de velocidades del motor.
 %
 
 El MRCVC es un proyecto que surgió en la Universidad Nacional del Comahue,
-presentado por Ingeniero Jorge A. Toth en el año 1996 al Instituto Nacional de
+presentado por el Ing. Jorge A. Toth en el año 1996 al Instituto Nacional de
 la Propiedad Industrial y patentado en el año 1999.
 
 \begin{figure}
@@ -14,7 +14,7 @@ la Propiedad Industrial y patentado en el año 1999.
     \caption{Motor Rotativo de Combustión a Volumen Constante}\label{fig:mrcvc}
 \end{figure}
 
-En trabajos anteriores~\parencite{lopez16,lopez13,toth}~se han mencionado
+En trabajos anteriores~\parencite{lopez13,lopez16,toth00}~se han mencionado
 las características que hacen al MRCVC un motor atractivo: la geometría de la
 cámara de combustión y del conjunto rotante permiten que gran parte del proceso
 de combustión se realice a volumen constante, además de tener un balanceo
@@ -28,7 +28,7 @@ Por otro lado, hay que mencionar que los motores rotativos traen consigo una
 serie de problemas como la necesidad de introducir aceite a la cámara de
 combustión para lubricar elementos móviles, el solape de cámaras durante la
 apertura de los puertos y, en particular al MRCVC, un complejo sistema de
-sellos~\parencite{roldan}.
+sellos~\parencite{roldan20}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -43,13 +43,9 @@ geometría de los puertos de admisión y escape, definiendo las métricas a
 utilizar para medir la eficiencia del sistema y poder realizar comparaciones
 cuantitativas de los diseños propuestos.
 %
-% El prediseño consiste en definir las métricas a utilizar para medir la
-% eficiencia del sistema, rea así como también poder comparar cualitativamente
-% y cuantitativamente diferentes geometrías.
-%
 Debido al costo computacional de las simulaciones necesarias para realizar esta
-optimización se restringe el modelado de la geometría a definir posiciones
-de los puertos en el estator, largos y diámetros de los conductos.
+optimización se restringe el modelado de la geometría a las definiciones de las
+posiciones de los puertos en el estator, largos y diámetros de los conductos.
 %
 No se repara en detalles como la forma de la transición entre las paredes del
 puerto hacia la cámara, el ángulo al estator o detalles similares.
@@ -62,7 +58,7 @@ de las cuales fueron:
         %
     \item ICESym~\parencite{icesym}, simulador de motores de combustión interna basado en modelos cero-/uni-dimensionales (0D/1D).
         %
-    \item OpenFOAM~\parencite{openfoam}, una herramienta libre de CFD (Computational Fluid Dynamics).
+    \item OpenFOAM~\parencite{openfoam}, una herramienta libre de CFD (\textit{Computational Fluid Dynamics}).
         %
     \item Salome~\parencite{salome}, plataforma libre para simulación numérica.
         %
@@ -96,8 +92,8 @@ conductos y la posición relativa en la periferia del motor.
 Este modelo 3D se utilizó para extraer la geometría a simular con OpenFOAM y
 realizar flujometrías de las que se obtiene un valor del flujo másico
 ($\dot{m}$) en estado estacionario para un punto operativo del motor, es decir,
-para una combinación de diferencia de presión entre puerto y cámara de
-combustión ($\Delta P$) y el grado de apertura del puerto ($l_{v}$).
+para una combinación de diferencia de presión entre puerto y cámara
+($\Delta P$) y el grado de apertura del puerto ($l_{v}$).
 %
 El flujo másico se utilizó para medir la eficiencia con la cual escurre el gas a
 través del puerto, con el objetivo de crear un mapa del coeficiente de descarga
@@ -135,15 +131,15 @@ coeficiente de descarga $C_{D}$, junto con las ecuaciones asociadas.
 En el tercer capítulo se describen las herramientas computacionales utilizadas
 en este trabajo.
 %
-Se presenta el simulador de motores \emph{ICESym}, el optimizador desarrollado y
+Se presenta el simulador de motores ICESym, el optimizador desarrollado y
 la integración entre ambos programas.
 %
-Se incluye de una descripción del funcionamiento del optimizador, los motivos de
+Se incluye una descripción del funcionamiento del optimizador, los motivos de
 seleccionar un algoritmo de tipo evolutivo o genético, las ventajas y
 desventajas, los componentes básicos y finalmente la implementación del mismo.
 %
 En este capítulo también se presenta el software utilizado para realizar las
-flujometrías, \emph{OpenFOAM}, la implementación de las condiciones iniciales y
+flujometrías, OpenFOAM, la implementación de las condiciones iniciales y
 de contorno, extracción de datos de ICESym y otras herramientas necesarias para
 generar el modelo de CAD del puerto, malla y otros detalles relativos al proceso
 de utilizar el programa.
@@ -154,9 +150,10 @@ En el cuarto capítulo se presentan detalles particulares de las simulaciones
 realizadas, incluyendo la geometría del motor utilizado y su implementación en
 ICESym.
 %
-Además, se detallan la la configuración de las flujometrías virtuales realizadas
-con OpenFOAM, condiciones iniciales configuración de la herramienta, esquemas de
-discretización y otros parámetros importantes relacionados a las flujometrías.
+Además, se detallan la configuración de las flujometrías virtuales realizadas
+con OpenFOAM, condiciones iniciales, configuración de la herramienta, esquemas
+de discretización y otros parámetros importantes relacionados a las
+flujometrías.
 %
 % Quinto capítulo
 %
@@ -166,4 +163,4 @@ las etapas correspondientes.
 % Sexto capítulo
 %
 Por último, se exponen las conclusiones del trabajo, opiniones finales y una
-perspectiva a futuro o posibles trabajos a seguir.
+perspectiva a futuro de posibles trabajos a seguir.

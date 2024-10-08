@@ -9,7 +9,7 @@ https://www.gasenginemagazine.com/gas-engines/1909-5-hp-otto-special-electric/
 Los motores de combustión interna dieron un impulso a la actividad humana desde
 los años 1860, cuando su uso comercial comenzó a popularizarse.
 %
-La función de estos dispositivos es la de convertir energía potencial química del fluido
+La función de estos dispositivos es la de convertir energía química del fluido
 de trabajo (una mezcla de aire-combustible) en trabajo mecánico por medio de un
 proceso de combustión controlada dentro del cilindro o cámara de combustión.
 %
@@ -80,9 +80,9 @@ aumento de presión y temperatura en el cilindro, la carrera de expansión parte
 del PMS hacia el PMI, aprovechando la expansión en volumen de los productos de
 la combustión que producen trabajo sobre la cabeza del pistón.
 %
-    \item [Carrera de escape o barrido] luego de la carrera de expansión,
-próximo al PMI se abre la válvula de escape y el movimiento del pistón hacia el
-PMS produce un barrido de los gases quemados, reiniciando el ciclo.
+    \item [Carrera de escape o barrido] luego de la carrera de expansión, en PMI
+se abre la válvula de escape y se produce el  barrido de los gases quemados,
+reiniciando el ciclo.
 %
 \end{description}
 
@@ -118,12 +118,13 @@ desarrolló cerca del año 1957.
 %
 Existen otros desarrollos de este tipo de motores como el motor rotativo de
 pistón líquido, con un ciclo de combustión a volumen constante denominado
-HECH\parencite{hehc_05} y el objeto de este trabajo, el Motor Rotativo de
+HECH~\parencite{hehc_05} y el objeto de este trabajo, el Motor Rotativo de
 Combustión a Volumen Constante (MRCVC).
 
 Si bien estos motores son una alternativa interesante a los motores
-reciprocantes, la geometría y aspectos constructivos implican la necesidad de
-introducir aceite en la cámara de combustión para lubricar las partes móviles.
+reciprocantes, la geometría y aspectos constructivos implican que en algunos
+casos es necesario introducir aceite mezclado con el lubricante en la cámara de
+combustión para lubricar las partes móviles.
 %
 % Además tienen una mayor superficie de transferencia de calor causando una mayor
 % pérdida de calor en comparación con los motores reciprocantes.
@@ -167,7 +168,7 @@ Por ejemplo, al cociente entre el trabajo entregado por ciclo y la cilindrada
 de un motor se lo conoce como presión media efectiva o \emph{mep}, por sus
 siglas en inglés.
 %
-Algunos parámetros operativos e indicadores se describen en los párrafos
+Algunos parámetros operativos e indicadores se describen en las secciones
 siguientes.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -175,7 +176,7 @@ siguientes.
 \subsection{Volumen Desplazado}
 %
 El volumen desplazado se define como la diferencia entre el volumen máximo
-($V_{max}$) y mínimo ($V_{min}$) que ocupa la cámara de combustión.
+($V_{max}$) y mínimo ($V_{min}$) que ocupa la cámara de combustión:
 
 \begin{equation}\label{eq:vol_desp} V_d = V_{max}-V_{min}
 \end{equation}
@@ -183,10 +184,7 @@ El volumen desplazado se define como la diferencia entre el volumen máximo
 \nomenclature[PO]{\(V\)}{Volumen}
 \nomenclature[G]{\(V_d\)}{Volumen desplazado}
 % \nomenclature[G]{\(V_{min}\)}{Volumen mínimo en la cámara de combustión}
-\nomenclature[G]{\(V_{max}\)}{Volumen máximo en la cámara de combustión}
-
-% La geometría de la càmara de combustión del MRCVC está definida por leyeEn el
-% MRCVC la geomeria de la cámara de combustión es m'0
+\nomenclature[G]{\(V_{max}\)}{Volumen máximo de la cámara}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -207,15 +205,11 @@ la potencia entregada, los esfuerzos mecánicos y el rendimiento del motor.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \subsubsection{Troque y potencia al freno} % NOTA: Hace flata?
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \subsection{Trabajo Indicado por Ciclo}
 %
 El trabajo entregado por el gas dentro del cilindro al pistón por cada ciclo de
 operación se denomina trabajo indicado por ciclo y se obtiene al integrar la
-presión en función del volumen:
+presión en función del volumen a lo largo de todo el ciclo:
 
 \begin{equation}\label{eq:w_indicado}
   W_{c,i} = \oint p dV
@@ -249,7 +243,7 @@ entre partes móviles del motor.
 \subsection{Consumo Específico de Combustible y Rendimiento de Conversión del
 Combustible}
 %
-El consumo especifico de combustible \emph{sfc} por sus siglas en inglés, se
+El consumo específico de combustible, \emph{sfc} por sus siglas en inglés, se
 define como el cociente entre el caudal másico de combustible ($\dot{m_f}$)
 consumido por unidad de potencia $P$ entregada por el motor:
 \nomenclature[PO]{\(\dot{m_f}\)}{Caudal másico de combustible}
@@ -258,8 +252,8 @@ consumido por unidad de potencia $P$ entregada por el motor:
 \end{equation}
 \nomenclature[PO]{\(sfc\)}{Consumo específico de combustible}
 
-Mide la eficiencia con la que el motor utiliza el combustible para una condición
-de operación dada.
+Este parámetro mide la eficiencia con la que el motor utiliza el combustible
+para una condición de operación dada.
 %
 En motores de encendido por chispa se tienen valores típicos de alrededor de
 $235\text{ g/(kW\cdot h)}$~\parencite{heywood}.
@@ -269,7 +263,7 @@ suministrada por el combustible, es el \emph{rendimiento de conversión del
 combustible} $\eta_f$, que se relaciona al \emph{sfc} por medio del poder
 calorífico del combustible, $Q_{HV}$.
 
-\nomenclature[PO]{\(Q_{HV}\)}{Poder calórico}
+\nomenclature[PO]{\(Q_{HV}\)}{Poder calorífico}
 \nomenclature[PO]{\(\eta_f\)}{Rendimiento de conversión de combustible}
 
 \begin{equation}\label{eq:eta_f} \eta_f = \frac{1}{sfc \cdot Q_{HV}}
@@ -285,8 +279,8 @@ de 42 a 44 $MJ/kg$.
 
 \subsection{Presión Media Efectiva}
 %
-La presión media efectiva o $mep$ por sus siglas en inglés es un indicador cuya
-variación es proporcional a la curva de torque del motor.
+La presión media efectiva o $mep$ es un indicador cuya variación es proporcional
+al torque del motor.
 %
 El trabajo realizado por ciclo se puede calcular como
 $W_c = \frac{P \cdot n_R}{N}$, donde $n_R$ es el número de revoluciones del
@@ -330,10 +324,11 @@ a 1250 kPa para la velocidad a la que se alcanza el torque máximo~\parencite{he
 
 \subsection{Rendimiento Volumétrico}
 %
-El rendimiento volumétrico mide la eficiencia del sistema de admisión, es la
-relación entre el volumen de aire realmente introducido al cilindro y el volumen
-teórico que debería entrar al cilindro si este estuviera completamente lleno con
-aire a la densidad del ingreso al sistema de admisión ($\rho_{a,i}$).
+El rendimiento volumétrico mide la eficiencia del sistema de admisión.
+%
+Es la relación entre el volumen de aire realmente introducido al cilindro y el
+volumen teórico que debería entrar al cilindro si este estuviera completamente
+lleno con aire a la densidad del ingreso al sistema de admisión ($\rho_{a,i}$).
 %
 En términos concretos se define como el cociente entre el caudal másico de aire
 que ingresa al sistema de admisión ($\dot{m}_{a}$) y la velocidad con la que el
@@ -353,7 +348,7 @@ aire.
 Una forma alternativa a la ecuación anterior es considerando la masa total de aire que
 ingresa al cilindro por ciclo, ($m_{a}$):
 
-\begin{equation}\label{eq:eta_v}
+\begin{equation}\label{eq:eta_v_alt}
   \eta_v = \frac{m_a}{\rho_{a,i}V_d}
 \end{equation}
 
@@ -379,12 +374,12 @@ etc.
 con la velocidad de flujo y aumentan a medida que aumenta la velocidad de giro
 del motor.
         %
-  \item [Pérdidas de carga localizada] Filtros, puertos, válvulas generan
-pérdidas localizadas.
+Además, se tienen las pérdidas por la presencia de filtros , puertos, válvulas
+que generan pérdidas localizadas.
         %
-  \item [Transferencia de calor en sistema de admisión] La mezcla se calienta
+  \item [Transferencia de calor en el sistema de admisión] La mezcla se calienta
 por transferencia de calor y esto disminuye la densidad de la misma, reduciendo
-la masa disponible para la combustión.
+la masa de aire.
         %
   \item [Reglaje de las válvulas/puertos] El punto de apertura y cierre de las
 válvulas o  puertos (reglaje) es clave para el funcionamiento del motor.
@@ -392,34 +387,31 @@ válvulas o  puertos (reglaje) es clave para el funcionamiento del motor.
 Dependiendo del reglaje que se elija, se puede favorecer el flujo a determinada
 velocidad de operación.
         %
-    \item [Flujo bloqueado en puertos de admisión y escape] En las zonas de
+    \item [Efecto ram] A grandes velocidades de flujo la inercia del gas al
+momento del cierre de la válvula (o puerto) de admisión permite un mayor ingreso
+de masa fresca al cilindro.
+        %
+    \item [Flujo bloqueado en puertos de admisión] En las zonas de
 menor área de pasaje la velocidad del fluido puede aumentar hasta alcanzar la
 velocidad del sonido, lo cual se conoce como bloqueo y limita el caudal másico que
 puede ingresar a la cámara de combustión.
         %
-%     \item [Transferencia de calor en el cilindro] La cámara de combustión se %
-% encuentra a mayor temperatura que la mezcla que ingresa, esto produce un aumento
-% del volumen específico reduciendo la cantidad que puede ingresar.
         %
-    \item [Sintonía del puerto de admisión y escape] El diseño de los puertos de
+    \item [Sintonía de admisión y escape] El diseño de los sistemas de
 admisión y escape puede favorecer el funcionamiento de los mismos a determinada
 velocidad de operación, lo cual se logra aprovechando las ondas de presión que
 se producen por la apertura y cierre de las válvulas o puertos.
       %
-Véanse las secciones~\ref{cap2_sec_sintonia_admision} y~\ref{cap2_sec_sintonia_ecsape}.
+Véanse las secciones~\ref{cap2_sec_sintonia_admision} y~\ref{cap2_sec_sintonia_escape}.
         %
   \item [Sobrecarga] Por medio de un compresor o turbocompresor se puede
 aumentar la presión en el sistema de admisión forzando más aire a la cámara de
 combustión.
         %
-    \item [Efecto \textit{RAM}] A grandes velocidades de flujo la inercia del
-gas al momento del cierre del puerto de admisión permite un mayor ingreso de
-masa fresca al cilindro.
-        %
 \end{description}
 
 La curva de rendimiento volumétrico es muy similar a la curva de torque o de
-presión media efectiva (ver Fig.~\ref{fig:bmep_tipica}).
+presión media efectiva (ver Figura~\ref{fig:bmep_tipica}).
 %
 La cantidad de aire que ingresa al motor está directamente relacionada con el
 trabajo que puede realizar por ciclo de operación.
@@ -435,26 +427,26 @@ a altas RPM.
 %
 La curva debe ser preferentemente suave para todo el régimen de funcionamiento
 del motor.
-
+%
 Estos y otros efectos se describen en detalle en la
 literatura~\parencite{heywood}.
 %
 
 Con respecto a la mezcla aire-combustible, se define la relación
-aire-combustible $\phi$ a partir del cociente de relaciones combustible/aire
-de la mezcla y combustible/aire estequeométrica como se indica en la
+de equivalencia $\phi$ a partir del cociente de relaciones combustible/aire (F/A)
+de la mezcla y combustible/aire estequiométrica como se indica en la
 ecuación~(\ref{eq:phi}).
 %
-Para más detalles en cuanto a la composición estequeométrica ver la ecuación
+Para más detalles en cuanto a la composición estequiométrica ver la ecuación
 ~(\ref{eq:estequeometrica}).
 
 \begin{equation}
   \label{eq:phi}
-  \phi = \frac{(F/A)_{mezcla}}{(F/A)_{estequeométrica}}
+  \phi = \frac{(F/A)_{mezcla}}{(F/A)_{estequiométrica}}
 \end{equation}
 
 En estos términos una mezcla pobre en combustible tiene $\phi < 1$, una mezcla
-estequeométrica $\phi=1$ y una mezcla rica en combustible $\phi > 1$.
+estequiométrica $\phi=1$ y una mezcla rica en combustible $\phi > 1$.
 
 
 \subsection{Fracción de Gases Residuales}
@@ -462,17 +454,15 @@ estequeométrica $\phi=1$ y una mezcla rica en combustible $\phi > 1$.
 La fracción de gases residuales $x_r$ mide la cantidad de gases quemados que hay
 en el cilindro al inicio de la carrera de admisión.
 %
-La masa residual en la cámara de combustión es producto de dos efectos, en
-primer lugar al momento del cierre de la válvula de escape quedan gases
-residuales de la combustión atrapados en el cilindro y en segundo lugar puede
-existir un reflujo desde el puerto de escape hacia la cámara de combustión
-causado por el solape de válvulas.
-
-La fracción de gases residuales afecta el rendimiento volumétrico, el trabajo
-obtenido, la eficiencia y las emisiones.
+Al final del proceso de barrido, con la válvula de escape cerrada,
+pueden quedar gases residuales de la combustión atrapados en el cilindro.
+%
+Estos gases permanecen para el próximo ciclo de trabajo, afectando el
+rendimiento volumétrico, el trabajo obtenido, la eficiencia y las emisiones.
 %
 Se define como el cociente entre la masa de gases quemados en el cilindro
-($m_{r}$) al inicio de un ciclo y la masa total en el cilindro ($m$):
+($m_{r}$) al inicio de la fase cerrada del ciclo y la masa total atrapada en el
+cilindro ($m$):
 
 
 \begin{equation}
@@ -488,34 +478,32 @@ En el MRCVC existe un fenómeno llamado solape de cámaras~\parencite{lopez13}.
 Durante el proceso de admisión de gases frescos, una cámara puede verse afectada
 por la apertura del puerto de admisión de la cámara siguiente, que se encuentra
 a mayor presión y temperatura debido a que está finalizando el proceso de escape
-y comenzando el de admisión
-%
-Lo que provoca un aumento de la cantidad de gases residuales.
+y comenzando el de admisión, pudiendo provocando un aumento de la cantidad de gases
+residuales.
 
 
 La presencia de gases residuales en la cámara tiene varios efectos en la
-combustión y en el rendimiento del motor.
+combustión y el rendimiento del motor.
 %
 Algunos pueden ser beneficiosos como la reducción de emisiones nocivas y la
-reducción del consumo de combustible, por otro lado puede tener efectos
-negativos como la reducción del rendimiento volumétrico.
+reducción del consumo de combustible.
 %
-\begin{itemize}
-  \item[Dilución de la mezcla] el gas residual ocupa volumen que no puede ocupar
-la mezcla fresca.
-  \item[Temperatura] los gases están a mayor temperatura y al mezclarse con la
-mezcla fresca aumenta su temperatura y volumen, reduciendo la cantidad de mezcla
-fresca que puede ingresar a la cámara.
-  \item[Reducción de $NO_{x}$] un efecto beneficioso es la reducción de
-emisiones de óxidos de nitrógeno.
-  \item[EGR] en motores modernos se recircula gases quemados (\textit{Exhaust
-Gas Recycle}) para reducir emisiones de $NO_{x}$ y controlar el consumo de
-combustible. En motores SI se puede utilizar hasta un 30\% de EGR, estos valores
-son aún mayores para motores de encendido por chispa~\parencite{heywood}.
-  \item[Rendimiento volumétrico] la presencia de gases residuales en la cámara
-disminuye el volumen que puede ocupar la mezcla fresca, lo cual tiene un impacto
-negativo en el rendimiento volumétrico.
-\end{itemize}
+Por otro lado puede tener efectos negativos como la reducción del rendimiento
+volumétrico.
+%
+\begin{description}
+        %
+  \item[Dilución de la mezcla] el gas residual ocupa volumen que no puede ocupar la mezcla fresca.
+        %
+  \item[Temperatura] los gases están a mayor temperatura y al mezclarse con la mezcla fresca aumenta su temperatura y volumen, reduciendo la cantidad de mezcla fresca que puede ingresar a la cámara.
+        %
+  \item[Reducción de $NO_{x}$] un efecto beneficioso es la reducción de emisiones de óxidos de nitrógeno.
+        %
+  \item[EGR] en motores modernos se recircula gases quemados (\textit{Exhaust Gas Recycle}) para reducir emisiones de $NO_{x}$ y controlar el consumo de combustible. En motores SI se puede utilizar hasta un 30\% de EGR, estos valores son aún mayores para motores de encendido por chispa~\parencite{heywood}.
+        %
+  \item[Rendimiento volumétrico] la presencia de gases residuales en la cámara disminuye el volumen que puede ocupar la mezcla fresca, lo cual tiene un impacto negativo en el rendimiento volumétrico.
+        %
+\end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Sintonización del Sistema de Admisión}\label{cap2_sec_sintonia_admision}
@@ -533,7 +521,7 @@ antes del cierre de la válvula, el sistema está sintonizado.
 Esta sobrepresión permite que ingrese una mayor cantidad de masa fresca al
 cilindro, aumentando la cantidad de trabajo que se puede realizar.
 
-En la Figuras~\ref{fig:sintonia_heywood} se muestan las curvas de presión en
+En la Figuras~\ref{fig:sintonia_heywood} se muestran las curvas de presión en
 función del ángulo de cigüeñal para un motor operando a $1200$ y $4800$ RPM, en
 donde se indican los períodos en los que se encuentran abiertas las válvulas de
 admisión (IO) y de escape (EO).
@@ -668,8 +656,8 @@ extremos de la combustión a presión limitada, por lo que se puede utilizar el
 rendimiento de conversión de combustible del ciclo de presión limitada para
 comparar entre ambos extremos.
 
-\nomenclature[F]{\(C_{V}\)}{Capacidad calórica a volumen constante}
-\nomenclature[F]{\(C_{P}\)}{Capacidad calórica a presión constante}
+\nomenclature[F]{\(C_{V}\)}{Capacidad calorífica a volumen constante}
+\nomenclature[F]{\(C_{P}\)}{Capacidad calorífica a presión constante}
 
 \begin{align}
     \label{eq:rendimiento_p_lim}
@@ -685,7 +673,7 @@ comparar entre ambos extremos.
     %
 \end{equation}
 
-\nomenclature[PO]{\(Q_{LHV}\)}{Poder calórico inferior}
+\nomenclature[PO]{\(Q_{LHV}\)}{Poder calorífico inferior}
 \nomenclature[PO]{\(m_{f}\)}{Masa de combustible en la cámara de combustión}
 
 
@@ -786,7 +774,7 @@ La base de datos seleccionada para el aire y los productos de la combustión es
 la utilizada por Chemkin~\parencite{chemkin} y los datos del isooctano fueron
 tomados de~\parencite{raine}.
 
-La finalidad de estas rutinas (por fuera de las incuidas en ICESym) es la de
+La finalidad de estas rutinas (por fuera de las incluidas en ICESym) es la de
 obtener la masa molar de la mezcla $M_{M}$, la viscosidad dinámica $\mu$, el
 calor específico a presión constante $C_{P}$, la relación de calores
 específicos $\gamma$ y el número de Prandtl $P_{r}$, ya que todos estos valores
@@ -801,7 +789,7 @@ para temperaturas $T\in [500; 4000]K$, presiones $P\in[1; 100]atm$ y relaciones
 de equivalencia $\phi \in [0;4]$ se puede aproximar con la
 ecuación~(\ref{eq:mu}).
 %
-Del mismo modo, el número de Prantl de productos de la combustión de
+Del mismo modo, el número de Prandtl de productos de la combustión de
 hidrocarburos y aire se puede estimar en función del $\gamma$ de la mezcla,
 para $\phi\leq 1$ con la ecuación~(\ref{eq:pr})~\parencite{heywood}:
 
@@ -978,226 +966,3 @@ la restricción $P_T$.
 
 El valor de $\gamma$ se obtiene de las propiedades de la mezcla con las rutinas
 computacionales descritas en el apartado~\ref{subsec:prop_mezcla}.
-
-\section{Esquemas de Discretización}
-
-Se utilizan para resolver ecuaciones de variables continuas con funciones
-discretas en tiempo y espacio.
-%
-Se deben seleccionar esquemas para resolver:
-
-\begin{itemize}
-  \item Primera derivada temporal
-  \item Interpolación
-  \item Gradiente
-  \item Divergencia
-  \item Gradientes normales a superficies
-  \item Laplacianos
-\end{itemize}
-
-
-\subsection{Derivadas temporales, $\delta / \delta t$}
-%
-Estas derivadas se discretizan con el método de Euler\parencite{burden}, que
-aproxima la integración de un paso $n$ a $n+1$ con $y_{n+1}-y_{n}\simeq hf_{n}$
-donde $h = t_{n+1}-t_{n}$ es el paso temporal y $f_{n}=f(t_{n},y_{n})$.
-%
-Para el esquema de Euler hacia atrás la aproximación es
-$y_{n+1}-y_{n}\simeq h f_{n+1}$.
-%
-A este esquema se le agrega un coeficiente $\gamma\in[0,1]$ de modo que:
-
-\begin{equation}
-  y_{n+1}-y_{n} \simeq \gamma h f_{n+q} + (1-\gamma)h f_{n}
-\end{equation}
-
-Con $\gamma=1/2$ el esquema es equivalente a Crank-Nicolson estándar.
-%
-Se puede convertir al esquema de Euler hacia adelante con $\gamma=0$.
-
-\subsection{Gradientes}
-%
-Se discretiza utilizando integración Gaussiana con interpolación lineal entre
-valores de celdas.
-%
-El método define al gradiente medio en un elemento de volumen finito con
-centroide \textbf{C} y volumen $V_{c}$ en términos de los flujos a través de sus
-caras, como lo indica la ecuación~(\ref{eq:green_gauss_gradient}).
-%
-Para esto se requiere conocer los valores de la variable $\phi_{f}$ en las caras
-vecinas e información del área de la celda y su normal $(\vec{S}_{f})$.
-
-\begin{equation}
-  \label{eq:green_gauss_gradient}
-  \nabla \phi_{P} = \frac{1}{V_{c}}\sum_{f} \vec{S}_{f}\phi_{f}
-\end{equation}
-
-El método de volúmenes finitos utiliza valores en las caras de las celdas, por
-lo que se debe aproximar el valor de la variable en una cara dada para obtener
-el valor del gradiente en dicha celda.
-%
-Los valores de $\phi_{f}$ se obtienen de una interpolación lineal entre valores
-conocidos de celdas adyacentes.
-%
-Un método de interpolación entre celdas puede ser:
-
-\begin{align}
-  \label{eq:interpolacion_lineal_caras}
-  \alpha &= \frac{|{\vec{r}_{N}-\vec{r}_{f}}|} {|{\vec{r}_{N}-\vec{r}_{P}}|}\\
-  \phi_{f} &= \alpha\phi_{P}+(1-\alpha)\phi_{N}
-\end{align}
-
-Donde $\alpha$ es un factor de ponderación geométrico entre las celdas
-\textbf{P}, \textbf{N} y $\vec{r}$ es el vector posición del centroide de las
-celdas.
-
-La interpolación se puede limitar para que los valores obtenidos se encuentren
-entre el mínimo y máximo de las celdas vecinas, este método se denomina
-``limitado''.
-
-
-%Gradiente normal a la superficie
-% \subsection{Gradiente normal a una superficie}
-% %
-% Este gradiente es evaluado en la cara de la celda.
-% %
-% Es la componente (normal a la cara) del gradiente entre los valores de los
-% centroides de 2 celdas conectadas por la cara evaluada.
-% %
-% En general las mallas utilizadas para modelar geometrías reales no son
-% ortogonales.
-% %
-% Esto implica que un vector $\vec{S_{f}}$ normal a una superficie no
-% necesariamente sea colineal con el vector que une el centroide de dos celdas
-% contiguas.
-% %
-% El gradiente en la cara en la dirección que une los centroides (C y F) de las
-% celdas $\vec{e}$ es
-
-% \begin{equation}
-%   \label{eq:gradiente_normal}
-%   (\nabla \phi \cdot \vec{e_{f}}) = \frac{\nabla\phi}{\delta n} = \frac{\phi_{F} - \phi_{C}}{||\vec{r_{C}}-\vec{r_{F}}||} = \frac{\phi_{F} - \phi_{C}}{d_{CF}}
-% \end{equation}
-
-% Donde el subíndice $f$ indica que se evalúa en la cara de una celda.
-% %
-% El vector de superficie $\vec{S_{f}}$ se puede escribir en términos de sus
-% componentes normal y tangente a la cara $f$ en la que es evaluado:
-
-% \begin{equation}
-%   \vec{S_{f}}= \vec{E_{f}} + \vec{T_{f}}
-% \end{equation}
-
-% De esta forma, el gradiente de la variable $\phi$ en mallas no ortogonales se
-% puede expresar en términos de las componentes normal y tangente a la cara de la
-% celda~\parencite{moukalled}.
-% %
-% El término \textbf{E} indica la componente del gradiente normal a la cara y
-% \textbf{T} la componente tangente.
-
-% \begin{align}
-%   \label{eq:gradiente}
-%   %
-%   {(\nabla \phi)}_{f}\cdot \vec{S_{f}} &= {(\nabla \phi)}_{f}\cdot E_{f} + {(\nabla \phi)}_{f}\cdot \vec{T_{f}} \\
-%   %
-%   &= \vec{E_{f}}\frac{\phi_{F}-\phi_{C}}{d_{FC}}+ {(\nabla \phi)}_{f}\cdot \vec{T_{f}}
-% \end{align}
-
-% %
-% Algunos esquemas de discretización de este tipo de gradientes son:
-% \begin{itemize}
-%   \item No corregido
-%   \item Ortogonal
-%   \item Corregido y limitado
-% \end{itemize}
-
-% La corrección ortogonal rota el vector $S_{f}$ hasta que sea normal a la superficie.
-% %
-% La corrección limitada aplica la corrección ortogonal, sumando
-% $\cos^{-1}{\theta}$, donde $\theta$ es el ángulo entre la normal a la cara y el
-% vector $S_{f}$.
-
-
-\subsection{Gradiente normal a una superficie}
-%
-Este gradiente es evaluado en la cara de la celda.
-%
-Es la componente (normal a la cara) del gradiente entre los valores de los
-centroides de 2 celdas conectadas por la cara evaluada.
-%
-En general, las mallas utilizadas para modelar geometrías reales no son
-ortogonales.
-%
-Esto implica que el vector $\vec{CF}$ que une el centroide de dos celdas
-contiguas (\textbf{C} y \textbf{F}) no necesariamente sea colineal con el vector
-$\vec{S_{f}}$ normal a la superficie.
-%
-El gradiente ($(\nabla\cdot\vec{e})_{f}$) evaluado en la cara de una celda, en
-la dirección del vector unitario que une los centroides de C y F ($\vec{e}$), se
-puede expresar como,
-
-\begin{align}
-    \label{eq:gradiente_normal}
-  \vec{e} &= \frac{\vec{r}_{F}-\vec{r}_{C}}{||\vec{r}_{F}-\vec{r}_{C}||} = \frac{\vec{d}_{CF}}{d_{CF}} \\
-  (\nabla \phi \cdot \vec{e})_{f} &= \frac{\partial \phi}{\partial n} = \frac{\phi_{F} - \phi_{C}}{||\vec{r_{C}}-\vec{r_{F}}||} = \frac{\phi_{F} - \phi_{C}}{d_{CF}}
-\end{align}
-
-Donde el subíndice $f$ indica que se evalúa en la cara de una celda.
-%
-El vector de superficie $\vec{S_{f}}$ se puede escribir en términos de sus
-componentes normal y tangente a la cara $f$ en la que es evaluado:
-
-\begin{equation}
-    \vec{S_{f}}= \vec{E_{f}} + \vec{T_{f}}
-\end{equation}
-
-% NOTE: me quede por aca, falta completar el término ortogonal
-
-De esta forma, el gradiente de la variable $\phi$ en mallas no ortogonales se
-puede expresar en términos de las componentes normal y tangente a la cara de la
-celda~\parencite{moukalled}.
-%
-El término \textbf{E} indica la componente del gradiente normal a la cara y
-\textbf{T} la componente tangente.
-
-\begin{align}
-\label{eq
-}
-%
-{(\nabla \phi)}{f}\cdot \vec{S{f}} &= {(\nabla \phi)}{f}\cdot \vec{E{f}} + {(\nabla \phi)}{f}\cdot \vec{T{f}} \
-%
-&= \vec{E_{f}}\frac{\phi_{F}-\phi_{C}}{d_{CF}}+ {(\nabla \phi)}{f}\cdot \vec{T{f}}
-\end{align}
-
-%
-Algunos esquemas de discretización de este tipo de gradientes son:
-\begin{itemize}
-\item No corregido
-\item Ortogonal
-\item Corregido y limitado
-\end{itemize}
-
-La corrección ortogonal ajusta el vector $\vec{d_{CF}}$ para que sea colineal con el vector $\vec{S_{f}}$, asegurando que el cálculo del gradiente se haga en la dirección normal a la superficie.
-%
-La corrección limitada aplica la corrección ortogonal, sumando un término adicional para tener en cuenta la desviación entre $\vec{d_{CF}}$ y $\vec{S_{f}}$ debido a la no ortogonalidad, generalmente en términos de $\cos^{-1}{\theta}$, donde $\theta$ es el ángulo entre el vector normal a la cara y el vector $\vec{d_{CF}}$.
-
-% Divergencia
-\subsection{Divergencia}
-%
-Se utiliza un esquema de integración Gaussiana con interpolación lineal para
-la discretización de la divergencia.
-
-Dependiendo de los tipos de variable, se utilizan diferentes esquemas de
-interpolación disponibles son:
-%
-\begin{itemize}
-        \item centrada
-        \item hacia adelante
-        \item hacia atrás
-        \item limitada
-\end{itemize}
-
-\subsection{Laplacianos}
-%
-Los términos Laplacianos se discretizan utilizando integración Gaussiana con
-interpolación lineal.
