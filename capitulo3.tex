@@ -49,13 +49,13 @@ f(lv, \Delta P)$, que se utiliza para calcular el área efectiva del puerto.
 \nomenclature[F]{\(\Delta P\)}{Diferencia de presión a través de un puerto}
 
 Independientemente de la cantidad de variables que formen parte del coeficiente
-de descarga, a ICESym se introduce un vector para el caso 1D y matriz para el
-caso 2D.
+de descarga, a ICESym se introduce un vector para el caso 1D y una matriz para
+el caso 2D.
 %
 El esquema de interpolación bilineal implementado requiere de una malla
 rectangular.
 %
-Se reutilizó el código existente para el caso 1D y se realiza una interpolación
+Se reutilizó el código existente para el caso 1D, realizando una interpolación
 lineal entre dos valores en planos con datos conocidos, como se ve en la
 Figura~\ref{fig:interp_bilineal}.
 %
@@ -174,7 +174,7 @@ métodos, para una malla de $C_{D}=f(\Delta P, l_{v})$ generada al azar.
     \BlankLine
     $I=zeros_{[n,m]}$\;
     \For{$i \gets 0$\KwTo$n$}{
-        \For{$j$\gets 0 \KwTo$m$}{
+        \For{$j \gets 0$ \KwTo $m$}{
           $d = {\left[{(V_x - I_{xi})}^2 +{(V_y - I_{yj})}^2\right]}^{\frac{p}{2}}$\;
           \eIf{$\exists i : d[i] = 0$}{
             $I[i, j] = V_z[i]$\;
@@ -204,9 +204,9 @@ métodos, para una malla de $C_{D}=f(\Delta P, l_{v})$ generada al azar.
 
 \subsection{Área de Referencia}
 %
-El área de referencia utilizada por ICESym es el área de
-cortina~(ver Ec.~\ref{eq:area_cortina}) y se expresa en el código del programa como el
-área efectiva $F_{V}=A_{R}\cdot C_{D}$.
+El área de referencia utilizada por ICESym es el área de la cortina~(ver
+Ec.~\ref{eq:area_cortina}) y se emplea en el código del programa para calcular
+el área efectiva $F_{V}=A_{R}\cdot C_{D}$.
 %
 Como se indicó en el apartado~\ref{sec:cap2_cd}, para el  MRCVC el área de
 referencia es el área frontal del puerto expuesta a la cámara, calculada como la
@@ -218,7 +218,7 @@ puede ser un valor fijo o el resultado de interpolar de un mapa de $C_D$ para un
 valor de cuerda y $\Delta P$ dado, como se indica en la ecuación~(\ref{eq:fv}).
 
 \begin{equation}\label{eq:fv}
-    F_v = C_{D,int}\cdot h_{p}\cdot l_{v}
+    F_{V} = C_{D,int}\cdot h_{p}\cdot l_{v}
 \end{equation}
 
 Tanto al inicio como al cierre del puerto ocurre solape de cámaras, por lo que
@@ -227,7 +227,7 @@ en estos intervalos angulares hay un valor de $C_D$ para cada cámara.
 Cada valor se calcula con el flujo másico que atraviesa las secciones de entrada
 correspondientes y el área de puerto expuesta por cada cámara.
 
-\subsection{Interfaz con Optimizador}
+\subsection{Interfaz con el Optimizador}
 %
 Para lograr ejecutar el simulador automáticamente, se creó una librería de
 funciones capaz de tomar como dato de entrada un archivo de configuración que
@@ -237,13 +237,13 @@ entre otros.
 Para ejecutar una instancia de ICESym se puede utilizar la interfaz gráfica de
 usuario (GUI) ó ejecutarlo por línea de comando desde una consola.
 %
-El simulador de motores se ejecuta como un archivo de Python {\tt>> python
-main.py}, el cual contiene las instrucciones que lanzan la simulación del
+El simulador de motores se ejecuta como un archivo de Python {\tt>{}> python main.py}, el cual contiene las instrucciones que lanzan la simulación del
 motor con la configuración requerida.
 %
 
 ICESym requiere de un archivo de configuración con los datos de la simulación a
 realizar, este archivo se organiza como sigue:
+\newline
 
 \begin{forest}
   [config.py
@@ -282,7 +282,7 @@ siguientes valores:
   \item {\tt Simulator}:
         \begin{itemize}
           \item {\tt RPMS}: Velocidades a simular (por ejemplo una lista de [1000,
-2000, \ldots, 9000).
+2000, \ldots, 9000].
           \item {\tt NCYCLES}: cantidad de ciclos por velocidad (un entero mayor o igual a 1).
           \item {\tt FOLDER NAME}: nombre de la carpeta donde se guardan los
 resultados de la simulación.
@@ -301,7 +301,7 @@ resultados de la simulación.
                 \begin{itemize}
                   \item $C_{D}l_{v}$ valores de alzada para el mapa de $C_{D}$(
 para modelo de 2 variables).
-                  \item $C_{D}d_{p}$ valores de $\Delta_{P}$ para el mapa de
+                  \item $C_{D}d_{p}$ valores de $\Delta P$ para el mapa de
 $C_{D}$ (para modelo de 2 variables).
                   \item $C_{D}$ valores de $C_{D}$ relacionados con alzada (para modelo de 1 variable).
                 \end{itemize}
@@ -312,6 +312,13 @@ $C_{D}$ (para modelo de 2 variables).
           \item longitud: longitud total del tubo de admisión o escape.
         \end{itemize}
 \end{itemize}
+
+Los valores de alzada y diámetro de válvula son valores utilizados en la
+configuración anterior no se corresponden con magnitudes geométricas en el
+MRCVC.
+%
+Estos valores se introducen como datos con el requisito de que el área de
+cortina ($A_{C}$) coincida con el área de referencia ($A_{R}$).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -331,14 +338,14 @@ geometría del MRCVC por la simplicidad y facilidad de implementación del mismo
 %
 Si bien este tipo de métodos no garantiza que se alcance un resultado óptimo,
 en la práctica se ha observado que alcanzan soluciones muy cercanas a las
-óptimas tras pocas iteraciones del método~\parencite{goldberg}\parencite{shi}.
+óptimas tras pocas iteraciones del método~\parencite{goldberg};\parencite{shi}.
 
 Una de las ventajas de este método es que no requiere información del gradiente
 de la función que se está evaluando, lo cual es útil cuando no se puede asegurar
 la existencia de la derivada de la función en todo el dominio ó cuando se tiene
 una función con más de un máximo o mínimo local.
 %
-Además, el punto de partida de la optimización es una población generada al
+Además, como el punto de partida de la optimización es una población generada al
 azar, se tiene un muestreo aleatorio del dominio que se está evaluando.
 %
 Esto hace que el método sea poco susceptible a dar como resultado óptimos
@@ -387,7 +394,7 @@ parámetros de cada nuevo individuo.
 %
 Este operador juega un rol secundario pero muy importante en la simulación.
 %
-Es secundario porque se pueden alcanzar soluciones satisfactorias sin que
+Es secundario porque se pueden alcanzar soluciones satisfactorias sin que se
 aplique este operador en la población.
 %
 Es importante porque utilizando probabilidades pequeñas de ocurrencia (de la
@@ -398,11 +405,11 @@ Por otro lado, en caso de que la probabilidad de mutación sea muy alta, el AG s
 convierte en un método de búsqueda aleatoria.
 
 \begin{algorithm} \caption{Algoritmo de optimización}\label{algo:genetico}
-  Inicializar población, al azar o a partir de una población ``semilla''.\;
+  Inicializar población, al azar o a partir de una población ``semilla''\;
   %
   \While{no se cumpla condición de parada}{
     %
-    \emph{Seleccionar} a los individuos más aptos, evaluándolos según la función objetivo.\;
+    \emph{Seleccionar} a los individuos más aptos, evaluándolos según la función objetivo\;
     %
     \emph{Cruzar} los candidatos seleccionados para crear la nueva población (la
 próxima iteración del método)\;
@@ -493,7 +500,7 @@ representa una característica en particular del motor.
 
 A modo de ejemplo, en la Figura~\ref{fig:pop_bit} se muestra un número generado
 aleatoriamente, la transformada para los primeros 5 dígitos que corresponden al
-diámetro del tubo de admisión, 001111.
+diámetro del tubo de admisión, 00111.
 %
 Si se desea que el diámetro del tubo de admisión varíe entre 60 y 100 mm, se
 deben obtener los coeficientes $a$ y $b$ para la transformación lineal  a partir
@@ -535,8 +542,8 @@ en los puntajes de la población actual.
 Hay varios métodos diferentes de selección, como lo son de ruleta, aleatoria,
 por puntaje y de tipo torneo.
 %
-Para este trabajo se seleccionó el método de torneo, es uno de los métodos más
-populares para los procesos de selección de AG.
+Para este trabajo se seleccionó el método de torneo, el cual es uno de los
+métodos más populares para los procesos de selección de AG.
 
 El método consiste en seleccionar $k$ individuos de la población al azar, se
 comparan los puntajes de estos individuos y resulta ``ganador'' aquel que tenga
@@ -548,7 +555,7 @@ El parámetro $k$ es el tamaño de torneo y comúnmente se utiliza
 2~\parencite{oladele}.
 %
 A mayores valores para $k$ se tiene una mayor pérdida de diversidad en los
-resultados\parencite{blickle} porque reduce la posibilidad de que candidatos con
+resultados~\parencite{blickle} porque reduce la posibilidad de que candidatos con
 menor puntaje sean seleccionados para la nueva generación (convergencia
 temprana).
 
@@ -630,12 +637,23 @@ búsqueda aleatoria.
 %
 Algunos de los métodos de mutación utilizados son:
 
-\begin{enumerate}
-  \item Flip Bit
-  \item Intercambio
-  \item Inversión
-  \item Reordenado Aleatorio
-\end{enumerate}
+\begin{description}
+  \item [Flip Bit] es uno de los métodos más simples y comunes. En la
+representación binaria de un cromosoma, se selecciona uno o más bits al azar y
+se invierten. Es decir, si el bit es 1, se cambia a 0 y viceversa.
+        %
+  \item [Intercambio] en este método se seleccionan dos posiciones en el
+cromosoma de manera aleatoria y se intercambian los valores de estas posiciones.
+        %
+  \item [Inversión] se elige un segmento dentro del cromosoma y se invierten los
+elementos de ese segmento. Por ejemplo, en la secuencia [A, B, C, D, E],
+se invierten los elementos B y D, obteniendo [A, D, C, B, E].
+        %
+  \item [Reordenado Aleatorio] se selecciona un subconjunto de genes en el
+cromosoma y se reordenan aleatoriamente. A diferencia del método de inversión,
+los genes no se voltean simplemente de posición, sino que además pueden terminar
+en cualquier orden.
+\end{description}
 
 En este trabajo se utiliza el método de reordenado aleatorio en el cual se
 modifica al azar el orden de los números que hacen al individuo, modificando los

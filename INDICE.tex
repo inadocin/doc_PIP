@@ -1,0 +1,45 @@
+\tableofcontents
+
+\pagebreak
+\renewcommand{\listfigurename}{Índice de Figuras}
+\listoffigures
+\pagebreak
+\renewcommand{\listtablename}{Índice de Tablas}
+\listoftables
+\pagebreak
+
+\pagenumbering{arabic}
+
+%\mainmatter
+\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
+
+\chapter{INTRODUCCIÓN}\label{capitulo:INTRODUCCION}
+\input{capitulo1.tex} \pagebreak
+
+\chapter{MARCO TEÓRICO}\label{capitulo:MARCO_TEORICO}
+\input{capitulo2.tex} \pagebreak
+
+\chapter{HERRAMIENTAS COMPUTACIONALES}\label{capitulo:HERRAMIENTAS_COMPUTACIONALES}
+\input{capitulo3.tex} \pagebreak
+
+\chapter{DESARROLLO}\label{capitulo:DESARROLLO}
+\input{capitulo4.tex} \pagebreak
+
+\chapter{RESULTADOS}\label{capitulo:RESULTADOS}
+\input{capitulo5.tex} \pagebreak
+
+\chapter{CONCLUSIONES}\label{capitulo:CONCLUSIONES}
+\input{capitulo6.tex} \pagebreak
+
+\chapter{REFERENCIAS}
+\printbibliography[heading=none] \pagebreak
+
+\chapter{ANEXO I}
+\input{anexos/anexo_I} \pagebreak
+
+
+%Esta línea fuerza a colocar en Referencias las que no fueron citadas en el texto
+%\nocite{*}
+
+%Imprime bibliografia del archivo biblio.bib
+\printbibliography[heading=none]

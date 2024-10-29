@@ -1,52 +1,564 @@
-\documentclass[oneside,a4paper,spanish,links,12pt]{book}
+\documentclass[oneside,a4paper,spanish,links,11pt]{book}
+%
+\usepackage[T1]{fontenc}%
+\usepackage[utf8]{inputenc}%
+\usepackage{lmodern}%
+\usepackage{textcomp}%
+\usepackage{lastpage}%
 
-\input{otros/paquetes}
-\input{otros/configuracion}
-\makenomenclature
+\newcommand{\annexname}{Anexo}
+\makeatletter
+\newcommand\annex{\par
+ \setcounter{section}{1}%
+ \gdef\@chapapp{\annexname}%
+ \gdef\thechapter{\@Alph\c@chapter}}
+\makeatother
+\usepackage[spanish, es-lcroman,spanish,es-tabla]{babel}
+
+\usepackage{amsfonts,amsthm}
+\usepackage{mathdots} % para el comando \iddots
+\usepackage{siunitx} 
+\usepackage{graphicx}
+
+\def\listtablename{Tabla}
+% \usepackage{subfig} no usar, este paquete esta depreciado
+\usepackage{multicol}
+\usepackage{textcomp}
+\usepackage{enumitem}
+
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{subfloat}
+
+\usepackage{float}
+
+\makeatletter
+\setlength{\@fptop}{0pt}
+\makeatother
+
+% change table of contents and list of figures spacing
+\usepackage{titletoc}
+\titlecontents{figure}[2.5em]{\addvspace{.1pc}}{\contentslabel{3em}}{} {\titlerule*[1pc]{.}\contentspage}
+
+%Comenté esta linea para eliminar error de superposición
+%\usepackage[spanish, es-tabla, es-lcroman]{babel}
+
+\usepackage{amsmath}
+\usepackage[labelsep=period]{caption}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{gensymb}
+\usepackage{changepage}
+\usepackage{times} %esta linea cambia fuente default LaTex a Times New Roman
+\usepackage{setspace}
+\usepackage[version=3]{mhchem}
+\usepackage{textgreek}
+\usepackage{geometry}
+\usepackage{appendix}
+\usepackage{sectsty}
+\usepackage{lipsum}
+\usepackage{fancyhdr}
+\usepackage{comment}
+\usepackage{lscape} %orientación hoja horizontal
+\usepackage{pdflscape}
+\usepackage{longtable,multirow,booktabs}
+
+\usepackage{mathtools}
+
+\usepackage[spanish]{babel} 
+
+\usepackage{titlesec}
+
+
+%Otros paquetes
+\usepackage{nomencl}
+\usepackage{etoolbox}
+\usepackage{adjustbox}
+\usepackage{listings}
+\usepackage{forest}
+\usepackage{textcomp}
+\usepackage[spanish,onelanguage,ruled,vlined,linesnumbered]{algorithm2e}
+
+%Formato de títulos
+
+%Este conjunto de lineas cambia el tamaño de cada título
+\titleformat{\chapter}{\normalfont\large\bfseries}{\thechapter.}{20pt}{\large}
+
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{1em}{\large}
+
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{1em}{\large}
+
+\titleformat{\subsubsection}{\normalfont\large\bfseries}{\thesubsubsection}{1em}{\large}
+
+%Este conjunto de lineas reduce el espacio entre título y texto
+\titlespacing*{\chapter}     {0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\titlespacing*{\section}     {0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\titlespacing*{\subsection}   {0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\titlespacing*{\subsubsection}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\fancypagestyle{mylandscape}{
+\fancyhf{} %Clears the header/footer
+\fancyfoot{% Footer
+\makebox[\textwidth][r]{% Right
+  \rlap{\hspace{.75cm}% Push out of margin by \footskip
+    \smash{% Remove vertical height
+      \raisebox{4.87in}{% Raise vertically
+        \rotatebox{90}{\thepage}}}}}}% Rotate counter-clockwise
+\renewcommand{\headrulewidth}{0pt}% No header rule
+\renewcommand{\footrulewidth}{0pt}% No footer rule
+}
+
+
+\usepackage{rotating} %rotación hoja
+% \usepackage{enumerate}
+% \usepackage{enumitem}
+
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
+
+\setcounter{tocdepth}{1} %oculta secciones
+
+%Añadí estas dos líneas para que funcione la bibliografía. El estilo es según normas APA
+\usepackage{hyperref}
+\hypersetup{
+     colorlinks=true,
+     linkcolor=blue,
+     filecolor=blue,
+     citecolor = blue,      
+     urlcolor=red,
+     }
+\usepackage[backend=biber, style=apa, citestyle=authoryear, hyperref=true]{biblatex}
+
+\addbibresource{bibliografia.bib}
+
+\usepackage{makeidx}
+\usepackage{blindtext}
+\usepackage{import}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%Este conjunto de lineas configura biblatex para tener hyperlink en autor y año
+
+\DeclareCiteCommand{\cite}
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \printtext[bibhyperref]{\usebibmacro{cite}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand*{\cite}
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \printtext[bibhyperref]{\usebibmacro{citeyear}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\parencite}[\mkbibparens]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+    \printtext[bibhyperref]{\usebibmacro{cite}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand*{\parencite}[\mkbibparens]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+    \printtext[bibhyperref]{\usebibmacro{citeyear}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\footcite}[\mkbibfootnote]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+  \printtext[bibhyperref]{ \usebibmacro{cite}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\footcitetext}[\mkbibfootnotetext]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \printtext[bibhyperref]{\usebibmacro{cite}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\textcite}
+  {\boolfalse{cbx:parens}}
+  {\usebibmacro{citeindex}%
+   \printtext[bibhyperref]{\usebibmacro{textcite}}}
+  {\ifbool{cbx:parens}
+     {\bibcloseparen\global\boolfalse{cbx:parens}}
+     {}%
+   \multicitedelim}
+  {\usebibmacro{textcite:postnote}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setlength{\headheight}{1.5pt}
+\pagestyle{fancy}
+
+\renewcommand{\appendixname}{Anexos}
+\renewcommand{\appendixtocname}{Anexos}
+\renewcommand{\appendixpagename}{Anexos}
+
+\renewcommand{\baselinestretch}{1.5} 
+
+\setcounter{secnumdepth}{3}
+
+\geometry{a4paper, left=35mm, right=25mm,top=35mm,bottom=25mm,headsep=20mm}
+
+\allsectionsfont{\normalsize}
+
+\chapternumberfont{\Huge}
+
+\lhead{}
+\chead{} 
+\rhead{\thepage} 
+\cfoot{}
+\rfoot{}
+\renewcommand{\footrulewidth}{0.5pt}
+
+
+\usepackage{cleveref}
+  % \Crefname{subfigures}{figure}{figures}%
+  % \Crefname{subfigures}{Figure}{Figures}%
+\Crefname{figure}{Figura}{Figuras}
+\crefname{figure}{figura}{figuras}
+
+% \captionsetup[subfloat]{%
+  % Aquí estamos diciendo a cleveref cómo debe referirse a subfloats cuando se usa \cref
+  % listofformat=subsimple,
+  % labelformat=simple
+% }
+% Redefinir el comando de subfloat para incluir el tipo de referencia
+% \renewcommand\thesubfloatfigure{\themainfigure\alph{subfloat}}
+
+% Esta línea añade coma entre el autor y año de la referencia citada
+\renewcommand*{\nameyeardelim}{\addcomma\space}
+% Estas lineas colocan linea de espesor mayor en las tablas
+\usepackage{array}
+
+\makeatletter
+\newcommand{\thickhline}{%
+    \noalign {\ifnum 0=`}\fi \hrule height 1pt
+    \futurelet \reserved@a \@xhline
+}
+\newcolumntype{"}{@{\hskip\tabcolsep\vrule width 1pt\hskip\tabcolsep}}
+\makeatother
+%%%
+
+% Estas lineas ponen Tabla 1. en lugar de Tabla 1:
+\makeatletter
+\long\def\@makecaption#1#2{
+\vskip\abovecaptionskip
+\sbox\@tempboxa{#1. #2}
+\ifdim \wd\@tempboxa >\hsize
+#1. #2\par
+\else
+\global \@minipagefalse
+\hb@xt@\hsize{\hfil\box\@tempboxa\hfil}
+\fi
+\vskip\belowcaptionskip}
+\makeatother
+%%%
+
+
+
+\renewcommand{\labelenumii}{\theenumii}
+\renewcommand{\theenumii}{\theenumi.\arabic{enumii}.}
+
+\newlist{SubItemList}{itemize}{1}
+\setlist[SubItemList]{label={$-$}}
+
+\let\OldItem\item
+\newcommand{\SubItemStart}[1]{%
+    \let\item\SubItemEnd
+    \begin{SubItemList}[resume]%
+        \OldItem #1%
+}
+\newcommand{\SubItemMiddle}[1]{%
+    \OldItem #1%
+}
+\newcommand{\SubItemEnd}[1]{%
+    \end{SubItemList}%
+    \let\item\OldItem
+    \item #1%
+}
+\newcommand*{\SubItem}[1]{%
+    \let\SubItem\SubItemMiddle%
+    \SubItemStart{#1}%
+}%
+
+\usepackage{wrapfig}
+
+% ----------------------------------------------------------------------------
+% Nomenclature
+% DE: https://www.overleaf.com/learn/latex/Nomenclatures
+\renewcommand{\nomname}{Nomenclatura}
+\renewcommand\nomgroup[1]{%
+  \item[\bfseries
+  \ifstrequal{#1}{G}{Geométricas}{%
+  \ifstrequal{#1}{PO}{Parámetros Termodinámicos u Operativos}{%
+  \ifstrequal{#1}{AG}{Algoritmo Genético}{%
+  \ifstrequal{#1}{F}{Flujometrías}{}}}}%
+]}
+% ----------------------------------------------------------------------------
+% Listings
+% DE: https://www.overleaf.com/learn/latex/code_listing
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\usepackage{listings}
+\lstdefinestyle{mystyle}{
+%     backgroundcolor=\color{backcolour},
+%     commentstyle=\color{codegreen},
+%     keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+%     stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+%     captionpos=b,
+%     keepspaces=true,
+    numbers=left,
+    numbersep=2pt,
+    % showspaces=false,
+    % showstringspaces=false,
+    % showtabs=false,
+    tabsize=2,
+    frame=shadowbox,
+}
+\lstset{style=mystyle}
+% ----------------------------------------------------------------------------
+% Tikz para arboles de directorios
+\tikzstyle{every node}
+\tikzstyle{every node}=[draw=black,thick,anchor=west]
+\tikzstyle{selected}=[draw=red,fill=red!30]
+\tikzstyle{optional}=[dashed,fill=gray!50]
+% ----------------------------------------------------------------------------
+\graphicspath{ {imagenes/} }
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Termina la configuracion y comienza el documento
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \begin{document}
 
-\begin{luacode}
-dofile("data/data.lua")
-\end{luacode}
+%\renewcommand{\chaptername}{Cap\'itulo}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Caratula, resumen, indice, etc
+\renewcommand{\contentsname}{\'Indice}
+
+\thispagestyle{empty}
 \pagenumbering{roman}
-\include{otros/caratula}
-\include{otros/resumen}
-\tableofcontents \pagebreak
-\listoffigures \pagebreak
-\listoftables \pagebreak
-\include{otros/nomenclatura} \printnomenclature \pagebreak
-% \input{otros/nomenclatura} \printnomenclature \pagebreak
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\pagenumbering{arabic}
-% \addtocontents{toc}{\protect\setcounter{tocdepth}{2}}\pagebreak
+\begin{center}
 
-\chapter{INTRODUCCIÓN}\label{capitulo:INTRODUCCION}
-\input{capitulo1.tex} \pagebreak
+\Large\textbf{{Diseño de los sistemas de admisión y escape del Motor Rotativo de Combustión a Volumen Constante\\}}
 
-\chapter{MARCO TEÓRICO}\label{capitulo:MARCO_TEORICO}
-\input{capitulo2.tex} \pagebreak
+\vspace{2cm}
 
-\chapter{HERRAMIENTAS COMPUTACIONALES}\label{capitulo:HERRAMIENTAS_COMPUTACIONALES}
-\input{capitulo3.tex} \pagebreak
+\includegraphics[scale=0.65]{logo_unco.jpg}\\
 
-\chapter{DESARROLLO}\label{capitulo:DESARROLLO}
-\input{capitulo4.tex} \pagebreak
+\vspace{1cm}
 
-\chapter{RESULTADOS}\label{capitulo:RESULTADOS}
-\input{capitulo5.tex} \pagebreak
+\Large{\textbf{
+NICOLÁS DANIEL BARRIOS\\
+}}
+\vspace{1cm}
 
-\chapter{CONCLUSIONES}\label{capitulo:CONCLUSIONES}
-\input{capitulo6.tex} \pagebreak
+PROYECTO INTEGRADOR PROFESIONAL\\
 
-\chapter{REFERENCIAS}
-\printbibliography[heading=none] \pagebreak
+\vspace{1cm}
 
-\chapter{ANEXO I}
-\input{anexos/anexo_I} \pagebreak
+Presentado a la Facultad de Ingeniería de la Universidad Nacional del Comahue como requisito para la obtención del grado de \\ INGENIERO MECÁNICO
 
+\vspace{1cm}
+
+Neuquén - Argentina\\
+AÑO 2024
+
+\vspace{1cm}
+
+\pagebreak
+\thispagestyle{empty}
+
+\Large\textbf{{Diseño de los sistemas de admisión y escape del Motor Rotativo de Combustión a Volumen Constante\\}}
+
+
+\vspace{4cm}
+
+\large{\textbf{
+NICOLÁS DANIEL BARRIOS\\
+}}
+
+\vspace{4cm}
+Director: Dr. Ing. \textbf{EZEQUIEL JOSÉ LÓPEZ}\\
+
+% Co-director: Ing.  \textbf{NOMBRE DEL CO-DIRECTOR}
+
+\vspace{3cm}
+Presentado a la Facultad de Ingeniería de la Universidad Nacional del Comahue como requisito para la obtención del grado de \\ INGENIERO MECÁNICO
+
+\vfill
+Neuquén - Argentina
+
+AÑO 2024
+
+\newpage
+\thispagestyle{plain}
+
+\Large\textbf{{Diseño de los sistemas de admisión y escape del Motor Rotativo de Combustión a Volumen Constante \\}}
+
+
+\vspace{3cm}
+
+\large{\textbf{
+NICOLÁS DANIEL BARRIOS
+}}\\
+\vspace{3cm}
+\end{center}
+
+Aprobado en fecha X de XXXXX de 2024
+
+
+\vspace{2cm}
+
+Tribunal evaluador:
+
+\begin{itemize}
+
+\item Dr. Ing. PRADO, Ricardo. %Miembro de mesa 1
+\item Ing. ÁLVAREZ, Pablo. %Miembro de mesa 2
+\item Ing. ZAPPA, Andrés. %Miembro de mesa 3
+\item Mg. Ing. BOCCANERA, Daniel (Suplente). %Miembro de mesa 3
+
+\end{itemize}
+
+\newpage
+\thispagestyle{plain}
+
+\begin{center}
+
+\textbf{AGRADECIMIENTOS}\\
+\vspace{1cm}
+
+\end{center}
+
+
+
+%\frontmatter
+
+\newpage
+\thispagestyle{plain}
+
+\begin{center}
+\large{\textbf{{Título del PIP}}}\\
+\end{center}
+\setstretch{1.5}
+
+\normalsize
+\
+ \hfill Autor: Nicolás Daniel Barrios
+
+\hfill Director: Dr. Ing. Ezequiel José López
+
+
+% \hfill Co-Director: NOMBRE DEL CO-DIRECTOR
+
+
+\textbf{Resumen}
+
+En este trabajo se optimizaron los sistemas de admisión y escape del Motor
+Rotativo de Combustión a Volumen Constante (MRCVC) utilizando herramientas de
+simulación computacional tales como ICESym (simulador 0D/1D de motores de
+combustión interna), OpenFOAM (herramienta CFD, por\emph{Computer Fluid
+Dynamics} de código abierto) y un optimizador basado en un algoritmo genético
+(AG) desarrollado con la librería DEAP (Python), entre otros.
+
+Primero, se desarrolló una librería de funciones para acoplar el AG con ICESym,
+permitiendo configurar, ejecutar y procesar datos del simulador.
+%
+También se modificó ICESym, agregando un modelo de coeficientes de descarga
+($C_{D}$) dependiente de la diferencia de presión y grado de apertura del
+puerto, permitiendo un mejor modelado del flujo de gas a través de los puertos.
+
+Se realizó una optimización inicial de la geometría de los puertos del MRCVC con
+valores de $C_{D}$ constantes, buscando maximizar el rendimiento volumétrico.
+%
+La geometría resultante se modeló con un programa de diseño asistido por
+computadora (CAD por sus siglas en inglés) de código abierto, FreeCAD.
+%
+Este resultado, junto con el estado termodinámico del gas obtenido de los datos
+de salida de ICESym, se utilizó para realizar flujometrías virtuales de los
+puertos en diferentes configuraciones empleando OpenFOAM, y así obtener el
+correspondiente mapa de $C_{D}$.
+%
+Este mapa se utilizó como retroalimentación del AG para una nueva optimización,
+logrando una geometría de puertos satisfactoria para el estado actual desarrollo
+del motor.
+
+\noindent 
+
+\textit{Palabras clave: MRCVC, Rendimiento volumétrico, Sistemas de intercambio
+de gases, CFD, Optimización, Algoritmo Genético.}
+
+\newpage
+\thispagestyle{plain}
+\setstretch{1.0}
+\begin{center}
+\large{\textbf{{Design of the Intake and Exhaust Systems of the Constant Volume Combustion Rotary Engine}}}
+
+\end{center}
+\setstretch{1.5}
+
+\normalsize{
+
+\hfill Author: Nicolás Daniel Barrios
+
+\hfill Advisor: Dr. Ing. Ezequiel José López
+
+
+\textbf{Summary}
+
+In this work, the intake and exhaust systems of the Constant Volume Combustion
+Rotary Engine were optimized using computational simulation tools such
+as ICESym (0D/1D internal combustion engine simulator), OpenFOAM (open-source
+CFD tool), and a genetic algorithm (GA) based optimizer developed with the DEAP
+(Python) library, among others.
+
+First, a library of functions was developed to couple the GA with ICESym,
+allowing configuration, execution, and data processing from the simulator.
+%
+ICESym was also modified to include a discharge coefficient ($C_{D}$) model
+dependent on pressure difference and port opening fraction, enabling better
+modeling of gas flow through the ports.
+
+An initial optimization of the engine port geometry was performed with constant
+$C_{D}$ values, aiming to maximize volumetric efficiency.
+%
+The resulting geometry was modeled with an open-source computer-aided design
+(CAD) program, FreeCAD.
+%
+This result, along with the gas thermodynamic state obtained from ICESym output
+data, was used to conduct virtual flow measurements of the ports in different
+configurations using OpenFOAM, thereby obtaining the corresponding $C_{D}$ map.
+%
+This map was used as feedback for the GA in a new optimization, achieving a
+satisfactory port geometry for the current state of engine development.
+
+
+\textit{Keywords: MRCVC, Volumetric Efficiency, Gas Exchange Systems, CFD, Optimization, Genetic Algorithm.}
+
+\newpage
+
+\lhead{}
+\rhead{\thepage}
+
+\include{INDICE}
+
+}
 \end{document}

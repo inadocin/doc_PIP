@@ -1,9 +1,10 @@
 \section{Motores de Combustión Interna}
 
-\begin{figure} \centering \includegraphics[width=.5\textwidth]{otto_1909.jpg}
-    \caption{Motor 1909 5HP Otto Special Electric Lighting de Wayne
-Grenning}\label{fig:otto1909} %
-https://www.gasenginemagazine.com/gas-engines/1909-5-hp-otto-special-electric/
+\begin{figure}
+  \centering
+  \includegraphics[width=.5\textwidth]{otto_1909.jpg}
+  \caption{Motor 1909 5HP Otto Special Electric Lighting de Wayne Grenning}\label{fig:otto1909}
+  % https://www.gasenginemagazine.com/gas-engines/1909-5-hp-otto-special-electric/
 \end{figure}
 
 Los motores de combustión interna dieron un impulso a la actividad humana desde
@@ -86,19 +87,38 @@ reiniciando el ciclo.
 %
 \end{description}
 
+% \begin{figure}
+%   \centering
+%   \subfloat[Ciclo de cuatro tiempos]
+%   \begin{subfigure}{0.6\textwidth}
+%     \centering
+%     \includegraphics[width=\textwidth]{4stroke.jpg}
+%     \caption{Ciclo de cuatro tiempos}\label{fig:4tiempos} %
+%   \end{subfigure}%
+%   \begin{subfigure}{0.4\textwidth}
+%     \centering
+%     \includegraphics[width=\textwidth]{pms_pmi.jpg}
+%     \caption{PMS y PMI}\label{fig:pms_pmi}
+%   \end{subfigure}
+%   \caption{Ciclo de cuatro tiempos}
+% \end{figure}
+
+
 \begin{figure}
   \centering
   \begin{subfigure}{0.6\textwidth}
     \centering
     \includegraphics[width=\textwidth]{4stroke.jpg}
-    \caption{Ciclo de cuatro tiempos}\label{fig:4tiempos} %
+    \caption{Ciclo de cuatro tiempos}\label{fig:4tiempos}
   \end{subfigure}%
+  \hfill
   \begin{subfigure}{0.4\textwidth}
     \centering
     \includegraphics[width=\textwidth]{pms_pmi.jpg}
     \caption{PMS y PMI}\label{fig:pms_pmi}
   \end{subfigure}
-  \caption{Ciclo de cuatro tiempos}
+  \caption{Ciclo de cuatro tiempos y PMS/PMI}
+  \label{fig:4tiempos_pms_pmi} % Etiqueta global para la figura completa
 \end{figure}
 
 % https://www.istockphoto.com/es/vector/motor-di%C3%A9sel-de-cuatro-tiempos-gm586705100-100702521
@@ -256,7 +276,7 @@ Este parámetro mide la eficiencia con la que el motor utiliza el combustible
 para una condición de operación dada.
 %
 En motores de encendido por chispa se tienen valores típicos de alrededor de
-$235\text{ g/(kW\cdot h)}$~\parencite{heywood}.
+$235\text{g/(kW}\cdot h$~\parencite{heywood}.
 
 Una versión similar de este indicador adimensionalizado en relación a la energía
 suministrada por el combustible, es el \emph{rendimiento de conversión del
@@ -451,18 +471,15 @@ estequiométrica $\phi=1$ y una mezcla rica en combustible $\phi > 1$.
 
 \subsection{Fracción de Gases Residuales}
 %
-La fracción de gases residuales $x_r$ mide la cantidad de gases quemados que hay
-en el cilindro al inicio de la carrera de admisión.
-%
 Al final del proceso de barrido, con la válvula de escape cerrada,
 pueden quedar gases residuales de la combustión atrapados en el cilindro.
 %
 Estos gases permanecen para el próximo ciclo de trabajo, afectando el
 rendimiento volumétrico, el trabajo obtenido, la eficiencia y las emisiones.
 %
-Se define como el cociente entre la masa de gases quemados en el cilindro
-($m_{r}$) al inicio de la fase cerrada del ciclo y la masa total atrapada en el
-cilindro ($m$):
+La fracción de gases residuales se define como el cociente entre la masa de
+gases quemados en el cilindro  al inicio de la fase cerrada del ciclo ($m_{r}$)
+y la masa total atrapada en el cilindro ($m$):
 
 
 \begin{equation}

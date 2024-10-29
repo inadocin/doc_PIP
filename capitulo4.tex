@@ -33,19 +33,19 @@ Esta combinación de rendimiento y potencia que, en principio pueden ser
 relativamente altos, hace atractivo el desarrollo de este motor.
 %
 
-\begin{figure}[ht]
+\begin{figure}[h!]
   \centering
   \includegraphics[width=0.7\textwidth]{plano_mrcvc_flor.pdf}
-  \caption{Parámetros goemétricos del MRCVC~\parencite{roldan}}\label{fig:geom_flor_mrcvc}
+  \caption{Parámetros goemétricos del MRCVC~\parencite{roldan20}}\label{fig:geom_flor_mrcvc}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[h!]
   \centering
   \includegraphics[width=0.7\textwidth]{gnuplot/vol.pdf}
   \caption{Variación del volumen del MRCVC}\label{fig:mrcvc_vol_cte}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[h!]
   \centering
   \includegraphics[width=0.7\textwidth]{gnuplot/vol_vs_pres.pdf}
   \caption{Ciclo operativo del MRCVC}\label{fig:PV_mrcvc}
@@ -79,8 +79,8 @@ En este gráfico se indica el ángulo de inicio de la combustión, el cual
 \emph{es una estimación} basada en datos de otros motores como
 $\theta_{0}\simeq 267^{\circ}$.
 %
-En la Tabla se listan el número de paletas $n$, los radios $R$, $R_{e}$,
-$R_{i}$ y $r$, altura de cámara $h_{c}$, altura de puerto $h_{p}$, relación de
+En la Tabla se listan el número de paletas $n$, los radios $R$, $R_{e}$, $R_{i}$
+y $r$, altura de cámara $h_{c}$, altura de puerto $h_{p}$ y relación de
 compresión $r_{c}$
 
 
@@ -94,7 +94,7 @@ compresión $r_{c}$
     \centering
     \begin{tabular}{rccccccccc} \toprule
         Parámetro & n & R & r & $h_{c}$ & $h_{p}$ & rc & $V_{max}$ & $R_i$ & $R_e$ \\ \midrule
-     Valor & \lua{tex.print(myData.n)} & \lua{tex.print(myData.R)} & \lua{tex.print(myData.r)} & \lua{tex.print(myData.hc)} & \lua{tex.print(myData.hp)} & \lua{tex.print(myData.rc)} & \lua{tex.print(myData.V0)} & \lua{tex.print(trunc(myData.Ri))} & \lua{tex.print(trunc(myData.Re))} \\
+      Valor & 3 & 116.1 & 44.1 & 44.1 & 29.4 & 9 & 500 & 107.4 & 139.0 \\
      Unidades & --- & mm & mm & mm & mm & --- & $cm^3$ & mm & mm \\ \bottomrule
     \end{tabular}
     \caption{Datos de la geometría del MRCVC considerados en el trabajo}\label{tab:geom_mrcvc}
@@ -130,7 +130,7 @@ puerto en la cámara de combustión.
 En la Figura~\ref{fig:sistema_intercambio_gases} se esquematiza la geometría
 mencionada.
 
-\begin{figure}
+\begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{ciclo/sistema_intercambio_gases.png}
     \caption{Esquema del sistema de intercambio de gases}\label{fig:sistema_intercambio_gases}
@@ -156,7 +156,7 @@ para el escape, ver Figura~\ref{fig:angulos_puertos}.
 \nomenclature[G]{\(EIA\)}{Ángulo de apertura del puerto de escape, ver Figura \ref{fig:angulos_puertos}}
 \nomenclature[G]{\(EFA\)}{Ángulo de cierre del puerto de escape, ver Figura \ref{fig:angulos_puertos}}
 
-\begin{figure}
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.6\textwidth]{/CAD/angulos.pdf}
     \caption{Puerto de admisión y escape}\label{fig:angulos_puertos}
@@ -213,8 +213,11 @@ $25^{\circ}C$.
 %
 \nomenclature[PO]{\(\phi\)}{Relación de equivalencia combustible/aire}
 
+Además, en la simulación del MRCVC se utilizó una mezcla  de aire-isooctano
 ($C_{8}H_{18}$) cuya reacción (estequiométrica) se indica en la
 ecuación~(\ref{eq:estequeometrica}).
+
+% TODO: iba por aca 15/10, estaba actualizando la parte de la mezcla estequeometrica
 
 \begin{equation} \label{eq:estequeometrica}
   C_{8}H_{18} + 12,5 \left(O_{2}+3,772N_{2}\right) \rightarrow 8 CO_{2} + 9 H_{2}O + 47,16 N_{2}
@@ -245,7 +248,7 @@ La altura de puerto vale $h_{p}=29,4$ mm.
 El área de utilizada se ilustra en la Figura~\ref{fig:area_referencia}.
 %
 Se observan dos zonas coloreadas que hacen referencia al área de dos cámaras
-contiuas durante un período de solape de cámaras.
+contiguas durante un período de solape de cámaras.
 
 
 \begin{figure}
@@ -258,7 +261,7 @@ contiuas durante un período de solape de cámaras.
 
 Se incorporaron las pérdidas por rozamiento los sellos de las paletas y sellos
 estatóricos del MRCVC utilizando valores obtenidos en trabajos
-anteriores~\parencite{roldan}.
+anteriores~\parencite{roldan20}.
 %
 El trabajo de fricción para diferentes velocidades se consideró en la etapa de
 post-procesamiento de las simulaciones de ICESym.
