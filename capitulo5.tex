@@ -95,7 +95,7 @@ geométricas obtenida en trabajos anteriores~\parencite{mrcvc_geom}.
 %   \caption{Datos geométricos del mejor candidato}\label{tab:resultado_primer_it}
 % \end{table}
 
-\begin{table}[h]
+\begin{table}[h!]
   \centering
   \begin{tabular}{ccccc}
     \toprule
@@ -143,11 +143,10 @@ geometría a evaluar con las flujometrías.
 \begin{figure}[h!]
   \centering
   \subfloat[]{
-    \includegraphics[width=\textwidth]{CAD/motor_cad1.png}
+    \includegraphics[width=.5\textwidth]{CAD/motor_cad1.png}
   }
-  \hfill
   \subfloat[]{
-    \includegraphics[width=\textwidth]{CAD/motor_cad2.png}
+    \includegraphics[width=.5\textwidth]{CAD/motor_cad2.png}
   }
   \caption{CAD Primera iteración}\label{fig:motor_cad1}
 \end{figure}
@@ -158,6 +157,7 @@ geometría a evaluar con las flujometrías.
   \subfloat[Puerto de Admisión]{
     \includegraphics[width=\textwidth]{CAD/vistas_admision.png}
   }
+  \hfill
   \subfloat[Puerto de Escape]{
     \includegraphics[width=\textwidth]{CAD/vistas_escape.png}
   }
@@ -173,12 +173,10 @@ El foco de esta etapa de optimización es el diámetro del puerto y el reglaje.
 %
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Flujometrías}
 
-De la pirmera iteración se obtuvo la geometría y datos operativos del motor, lo
+De la primera iteración se obtuvo la geometría y datos operativos del motor, lo
 cual permitió representar la curva de diferencia de presión ($\Delta P$) en
 función de la alzada ($l_{v}$) de ambos puertos para diferentes velocidades de
 giro, identificando los puntos de mayor interés en los cuales realizar las
@@ -224,11 +222,8 @@ cámara hacia el puerto de admisión, correspondiente a un puerto que abre.
 % para los puertos de admisión y escape, las cuales se presentan en el
 % Anexo~\ref{anexo:1}.
 %
-La totalidad de puntos evaluados se presentan en las
-tablas~\ref{tab:mapa_cd_admision},~\ref{tab:mapa_cd_escape} para el puerto de
-admisión y escape respectivamente.
 
-\begin{figure}[h]
+\begin{figure}[h!]
   \centering
   \includegraphics[width=0.7\textwidth]{./gnuplot/puerto_admision_10_7000.pdf}
   \caption{Puerto de admisión $10^{\circ}$ \@ $7000$ RPM}\label{fig:adm_10_7000rpm}
@@ -249,19 +244,19 @@ y~\ref{fig:mapa_cd_escape}.
 Con respecto al gradiente de presión indicado en las figuras que se presentan en
 los párrafos siguientes, para ambos puertos se define el gradiente de presión
 como la diferencia entre la presión en el cilindro y la presión en el puerto,
-$\Delta P = P_{\text{c\'amara}} - P_{puerto}$.
+$\Delta P = P_{\text{c\'amara}} - P_{\text{puerto}}$.
 %
 En la Tabla~\ref{tab:resumen_puertos} se resumen los valores máximos y mínimos
 de $C_{D}$ y $\dot{m}$ obtenidos para los puertos de admisión y escape.
 
-\begin{table}[h]
+\begin{table}[h!]
   \centering
   \begin{tabular}{cccccccc}\toprule
-    Puerto & $l_{v} [mm]$ & $\Delta P [kPa]$ & $C_{D}$ & $\dot{m} [g/seg]$ & Nota & Figura\\ \midrule
-    Admisión & 62,95 &  -7,4 & 0,59  & -122 & $C_{D,\max}$ &\ref{fig:adm_cd_max} \\
-    Admisión & 81,94 &  4,95 & 0,33 &   70 & $\dot{m}_{\max}$ &\ref{fig:adm_cd_max} \\
-    Escape   & 87,76 & -10,7 & 0,58 &  145 & $C_{D,\max}$ &\ref{fig:esc_cd_max}\\
-    Escape   & 87,76 & -33,4 & 0,45 &  176 & $\dot{m}_{\max}$ &\ref{fig:esc_m_max}\\
+    Puerto   & $l_{v} [mm]$ & $\Delta P [kPa]$ & $C_{D}$ & $\dot{m} [g/seg]$ & Nota            & Figura\\ \midrule
+    Admisión & 62,95        &  7,4            & 0,59   & -122              & $C_{D,\max}$     &\ref{fig:adm_cd_max} \\
+    Admisión & 81,94        &  -4,95           & 0,33   &   70              & $\dot{m}_{\max}$ &\ref{fig:adm_cd_max} \\
+    Escape   & 87,76        & 10,7            & 0,58   &  145              & $C_{D,\max}$     &\ref{fig:esc_cd_max}\\
+    Escape   & 87,76        & 33,4            & 0,45   &  176              & $\dot{m}_{\max}$ &\ref{fig:esc_m_max}\\
   \end{tabular}
   \caption{Valores máximos $C_{D}$ y $\dot{m}$ para puertos}\label{tab:resumen_puertos}
 \end{table}
@@ -281,31 +276,32 @@ La misma tendencia se observa si se representa el $C_{D}$ en función de la
 apertura del puerto $l_{v}$ o del gradiente de presión $\Delta P$, ver
 Figura~\ref{fig:cd_admision}.
 %
-Los mayores valores de $C_{D}$ ocurren para la mayor apertura o (en general)
+Los mayores valores de $C_{D}$ ocurren para la mayor apertura o, en general,
 para el menor gradiente de presión en términos absolutos.
 %
 También se observa que el coeficiente de descarga medio para el puerto es
-aproximadamente 0,3.
+aproximadamente $0,3$.
 
-\begin{figure}[h]
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.7\textwidth]{mapa_cd/mc_s2_mapa_adm.png}
     \caption{Puerto de admisión}\label{fig:mapa_cd_admision}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[h!]
     \centering
     \includegraphics{gnuplot/cd_vs_alzada_adm.pdf}
     \caption{$C_{D}$ del puerto de admisión}\label{fig:cd_admision}
 \end{figure}
 
 El máximo coeficiente de descarga vale $C_{D,\max}\simeq 0,6$ para
-$l_{v}=62,95 mm$ y $\Delta P\simeq -7,37 KPa$, obteniendo un flujo hacia adentro
+$l_{v}=62,95 mm$ y $\Delta P\simeq +7,37 KPa$, obteniendo un flujo hacia adentro
 del puerto de $122,09 g/seg$.
 %
 Para este caso se observa un reflujo de gases residuales apenas abre el puerto
 de admisión, correspondiendo a un ángulo de cigüeñal de $10^{\circ}$ a $7000$
 RPM.
+% TODO: Revisar esto con el delta P, el flujo es hacia afuera del puerto (ver flujometria 10 7000rpm)
 
 La flujometría correspondiente al último instante de la simulación se muestra en
 la Figura~\ref{fig:adm_cd_max}, en la cual las líneas de corriente están
@@ -340,11 +336,11 @@ mayor para aperturas mayores del puerto y menores gradientes de presión
 ($|\Delta P|\sim 0$).
 %
 El máximo coeficiente de descarga obtenido vale $C_{D,\max}\simeq 0,58$ y ocurre
-para $l_{v}=87,76 mm$, $\Delta P=-10,7 KPa$ con un flujo másico de $145 g/s$
+para $l_{v}=87,76 mm$, $\Delta P=10,7 KPa$ con un flujo másico de $145 g/s$
 hacia afuera para $440^{\circ}$ a $9000$ RPM, ver Figura~\ref{fig:esc_cd_max}.
 %
 Por otro lado el máximo caudal másico es $\dot{m}=176,1 g/seg$ y ocurre para
-$l_{v}=87,76 mm$ y $\Delta P=-334 KPa$, correspondiendo a $440^{\circ}$ y 7000
+$l_{v}=87,76 mm$ y $\Delta P=334 KPa$, correspondiendo a $440^{\circ}$ y 7000
 RPM, ver Figura~\ref{fig:esc_m_max}.
 
 \begin{figure}[h]
@@ -388,19 +384,17 @@ Se obtuvieron los candidatos cuyas geometrías se listan en la
 Tabla~\ref{tab:2iter_geom}.
 %
 Los diámetros de los conductos de admisión son similares en todos los casos,
-para el esacape se tiene un par con conductos de 60mm y otro con 90mm.
+para el escape se tiene un par con conductos de 60mm y otro con 90mm.
 %
-La mayor variacíon ocurre en largos de los conductos y los ángulos de apertura y
+La mayor variación ocurre en largos de los conductos y los ángulos de apertura y
 cierre.
-%
-% Exceptuando la corrida $run_{51}$ los ángulos de apertura de los puertos de %
-admisión se mantienen cercanos Figura \ref{fig:2iter_general}.
 %
 Para seleccionar uno de los candidatos, se compararon las curvas de rendimiento
 volumétrico, torque, potencia y fracción de gases residuales, de estos motores
 las cuales se muestran en la Figura~\ref{fig:comparativa_segunda_iter}.
 
-\begin{table} \centering
+\begin{table}[h!]
+  \centering
   \begin{tabular}{ccccccccc}\toprule
     Corrida   & DTA   & DTE & LIT   & LET   & IIA   & IFA   & EIA    & EFA \\
     -         & [mm] & [mm] & [m]   & [m]   & [gra] & [gra] & [gra]  & [gra] \\ \midrule
@@ -412,13 +406,13 @@ las cuales se muestran en la Figura~\ref{fig:comparativa_segunda_iter}.
   \caption{Geometrías de segunda iteración}\label{tab:2iter_geom}
 \end{table}
 
-\begin{figure} \centering
+\begin{figure}[h!] \centering
 \includegraphics[width=\textwidth]{gnuplot/comparativa_segunda_iter_mep.pdf}
   \caption{Comparativa candidatos} \label{fig:comparativa_segunda_iter}
 \end{figure}
 
 En base a esta comparativa de figuras se optó por seleccionar la corrida
-denominada como ``run 3-4'', este motor presenta un máximo de torque y potencia
+denominada como ``run 03-04'', este motor presenta un máximo de torque y potencia
 en 5000 RPM, también presenta una curva de rendimiento volumétrico suave con un
 máximo en 4000 RPM.
 %

@@ -36,7 +36,7 @@ relativamente altos, hace atractivo el desarrollo de este motor.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.7\textwidth]{plano_mrcvc_flor.pdf}
-  \caption{Parámetros goemétricos del MRCVC~\parencite{roldan20}}\label{fig:geom_flor_mrcvc}
+  \caption{Parámetros geométricos del MRCVC~\parencite{roldan20}}\label{fig:geom_flor_mrcvc}
 \end{figure}
 
 \begin{figure}[h!]
@@ -83,14 +83,13 @@ En la Tabla se listan el número de paletas $n$, los radios $R$, $R_{e}$, $R_{i}
 y $r$, altura de cámara $h_{c}$, altura de puerto $h_{p}$ y relación de
 compresión $r_{c}$
 
-
-\begin{figure}[ht]
+\begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{ciclo/ciclo_operativo.pdf}
   \caption{Ciclo operativo del MRCVC}\label{fig:ciclo_mrcvc}
 \end{figure}
 
-\begin{table}
+\begin{table}[h!]
     \centering
     \begin{tabular}{rccccccccc} \toprule
         Parámetro & n & R & r & $h_{c}$ & $h_{p}$ & rc & $V_{max}$ & $R_i$ & $R_e$ \\ \midrule
@@ -156,31 +155,31 @@ para el escape, ver Figura~\ref{fig:angulos_puertos}.
 \nomenclature[G]{\(EIA\)}{Ángulo de apertura del puerto de escape, ver Figura \ref{fig:angulos_puertos}}
 \nomenclature[G]{\(EFA\)}{Ángulo de cierre del puerto de escape, ver Figura \ref{fig:angulos_puertos}}
 
-\begin{figure}[h!]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.6\textwidth]{/CAD/angulos.pdf}
     \caption{Puerto de admisión y escape}\label{fig:angulos_puertos}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
 \centering
   \includegraphics[]{./flujometrias/refinamiento_malla_admision.png}
   \caption{Refinamiento de malla para puerto de admisión}\label{fig:refinamiento_admision}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[]{./flujometrias/refinamiento_malla_escape.png}
   \caption{Refinamiento de malla para puerto de escape}\label{fig:refinamiento_escape}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.9\textwidth]{./flujometrias/convergencia_admision_2000rpm.pdf}
   \caption{Convergencia de malla de puerto de admisión}\label{fig:conv_malla_admision}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.9\textwidth]{./flujometrias/convergencia_escape_4000rpm.pdf}
   \caption{Convergencia de malla de puerto de escape}\label{fig:conv_malla_escape}
@@ -213,11 +212,9 @@ $25^{\circ}C$.
 %
 \nomenclature[PO]{\(\phi\)}{Relación de equivalencia combustible/aire}
 
-Además, en la simulación del MRCVC se utilizó una mezcla  de aire-isooctano
-($C_{8}H_{18}$) cuya reacción (estequiométrica) se indica en la
+En la simulación del MRCVC se utilizó una mezcla estequiométrica de
+aire-isooctano ($C_{8}H_{18}$) cuya reacción se indica en la
 ecuación~(\ref{eq:estequeometrica}).
-
-% TODO: iba por aca 15/10, estaba actualizando la parte de la mezcla estequeometrica
 
 \begin{equation} \label{eq:estequeometrica}
   C_{8}H_{18} + 12,5 \left(O_{2}+3,772N_{2}\right) \rightarrow 8 CO_{2} + 9 H_{2}O + 47,16 N_{2}
@@ -251,7 +248,7 @@ Se observan dos zonas coloreadas que hacen referencia al área de dos cámaras
 contiguas durante un período de solape de cámaras.
 
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=.6\textwidth]{area_referencia.png}
   \caption{Área de referencia MRCVC}\label{fig:area_referencia}
@@ -492,7 +489,7 @@ sección~\ref{subsec:prop_mezcla}.
 Los valores calculados son los indicados en la
 Tabla~\ref{tab:valores_calculados}.
 
-\begin{table}
+\begin{table}[h!]
   \centering
   \begin{tabular}{cl}\toprule
     Símbolo & Descripción \\ \midrule
@@ -506,7 +503,7 @@ Tabla~\ref{tab:valores_calculados}.
 \caption{Valores iniciales}\label{tab:valores_iniciales}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[h!]
   \centering
   \begin{tabular}{cll}\toprule
     Símbolo & Descripción & Ecuación\\ \midrule
@@ -588,7 +585,7 @@ puede apreciar la diferencia de tamaño entre las celdas cercanas a las paredes
 del puerto y las celdas pertenecientes al interior del volumen para la malla
 con tamaño inicial de 20mm.
 
-\begin{table}
+\begin{table}[h!]
   \centering
   \begin{tabular}{cccccc}\toprule
     Tamaño de celda & $N^{\circ}$ Celdas & $Q_{0^{\circ}} [dm^{3}/seg]$ & $\varepsilon_{r,0^{\circ}}$ & $Q_{120^{\circ}} [cm^{3}/seg]$ & $\varepsilon_{r,120^{\circ}}$ \\ \midrule
@@ -600,7 +597,7 @@ con tamaño inicial de 20mm.
   \caption{Figura~\ref{fig:conv_malla_admision} tabulada}\label{tab:convergencia_malla_admision}
 \end{table}
 
-\begin{table}
+\begin{table}[h!]
   \centering
   \begin{tabular}{cccccc}\toprule
     Tamaño de celda & $N^{\circ}$ Celdas & $\dot{m}_{420^{\circ}} [g/seg]$ & $\varepsilon_{r,420^{\circ}}$ & $\dot{m}_{540^{\circ}} [g/seg]$ & $\varepsilon_{r,540^{\circ}}$ \\ \midrule
@@ -612,25 +609,25 @@ con tamaño inicial de 20mm.
   \caption{Figura~\ref{fig:conv_malla_escape} tabulada}\label{tab:convergencia_malla_escape}
 \end{table}
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.8\textwidth]{./flujometrias/refinamiento_malla_admision.png}
   \caption{Refinamiento de malla para puerto de admisión}\label{fig:refinamiento_admision}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.8\textwidth]{./flujometrias/refinamiento_malla_escape.png}
   \caption{Refinamiento de malla para puerto de escape}\label{fig:refinamiento_escape}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.9\textwidth]{./flujometrias/convergencia_admision_2000rpm.pdf}
   \caption{Convergencia de malla de puerto de admisión}\label{fig:conv_malla_admision}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.9\textwidth]{./flujometrias/convergencia_escape_4000rpm.pdf}
   \caption{Convergencia de malla de puerto de escape}\label{fig:conv_malla_escape}
@@ -784,13 +781,13 @@ que consiste en dividir las celdas en hexaedros más pequeños y luego aplicar e
 modelando, ver Figura~\ref{fig:openfoam_shm_pasos}.
 %
 
-\begin{figure}
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\textwidth]{flujometrias/paraview_blockMesh_stl.png}
     \caption{Malla de blockMesh y stl de Salome}\label{fig:paraview_blockMesh_stl}
 \end{figure}
 
-\begin{figure}[t!]
+\begin{figure}[h!]
     \centering
     \begin{subfigure}[t]{0.5\textwidth}
         \centering
@@ -881,7 +878,7 @@ menor para velocidades con $\Delta P \simeq 0$.
 A medida que el puerto se abre la diferencia de presión con el gas en la cámara
 disminuye y esta banda se afina.
 
-\begin{figure}
+\begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{gnuplot/puntos_interes.pdf}
     \caption{Presión en función de la apertura el puerto,
@@ -898,7 +895,7 @@ volúmenes que representan diferentes componentes del motor como son el estator,
 rotor, paletas, etc.
 
 
-\begin{figure}
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.7\textwidth]{./CAD/freecad_pasos.png}
     \caption{Puerto de admisión para $\theta=50^{\circ}$ modelado con
@@ -919,7 +916,7 @@ en la Figura~\ref{fig:salome_malla_hermetica}, en la que se ven dos superficies
 ``walls'' y ``outlet'' y los nodos compartidos entre ambas superficies.
 %
 
-\begin{figure}[ht]
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.4\textwidth]{./flujometrias/salome_malla_hermetica.png}
     \caption{Malla hermética}\label{fig:salome_malla_hermetica}
@@ -932,7 +929,7 @@ en OpenFOAM.
 Las superficies diferenciadas son: puerto, cámara/s y pared, ver
 Figura~\ref{fig:openfoam_parches}.
 
-\begin{figure}[ht]
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\textwidth]{./flujometrias/openfoam_parches.png}
     \caption{Nombres de Parches}\label{fig:openfoam_parches}
@@ -955,7 +952,7 @@ parámetros básicos de configuración para las dos mallas.
 % Esto sin requerir de una gran cantidad de elementos para no ralentizar el
 % procesado con SnappyHexMesh.
 
-\begin{figure}[t!]
+\begin{figure}[h!]
     \centering
     \begin{subfigure}[t]{0.5\textwidth}
         \centering
@@ -970,7 +967,7 @@ parámetros básicos de configuración para las dos mallas.
     \caption{Diferentes mallas para flujometrías}\label{fig:salome_fina_gruesa}
 \end{figure}
 
-\begin{table}
+\begin{table}[h!]
     \centering
     \begin{tabular}{lccc} \toprule
         Parámetro                & Malla Fina    & Malla Gruesa     & Unidades\\ \midrule
