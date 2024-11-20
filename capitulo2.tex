@@ -480,7 +480,7 @@ En el MRCVC existe un fenómeno llamado solape de cámaras~\parencite{lopez13}.
 Durante el proceso de admisión de gases frescos, una cámara puede verse afectada
 por la apertura del puerto de admisión de la cámara siguiente, que se encuentra
 a mayor presión y temperatura debido a que está finalizando el proceso de escape
-y comenzando el de admisión, pudiendo provocando un aumento de la cantidad de gases
+y comenzando el de admisión, pudiendo provocar un aumento de la cantidad de gases
 residuales.
 
 
@@ -497,11 +497,11 @@ volumétrico.
         %
   \item[Dilución de la mezcla] el gas residual ocupa volumen que no puede ocupar la mezcla fresca.
         %
-  \item[Temperatura] los gases están a mayor temperatura y al mezclarse con la mezcla fresca aumenta su temperatura y volumen, reduciendo la cantidad de mezcla fresca que puede ingresar a la cámara.
+  \item[Temperatura] los gases residuales están a mayor temperatura y al mezclarse con la mezcla fresca aumenta su temperatura y volumen, reduciendo la cantidad de mezcla fresca que puede ingresar a la cámara.
         %
   \item[Reducción de $NO_{x}$] un efecto beneficioso es la reducción de emisiones de óxidos de nitrógeno.
         %
-  \item[EGR] en motores modernos se recircula gases quemados (\textit{Exhaust Gas Recycle}) para reducir emisiones de $NO_{x}$ y controlar el consumo de combustible. En motores SI se puede utilizar hasta un 30\% de EGR, estos valores son aún mayores para motores de encendido por chispa~\parencite{heywood}.
+  \item[EGR] en algunos motores modernos se recirculan gases quemados (\textit{Exhaust Gas Recycle}) para reducir emisiones de $NO_{x}$ y controlar el consumo de combustible. En motores SI se puede utilizar hasta un 30\% de EGR, estos valores son aún mayores para motores de encendido por compresión~\parencite{heywood}.
         %
   \item[Rendimiento volumétrico] la presencia de gases residuales en la cámara disminuye el volumen que puede ocupar la mezcla fresca, lo cual tiene un impacto negativo en el rendimiento volumétrico.
         %
@@ -546,11 +546,12 @@ necesidad de conductos más largos.
 En motores multi-cilíndricos se utiliza un pleno de admisión.
 %
 Este dispositivo proporciona un volumen grande de aire que sirve el propósito de
-cámara de resonancia.
+cámara de resonancia (resonador de Helmholtz).
 %
 Se puede ajustar la resonancia de modo que las oscilaciones de presión internas
-produzcan ondas de sobre presión que alcance cada puerto en el momento preciso
-en el que se aproxima el cierre del mismo.
+produzcan una sobrepresión en el múltiple de admisión que puede aprovecharse
+para incrementar el llenado del cilindro cuando el pistón promedia la carrera de
+admisión.
 
 \begin{figure}[h!]
   \centering
@@ -561,15 +562,15 @@ en el que se aproxima el cierre del mismo.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Sintonización del Sistema de Escape}\label{cap2_sec_sintonia_escape}
 
-De forma análoga al puerto de admisión, al momento de la apertura del puerto o
-válvula de escape los gases residuales de la combustión se encuentran a  mayor
-presión que el gas en el conducto.
+De forma análoga al sistema de admisión, al momento de la apertura del puerto o
+válvula de escape los gases quemados se encuentran a  mayor presión que el gas
+en el conducto.
 %
 Esto crea una onda de sobrepresión que viaja por el escape hasta alcanzar el
 final del mismo o un área de gran volumen, como el catalizador o el silenciador.
 %
 Desde esta zona se refleja como una onda de depresión, que en caso de alcanzar
-el puerto en los instantes previos al cierre del mismo, ayuda a evacuar una
+el puerto en los instantes previos al cierre de la válvula, ayuda a evacuar una
 mayor cantidad de gas, disminuyendo la fracción de gases residuales.
 
 En la Figura~\ref{fig:sintonia_heywood} se ve que para el escape en $p_2$ se
@@ -589,26 +590,13 @@ combustible.
 La geometría de un motor de combustión interna permite aprovechar
 el aumento de presión y temperatura para convertir energía química en trabajo
 mecánico.
-%
-Los modelos ideales de ciclos operativos se pueden clasificar según el proceso
-de combustión en:
-%
-\begin{enumerate}
-        %
-    \item Volumen constante, Figura~\ref{fig:comb_vcte}.
-        %
-    \item Presión constante, Figura~\ref{fig:comb_pcte}.
-        %
-    \item Presión limitada (parte a volumen constante y parte a presión
-constante), Figura.~\ref{fig:comb_plim}.
-        %
-\end{enumerate}
+
 
 En un motor de encendido por chispa se tiene una mezcla de aire-combustible en
 la cámara de combustión.
 %
 Dependiendo del tipo de motor, la mezcla se puede formar en el conducto de
-admisión, inyectando combustible en algún punto del sistema, se puede producir
+admisión, inyectando combustible en algún punto del sistema o se puede producir
 la mezcla en la cámara por la inyección directa de combustible.
 %
 En un motor de encendido por compresión, la mezcla combustible se forma en la
@@ -650,7 +638,7 @@ considerando un gas ideal con calores específicos constantes como fluido de
 trabajo.
 %
 Se tienen tres casos de combustión: a volumen constante, presión constante o presión
-limitada, obteniendo expresiones para el rendimiento de conversión de
+limitada, obteniendo expresiones para el rendimiento de conversión del
 combustible~(\ref{eq:rendimiento_p_lim}) y de $imep$ en función de la presión
 mínima $p_1$~(\ref{eq:imep_p1}) y máxima $p_3$~(\ref{eq:imep_p3}) del ciclo.
 %
@@ -705,8 +693,8 @@ y la presión máxima del ciclo, $imep/p_3$, se observa que a igual relación de
 compresión el ciclo de combustión a presión constante presenta mayores valores
 de $imep$ en relación a la presión máxima.
 %
-Lo cual esta relacionado con las altas presiones alcanzadas en el ciclo ideal de
-combustión a volumen constante.
+Estso se debe a las altas presiones alcanzadas en el ciclo ideal de combustión a
+volumen constante.
 %
 La presión máxima que se puede alcanzar en el ciclo real tiene limitaciones
 relacionadas a mayores pérdidas de masa (y presión) a través de sellos y la
@@ -743,7 +731,7 @@ iniciales requeridas en las flujometrías.
 En la simulación del MRCVC se utilizó una mezcla estequiométrica de
 aire-isooctano.
 %
-La reacción estequeométrica para un hidrocarburo genérico se indica en la
+La reacción estequiométrica para un hidrocarburo genérico se indica en la
 ecuación~(\ref{eq:estequeometrica_generica}).
 
 \begin{equation} \label{eq:estequeometrica_generica}
@@ -752,7 +740,7 @@ ecuación~(\ref{eq:estequeometrica_generica}).
 
 Las rutinas computacionales utilizadas para calcular las propiedades
 termodinámicas de las mezclas aire-combustible aproximan las propiedades
-químicas de cada especie en la mezcla con curvas polinómicas.
+químicas de cada especie en la mezcla con expresiones polinómicas.
 
 Para cada compuesto $i$ de la mezcla a temperatura estándar $T(K)$ y 1 atmósfera
 de presión se aproxima el calor específico a presión constante
@@ -776,7 +764,7 @@ $\widetilde{s_{i}}$ por la ecuación~(\ref{eq:s}):
 
 La base de datos seleccionada para el aire y los productos de la combustión es
 la utilizada por Chemkin~\parencite{chemkin} y los datos del isooctano fueron
-tomados de~\parencite{raine}.
+tomados de~\cite{raine}.
 
 La finalidad de estas rutinas (por fuera de las incluidas en ICESym) es la de
 obtener la masa molar de la mezcla $M_{M}$, la viscosidad dinámica $\mu$, el
@@ -813,7 +801,7 @@ para $\phi\leq 1$ con la ecuación~(\ref{eq:pr})~\parencite{heywood}:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Coeficiente de Descarga $C_{D}$}\label{sec:cap2_cd}
+\section{Coeficiente de Descarga $C_{D}$}\label{subsec:cap2_cd}
 %
 La pérdida de carga localizada en los puertos de admisión y escape se puede
 representar a través del coeficiente de descarga, $C_{D}$.
@@ -844,8 +832,12 @@ comercial.
 \begin{figure}[h!]
   \centering
 \includegraphics[width=0.5\textwidth]{./flujometrias/banco_flujometrias.png}
-  \caption{Banco de flujometrías Super-Flow SF-750}\label{fig:banco_flujometrias}
+%
+  \caption{Banco de flujometrías Super-Flow SF-750\protect\footnotemark}\label{fig:banco_flujometrias}
+  %
 \end{figure}
+
+\footnotetext{\url{https://superflow.com/tech-corner/understanding-and-working-with-superflow-flowbenches/}}
 
 Durante el ensayo se mide el caudal de aire atmosférico para diferentes grados
 de apertura de la válvula y así se obtienen datos de (alzada, flujo) con los
@@ -873,9 +865,9 @@ Además, se pueden modelar las propiedades del fluido de trabajo para una
 viscosidad, presión y temperatura representativas de las condiciones operativas
 del motor que se está simulando.
 %
-En este trabajo se optó por esta metodología, es decir, a partir de las flujometrías se
-obtuvo un valor de caudal másico el cual es utilizado para calcular un
-coeficiente de descarga.
+En este trabajo se optó por esta metodología, es decir, a partir de las
+flujometrías virtuales se obtuvo un valor de caudal másico el cual es utilizado
+para calcular un coeficiente de descarga.
 
 Conociendo el caudal másico $\dot{m}$, el valor de $C_{D}$  se calcula con las
 ecuaciones de flujo compresible a través de una restricción, habiendo dos casos
@@ -964,12 +956,18 @@ presión antes y después del puerto se selecciona de acuerdo al sentido de
 flujo.
 %
 En caso de ser hacia la cámara de combustión la presión en el puerto se utiliza
-como inicial $P_0$ y la presión en la cámara es la aproximación a la presión en
+como valor a la entrada $P_0$ y la presión en la cámara es la aproximación a la presión en
 la restricción $P_T$.
+%
+% TODO tengo que termiar de arreglar esta frase 15/11
+
+Por otro lado, si el flujo ocurre en sentido contrario, desde la cámara hacia el
+puerto, se utiliza la presión de cámara como valor de entrada $P_{0}$ y la
+presión en el puerto es la presión en la restricción $P_{T}$.
+
+El valor de $\gamma$ se obtiene de las propiedades de la mezcla con las rutinas
+computacionales descritas en el apartado~\ref{subsec:prop_mezcla}.
 %
 \nomenclature[PO]{\(T\)}{Temperatura}
 %
 \nomenclature[SU]{\(0\)}{Valor inicial}
-
-El valor de $\gamma$ se obtiene de las propiedades de la mezcla con las rutinas
-computacionales descritas en el apartado~\ref{subsec:prop_mezcla}.

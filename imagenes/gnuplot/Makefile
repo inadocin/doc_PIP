@@ -13,5 +13,5 @@ clean: all
 	rm -f *.tex *.log *.aux
 
 all:
-	gnuplot -c puntos_interes_admision.gp
-	pdflatex puntos_interes.tex
+	gnuplot -c cd_vs_alzada_esc.gp
+	pdflatex cd_vs_alzada_esc.tex

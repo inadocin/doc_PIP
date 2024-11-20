@@ -56,8 +56,9 @@ El esquema de interpolación bilineal implementado requiere de una malla
 rectangular.
 %
 Se reutilizó el código existente para el caso 1D, realizando una interpolación
-lineal entre dos valores en planos con datos conocidos, como se ve en la
-Figura~\ref{fig:interp_bilineal}.
+lineal entre dos valores en planos con datos conocidos.
+% , como se ve en la
+% Figura~\ref{fig:interp_bilineal}.
 %
 Si bien hay otros métodos de interpolación para estimar el valor de $C_D$ a
 partir de una nube de puntos, este método es sencillo y da resultados
@@ -67,18 +68,18 @@ En la Figura~\ref{fig:bilineal} se muestra a modo de ejemplo el error obtenido
 con este método para interpolar una función de prueba
 $f=\sin\left(\sqrt{x^2 + y^2}\right)$.
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.7\textwidth]{interpolacion_bilineal.png}
-    %
-    \caption{Interpolación bilineal\protect\footnotemark}\label{fig:interp_bilineal}
-    % \footnote{A}}
-\end{figure}
-\footnotetext{\url{https://stackoverflow.com/questions/8808996/bilinear-interpolation-to-enlarge-bitmap-images}}
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.7\textwidth]{interpolacion_bilineal.png}
+%     %
+%     \caption{Interpolación bilineal\protect\footnotemark}\label{fig:interp_bilineal}
+%     % \footnote{A}}
+% \end{figure}
+% \footnotetext{\url{https://stackoverflow.com/questions/8808996/bilinear-interpolation-to-enlarge-bitmap-images}}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.6\textwidth]{bilineal.png}
+    \includegraphics[width=\textwidth]{bilineal_horiz.png}
     \caption{Interpolación bilineal de $\sin(\sqrt{x^2 + y^2})$}\label{fig:bilineal}
 \end{figure}
 
@@ -108,7 +109,7 @@ matriz de $5\times5$.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[]{/mapa_cd/suavizado.pdf}
+    \includegraphics[width=0.6\textwidth]{/mapa_cd/suavizado.pdf}
     \caption{Suavizado por promedio con celdas vecinas, S=1}\label{fig:suavizado_promedio}
 \end{figure}
 
@@ -155,8 +156,6 @@ se presenta el esquema utilizado.
     \frac{1}{d_i^p}}
 \end{equation}
 
-En la Figura~\ref{fig:mapas_interpolados} se muestra una comparación de ambos
-métodos, para una malla de $C_{D}=f(\Delta P, l_{v})$ generada al azar.
 
 \begin{algorithm}
     \caption{Interpolación IDW}\label{algo:IDW}
@@ -185,38 +184,64 @@ métodos, para una malla de $C_{D}=f(\Delta P, l_{v})$ generada al azar.
      }
 \end{algorithm}
 
+En la Figura~\ref{fig:mapas_interpolados} se muestra una comparación de ambos
+métodos, para puntos tomados al azar de la función \emph{peaks(x,y)} la cual se
+expresa en la ecuación~\ref{eq:peaks_function} y representa en la Figura~\ref{fig:peaks_function}.
+
+\begin{equation}\label{eq:peaks_function}
+  z = 3(1 - x)^2 e^{-(x^2 + (y + 1)^2)} - 10\left(\frac{x}{5} - x^3 - y^5\right)e^{-(x^2 + y^2)} - \frac{1}{3}e^{-((x + 1)^2 + y^2)}
+\end{equation}
+
+Comparando las imágenes se ve que a medida que la variable \emph{p} del método
+\emph{IDW} se vuelve más grande, el resultado de la interpolación se asemeja más
+a los resultados obtenidos por el método de punto más cercano.
+
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=.7\textwidth]{mapa_cd/mapa_cd.pdf}
+    \includegraphics[width=.5\textwidth]{peaks3d.png}
+    \caption{\emph{peaks(x,y)}}\label{fig:peaks_function}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{comparativa_interpolacion.pdf}
     \caption{Comparación de métodos de interpolación}\label{fig:mapas_interpolados}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Área de Referencia}
-%
-El área de referencia utilizada por ICESym es el área de la cortina~(ver
-Ec.~\ref{eq:area_cortina}) y se emplea en el código del programa para calcular
-el área efectiva $F_{V}=A_{R}\cdot C_{D}$.
-%
-Como se indicó en el apartado~\ref{sec:cap2_cd}, para el  MRCVC el área de
-referencia es el área frontal del puerto expuesta a la cámara, calculada como la
-altura de la ranura $h_{p}$ multiplicada por la distancia entre el borde del
-puerto y la paleta que delimita la cámara, denominada como $l_{v}$.
 
-Este valor se afecta por el coeficiente de descarga intermedio $C_{D,int}$, que
-puede ser un valor fijo o el resultado de interpolar de un mapa de $C_D$ para un
-valor de cuerda y $\Delta P$ dado, como se indica en la ecuación~(\ref{eq:fv}).
+\subsection{Área de Referencia}
+
+El área de referencia utilizada en ICESym es el área de cortina (ver
+ecuación~\ref{eq:area_cortina}) y se emplea en el código del programa para
+calcular el área efectiva $F_{V} = A_{R} \cdot C_{D}$.
+
+Como se mencionó en la sección~\ref{subsec:cap2_cd}, para el MRCVC, el área de
+referencia se define como el área frontal del puerto expuesta a la cámara.
+%
+Esta se calcula multiplicando la altura de la ranura $h_{p}$ por la distancia
+entre el borde del puerto y la paleta que delimita la cámara, denotada como
+$l_{v}$.
+
+El valor calculado se modifica por el coeficiente de descarga intermedio $C_{D,int}$,
+que puede ser un valor fijo o el resultado de la interpolación de un mapa de
+$C_D$ para un valor de cuerda y $\Delta P$ dados, según se muestra en la
+ecuación~(\ref{eq:fv}).
 
 \begin{equation}\label{eq:fv}
-    F_{V} = C_{D,int}\cdot h_{p}\cdot l_{v}
+    F_{V} = C_{D,int} \cdot h_{p} \cdot l_{v}
 \end{equation}
 
-Tanto al inicio como al cierre del puerto ocurre solape de cámaras, por lo que
-en estos intervalos angulares hay un valor de $C_D$ para cada cámara.
+En los momentos de apertura y cierre del puerto, se produce un solape entre
+cámaras, lo cual implica que en estos intervalos angulares, cada cámara tiene un
+valor de $C_D$ específico.
 %
-Cada valor se calcula con el flujo másico que atraviesa las secciones de entrada
-correspondientes y el área de puerto expuesta por cada cámara.
+Estos valores se determinan basándose en el flujo másico que atraviesa las
+secciones de entrada correspondientes y el área del puerto expuesta por cada
+cámara.
+
 
 \subsection{Interfaz con el Optimizador}
 %
@@ -775,13 +800,13 @@ $C_{mult}\in[1.2, 2]$\;\\ }
   $u_{medio} = \media{F}$\;
   \eIf{$u_{min}> aux = (C_{mult}\cdot u_{medio} - u_{max}) \mathbin{/} (C_{mult}-1)$
     }{
-    $\Delta_{u} = u_{max}-u_{avg}$\;
-    $a = (C_{mult} - 1) \cdot u_{avg} / \Delta u$\;
-    $b = u_{avg} \cdot (u_{max} - C_{mult} \cdot u_{avg}) \Delta_{u} $\;
+    $\Delta u = u_{max}-u_{medio}$\;
+    $a = (C_{mult} - 1) \cdot u_{medio} / \Delta u$\;
+    $b = u_{medio} \cdot (u_{max} - C_{mult} \cdot u_{medio}) \Delta u $\;
   }{
     \eIf{$\Delta \neq 0$}{
-      $a = u_{avg} \mathbin{/} \Delta_{u}$\;
-      $b = -u_{min} \cdot u_{avg} \mathbin{/} \Delta_{u}$ \;
+      $a = u_{medio} \mathbin{/} \Delta u$\;
+      $b = -u_{min} \cdot u_{medio} \mathbin{/} \Delta u$ \;
     }{
       $a=1$\;
       $b=0$\;

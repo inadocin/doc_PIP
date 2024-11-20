@@ -99,18 +99,23 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 
-\fancypagestyle{mylandscape}{
-\fancyhf{} %Clears the header/footer
-\fancyfoot{% Footer
-\makebox[\textwidth][r]{% Right
-  \rlap{\hspace{.75cm}% Push out of margin by \footskip
-    \smash{% Remove vertical height
-      \raisebox{4.87in}{% Raise vertically
-        \rotatebox{90}{\thepage}}}}}}% Rotate counter-clockwise
+% \fancypagestyle{mylandscape}{
+% \fancyhf{} %Clears the header/footer
+% \fancyfoot{% Footer
+% \makebox[\textwidth][r]{% Right
+%
+%   \rlap{\hspace{.75cm}% Push out of margin by \footskip
+%     \smash{% Remove vertical height
+%       \raisebox{4.87in}{% Raise vertically
+%         \rotatebox{90}{\thepage}}}}}}% Rotate counter-clockwise
+% \renewcommand{\headrulewidth}{0pt}% No header rule
+% \renewcommand{\footrulewidth}{0pt}% No footer rule
+% }
+
+\fancyhead{}
 \renewcommand{\headrulewidth}{0pt}% No header rule
 \renewcommand{\footrulewidth}{0pt}% No footer rule
-}
-
+\fancyfoot[CE,CO]{\thepage}
 
 \usepackage{rotating} %rotación hoja
 % \usepackage{enumerate}
@@ -211,12 +216,12 @@
 
 \chapternumberfont{\Huge}
 
-\lhead{}
-\chead{} 
-\rhead{\thepage} 
-\cfoot{}
-\rfoot{}
-\renewcommand{\footrulewidth}{0.5pt}
+% \lhead{}
+% \chead{}
+% \rhead{\thepage}
+% \cfoot{}
+% \rfoot{}
+% \renewcommand{\footrulewidth}{0.5pt}
 
 
 \usepackage{cleveref}
@@ -557,8 +562,8 @@ satisfactory port geometry for the current state of engine development.
 
 \newpage
 
-\lhead{}
-\rhead{\thepage}
+% \lhead{}
+% \rhead{\thepage}
 
 \include{INDICE}
 

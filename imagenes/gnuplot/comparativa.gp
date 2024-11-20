@@ -14,10 +14,10 @@ set label 4 at 2.4, 191 '191 Nm' right font ',8'
 set label 5 at 7.5, 177 '' point pt 13 lc 7 ps 1.5
 set label 6 at 2.5, 191 '' point pt 13 lc 7 ps 1.5
 
-set label 7 at 2.4, 189 '189 N.m.' left font ',8'
-set label 8 at 4.5, 135 '135 CV' center font ',8'
-set label 9 at 5, 189 "" point pt 5 lc -1 ps 1.5 font ',8'
-set label 10 at 5, 135 "" point pt 5 lc -1 ps 1.5 font ',8'
+set label 7 at 2.6, 185 '180 N.m.' left font ',8'
+set label 8 at 5, 120 '113 CV' center font ',8'
+set label 9 at 2.5, 180 "" point pt 5 lc -1 ps 1.5 font ',8'
+set label 10 at 5, 113 "" point pt 5 lc -1 ps 1.5 font ',8'
 
 set grid lw 1.5
 set key bottom right
